@@ -1,4 +1,4 @@
-AdminPanel.jsx - Административная панель
+// AdminPanel.jsx - Административная панель
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';

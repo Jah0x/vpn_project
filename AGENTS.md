@@ -49,6 +49,7 @@ NODE_ENV=development
 | **Frontend** | *“Create a `<VpnStatusBadge />` component that shows the status (`online`, `offline`, `warning`) with the existing colour palette.”* |
 | **Testing** | *“Write Jest tests to cover the new restart route (happy + error paths).”* |
 | **Docs** | *“Generate Swagger docs for all `/api/vpn/*` endpoints and expose them at `/api/docs`.”* |
+| **UI** | *"Create `<VpnStatusBadge />` component"* |
 
 When working on tasks the agent **must**:
 - Pass `npm run lint` and `npm test`.

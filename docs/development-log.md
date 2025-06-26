@@ -10,3 +10,7 @@
 - Добавлена поддержка JWT и таблицы `Vpn`, `Job` (пока в памяти).
 - Реализован эндпоинт `POST /api/vpn/restart/:id`.
 - Добавлена документация Swagger и тесты на Jest.
+
+## 2025-06-28
+- Создан компонент `VpnStatusBadge` и карточка `VpnCard` на TypeScript.
+- Добавлены тесты на React Testing Library и обновлён Jest конфиг.
