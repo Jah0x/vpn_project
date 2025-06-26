@@ -51,6 +51,7 @@ NODE_ENV=development
 | **Docs** | *“Generate Swagger docs for all `/api/vpn/*` endpoints and expose them at `/api/docs`.”* |
 | **UI** | *"Create `<VpnStatusBadge />` component"* |
 | **i18n** | *"Add new locale string"* |
+| **DevOps** | *"Deploy to staging via Fly.io"* |
 
 When working on tasks the agent **must**:
 - Pass `npm run lint` and `npm test`.
