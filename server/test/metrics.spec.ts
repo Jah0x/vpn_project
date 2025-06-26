@@ -2,10 +2,20 @@
  * @jest-environment node
  */
 import request from 'supertest';
+import createPrismaMock from 'prisma-mock';
+import { mockReset } from 'jest-mock-extended';
+import { Prisma } from '@prisma/client';
 import { app } from '../src/server';
 import { register } from '../src/metrics';
 import { signAccessToken } from '../src/auth';
 import { Role } from '../src/types';
+
+jest.mock('../src/lib/prisma', () => ({ prisma: createPrismaMock({}, (Prisma as any).dmmf.datamodel) }));
+import { prisma } from '../src/lib/prisma';
+
+beforeEach(() => {
+  mockReset(prisma);
+});
 
 describe('Metrics', () => {
   it('http_requests_total increments', async () => {

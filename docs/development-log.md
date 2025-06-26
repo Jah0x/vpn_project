@@ -34,3 +34,8 @@
 - Подключены метрики Prometheus и обновлён Grafana дашборд.
 - Настроен Alertmanager (Slack, Telegram) и добавлены правила алертов.
 - Усилена безопасность API: rate-limit и secure headers через helmet.
+
+## 2025-07-02
+- Переведена база на PostgreSQL и Prisma ORM.
+- Введены миграции, сиды и Docker Compose с Postgres.
+- Пароли теперь хранятся как bcrypt-хэши.

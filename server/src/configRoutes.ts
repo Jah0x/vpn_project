@@ -3,7 +3,14 @@ import fs from 'fs';
 import path from 'path';
 import { authenticateJWT, authorizeRoles, AuthenticatedRequest } from './auth';
 import { Role } from './types';
-import { users, subscriptions, configTemplate } from './store';
+import { prisma } from './lib/prisma';
+
+const subscriptions: Record<string, { status: string }> = {};
+let configTemplate: any = { v: '2' };
+const templatePath = path.join(__dirname, '../config-template.json');
+if (fs.existsSync(templatePath)) {
+  configTemplate = JSON.parse(fs.readFileSync(templatePath, 'utf-8'));
+}
 
 const router = Router();
 
@@ -49,16 +56,18 @@ router.post('/stripe/webhook', (req, res) => {
   const { type, data } = req.body as { type: string; data: any };
   if (type === 'checkout.session.completed') {
     const userId = data.userId as string;
-    const user = users.find(u => u.id === userId);
-    if (user) {
-      subscriptions[userId] = { status: 'active' };
-      const cfg = JSON.parse(
-        JSON.stringify(configTemplate).replace('{{USER_UUID}}', user.uuid)
-      );
-      const dir = path.join(__dirname, '../../configs');
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir);
-      fs.writeFileSync(path.join(dir, `${userId}.json`), JSON.stringify(cfg, null, 2));
-    }
+    prisma.user
+      .findUnique({ where: { id: userId } })
+      .then(user => {
+        if (!user) return;
+        subscriptions[userId] = { status: 'active' };
+        const cfg = JSON.parse(
+          JSON.stringify(configTemplate).replace('{{USER_UUID}}', user.uuid)
+        );
+        const dir = path.join(__dirname, '../../configs');
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+        fs.writeFileSync(path.join(dir, `${userId}.json`), JSON.stringify(cfg, null, 2));
+      });
   }
   res.json({ received: true });
 });
