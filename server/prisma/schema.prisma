@@ -1,0 +1,32 @@
+// SQLite database for development/testing
+// provider could be postgresql in production
+ datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+ }
+
+ generator client {
+  provider = "prisma-client-js"
+ }
+
+ model User {
+   id       String  @id @default(cuid())
+   email    String  @unique
+   password String
+   role     Role    @default(USER)
+   Vpn      Vpn[]
+ }
+
+ model Vpn {
+   id        String @id @default(cuid())
+   name      String
+   tariffId  String
+   ownerId   String
+   owner     User   @relation(fields: [ownerId], references: [id])
+ }
+
+ enum Role {
+   ADMIN
+   USER
+   VIEWER
+ }

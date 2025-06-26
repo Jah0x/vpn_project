@@ -4,6 +4,7 @@ import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
 import path from 'path';
 import vpnRouter from './vpn';
+import authRouter from './authRoutes';
 
 export const app = express();
 
@@ -15,7 +16,8 @@ if (fs.existsSync(openapiPath)) {
   const swaggerDoc = fs.readFileSync(openapiPath, 'utf8');
   const yaml = require('yaml');
   const spec = yaml.parse(swaggerDoc);
-  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(spec));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(spec));
 }
 
+app.use('/api/auth', authRouter);
 app.use('/api/vpn', vpnRouter);
