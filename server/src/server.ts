@@ -12,6 +12,7 @@ import { metricsMiddleware } from './metricsMiddleware';
 import vpnRouter from './vpn';
 import authRouter from './authRoutes';
 import configRouter from './configRoutes';
+import billingRouter from './billing';
 
 export const app = express();
 
@@ -19,6 +20,7 @@ const logger = pino({ level: 'info' });
 app.use(pinoHttp({ logger }));
 
 app.use(cors());
+app.use('/api/billing/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
 app.use(
   helmet({
@@ -55,3 +57,4 @@ app.get('/metrics', async (_req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/vpn', vpnRouter);
 app.use('/api', configRouter);
+app.use('/api/billing', billingRouter);

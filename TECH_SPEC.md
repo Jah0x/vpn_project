@@ -22,3 +22,11 @@
 - Все модели описаны в `prisma/schema.prisma`.
 - Миграции запускаются командой `npm run prisma:migrate`, сиды — `npm run seed`.
 - Для локальной разработки БД поднимается через Docker Compose сервис `postgres`.
+
+## Billing
+Интеграция со Stripe Billing осуществляется через Checkout и Webhook. В `.env` должны быть заданы ключи:
+`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` и идентификаторы цен `STRIPE_PRICE_*`.
+
+Модель `Subscription` хранит активный тариф пользователя и лимит активных VPN. Вебхук `/api/billing/webhook` обновляет статус подписки в зависимости от событий Stripe (`checkout.session.completed`, `invoice.payment_failed`, `customer.subscription.deleted`).
+
+Создание VPN ограничено middleware `enforceVpnLimit`, которое сравнивает количество VPN пользователя с `maxActiveVpns` из его подписки.
