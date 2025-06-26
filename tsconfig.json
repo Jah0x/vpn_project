@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "noEmit": true
+  },
+  "include": ["src", "server/src", "server/test"]
+}

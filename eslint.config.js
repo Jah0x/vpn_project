@@ -4,7 +4,8 @@ module.exports = [
     languageOptions: {
       parserOptions: {
         ecmaVersion: 2020,
-        sourceType: 'module'
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true }
       },
       globals: {
         window: 'readonly',
