@@ -57,3 +57,8 @@
 
 ## 2025-07-06
 - Настроен workflow ci.yml с PostgreSQL и Prisma, линт и тесты проходят.
+
+## 2025-07-07
+- Введены middleware security (helmet с CSP, глобальный rate-limit).
+- Обновлены Swagger и TECH_SPEC.
+

@@ -13,10 +13,13 @@
 
 Файл шаблона конфигурации VPN хранится в таблице `ConfigTemplate` (см. Prisma schema) и дублируется на диске `server/config-template.json`. Админ может получить и изменить шаблон через `/api/admin/config-template`. После оплаты подписки веб‑хук Stripe создаёт пользовательский конфиг в `configs/<userId>.json`, подставляя `uuid` пользователя вместо `{{USER_UUID}}`.
 
-## Observability & Security
+## Observability
 - Все HTTP запросы считаются и измеряются через Prometheus middleware. Метрики доступны без авторизации по `/metrics`.
 - Alertmanager настроен на Slack и Telegram, правило `HighErrorRate` срабатывает при доле 5xx >5% в течение 5 минут.
-- Сервер защищён через `express-rate-limit` (100 запросов за 15 минут на IP, кроме `/metrics`) и `helmet` с CSP `default-src 'self'`.
+
+## Security hardening
+- `helmet` со строгой Content-Security-Policy (`default-src 'self'; img-src 'self' data:; script-src 'self'; object-src 'none'`), `crossOriginEmbedderPolicy: false`.
+- `express-rate-limit` – 100 запросов за 15 минут на IP, исключая `/metrics` и `/health`.
 
 ## Database & Prisma
 - Используется PostgreSQL 15 и Prisma ORM 5.
