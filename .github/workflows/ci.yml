@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, release/**, feature/**, codex/** ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vpn_project
+        ports: [ "5432:5432" ]
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vpn_project?schema=public
+      JWT_SECRET: testsecretjwt1234567890
+      JWT_REFRESH_SECRET: testrefsecret1234567890
+      STRIPE_SECRET_KEY: sk_test_11111111111111
+      STRIPE_WEBHOOK_SECRET: whsec_test_22222222222222
+      STRIPE_PRICE_BASIC: price_basic_test
+      STRIPE_PRICE_PRO: price_pro_test
+      STRIPE_PRICE_TEAM: price_team_test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install deps
+        run: |
+          npm ci
+          npm ci --prefix subscription-server
+          npx prisma generate
+
+      - name: Run DB migrations
+        run: npx prisma migrate deploy
+
+      - name: Seed DB (admin user)
+        run: npm run seed
+
+      - name: Lint
+        run: ESLINT_USE_FLAT_CONFIG=false npm run lint
+
+      - name: Test
+        run: npm test

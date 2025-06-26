@@ -54,3 +54,6 @@
 - Создан отдельный сервис `subscription-server` на Express + SQLite.
 - Поддержаны эндпойнты `GET /:uuid` и `POST /add`.
 - Добавлены Jest-тесты и Dockerfile для нового сервиса.
+
+## 2025-07-06
+- Настроен workflow ci.yml с PostgreSQL и Prisma, линт и тесты проходят.
