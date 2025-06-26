@@ -8,7 +8,14 @@ export interface User {
   id: string;
   email: string;
   password: string;
+  uuid: string;
   role: Role;
+  subscription?: Subscription;
+}
+
+export interface Subscription {
+  status: string;
+  stripeId?: string;
 }
 
 export interface Vpn {

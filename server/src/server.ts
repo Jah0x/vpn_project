@@ -8,6 +8,7 @@ import pinoHttp from 'pino-http';
 import client from 'prom-client';
 import vpnRouter from './vpn';
 import authRouter from './authRoutes';
+import configRouter from './configRoutes';
 
 export const app = express();
 
@@ -48,3 +49,4 @@ app.get('/metrics', async (_req, res) => {
 
 app.use('/api/auth', authRouter);
 app.use('/api/vpn', vpnRouter);
+app.use('/api', configRouter);

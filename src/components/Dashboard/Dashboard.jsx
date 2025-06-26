@@ -125,6 +125,13 @@ const Dashboard = () => {
                   Действует до: {new Date(user.subscription.expires_at).toLocaleDateString('ru-RU')}
                 </p>
               </div>
+              <button
+                onClick={() => window.open('/api/config')}
+                className="ml-auto bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded flex items-center"
+                disabled={!hasActiveSubscription}
+              >
+                <Download className="w-4 h-4 mr-1" />Скачать конфиг
+              </button>
             </div>
           ) : (
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-center justify-between">

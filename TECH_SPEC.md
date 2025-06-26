@@ -7,3 +7,7 @@
 Пайплайн GitHub Actions выполняет lint и тесты, затем собирает и публикует Docker‑образы в GHCR. При пуше в ветку `main` приложения деплоятся на Fly.io. Любая ветка `release/*` запускает обновление образов в Kubernetes.
 
 Мониторинг реализован через Prometheus и Grafana. Бекенд предоставляет endpoint `/metrics` с метриками `http_requests_total` и `process_cpu_seconds_total`. Helm‑chart `prometheus-stack` конфигурируется значениями из каталога `k8s/monitoring/`.
+
+## Config template editing
+
+Файл шаблона конфигурации VPN хранится в таблице `ConfigTemplate` (см. Prisma schema) и дублируется на диске `server/config-template.json`. Админ может получить и изменить шаблон через `/api/admin/config-template`. После оплаты подписки веб‑хук Stripe создаёт пользовательский конфиг в `configs/<userId>.json`, подставляя `uuid` пользователя вместо `{{USER_UUID}}`.

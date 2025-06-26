@@ -158,3 +158,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Vpn'
+  /api/config:
+    get:
+      summary: Download VPN config
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Config file
+          content:
+            application/json:
+              schema:
+                type: object
+        '402':
+          description: Subscription required
+  /api/admin/config-template:
+    get:
+      summary: Get config template
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Template JSON
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      summary: Update config template
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Updated template
+          content:
+            application/json:
+              schema:
+                type: object
