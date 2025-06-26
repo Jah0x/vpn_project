@@ -29,7 +29,8 @@
     "dev": "npm start",
     "preview": "npm run build && npx serve -s build",
     "lint": "eslint src/**/*.{js,jsx}",
-    "format": "prettier --write src/**/*.{js,jsx,css,md}"
+    "format": "prettier --write src/**/*.{js,jsx,css,md}",
+    "server": "node server/index.js"
   },
   "eslintConfig": {
     "extends": [
