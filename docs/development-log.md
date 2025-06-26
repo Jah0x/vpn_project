@@ -24,3 +24,6 @@
 - Подключён `react-i18next` и добавлены словари `en` и `ru`.
 - Создан переключатель языка и базовая библиотека UI (`Card`, `Button`, `Modal`).
 - Настроены Storybook и Cypress со smoke‑тестом смены языка.
+
+## 2025-06-30b
+- Подготовлены Dockerfile и docker-compose. Настроен CI/CD с Fly.io и Kubernetes. Добавлен monitoring через Prometheus и Grafana.
