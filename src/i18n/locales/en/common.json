@@ -1,0 +1,10 @@
+{
+  "vpnStatus.online": "Online",
+  "vpnStatus.offline": "Offline",
+  "vpnStatus.warning": "Warning",
+  "vpnStatus.pending": "Pending",
+  "button.restart": "Restart",
+  "modal.confirmTitle": "Are you sure?",
+  "modal.confirm": "Confirm",
+  "modal.cancel": "Cancel"
+}
