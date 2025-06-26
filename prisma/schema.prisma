@@ -19,6 +19,7 @@ model User {
   uuid         String   @unique
   role         Role     @default(USER)
   Vpn          Vpn[]
+  Subscription Subscription?
 }
 
 model Vpn {
@@ -47,4 +48,15 @@ model Job {
   output    String?
   createdAt DateTime @default(now())
   vpn       Vpn      @relation(fields: [vpnId], references: [id])
+}
+
+model Subscription {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  stripeSubId   String   @unique
+  status        String   @default("active")
+  planId        String
+  maxActiveVpns Int
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id])
 }

@@ -39,3 +39,7 @@
 - Переведена база на PostgreSQL и Prisma ORM.
 - Введены миграции, сиды и Docker Compose с Postgres.
 - Пароли теперь хранятся как bcrypt-хэши.
+
+## 2025-07-03
+- Интегрирован Stripe Billing (Checkout + Webhook).
+- Добавлена модель `Subscription` и ограничение числа VPN по тарифу.

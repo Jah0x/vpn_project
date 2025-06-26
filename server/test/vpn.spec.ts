@@ -6,12 +6,13 @@ import bcrypt from 'bcryptjs';
 import createPrismaMock from 'prisma-mock';
 import { mockReset } from 'jest-mock-extended';
 import { Prisma } from '@prisma/client';
+
+process.env.STRIPE_SECRET_KEY = 'sk_test';
+jest.mock('../src/lib/prisma', () => ({ prisma: createPrismaMock({}, (Prisma as any).dmmf.datamodel) }));
+import { prisma } from '../src/lib/prisma';
 import { app } from '../src/server';
 import { signAccessToken } from '../src/auth';
 import { Role } from '../src/types';
-
-jest.mock('../src/lib/prisma', () => ({ prisma: createPrismaMock({}, (Prisma as any).dmmf.datamodel) }));
-import { prisma } from '../src/lib/prisma';
 
 const userToken = signAccessToken({ id: 'u2', role: Role.USER });
 

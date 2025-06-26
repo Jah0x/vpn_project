@@ -9,6 +9,7 @@ import {
 } from './auth';
 import { Role, VpnStatus } from './types';
 import { prisma } from './lib/prisma';
+import { enforceVpnLimit } from './enforceVpnLimit';
 
 const router = Router();
 
@@ -20,11 +21,17 @@ router.get('/', authenticateJWT, authorizeRoles(Role.USER, Role.ADMIN), async (r
   res.json(vpns);
 });
 
-router.post('/', authenticateJWT, authorizeRoles(Role.USER), async (req: AuthenticatedRequest, res) => {
-  const { name } = req.body as { name: string };
-  const vpn = await prisma.vpn.create({ data: { ownerId: req.user!.id, name } });
-  res.status(201).json(vpn);
-});
+router.post(
+  '/',
+  authenticateJWT,
+  authorizeRoles(Role.USER),
+  enforceVpnLimit,
+  async (req: AuthenticatedRequest, res) => {
+    const { name } = req.body as { name: string };
+    const vpn = await prisma.vpn.create({ data: { ownerId: req.user!.id, name } });
+    res.status(201).json(vpn);
+  }
+);
 
 router.patch('/:id', authenticateJWT, ownerOrAdmin, async (req: AuthenticatedRequest, res) => {
   const { name } = req.body as Partial<{ name: string }>;

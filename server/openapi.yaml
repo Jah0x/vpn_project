@@ -213,3 +213,40 @@ paths:
             text/plain:
               schema:
                 type: string
+
+  /api/billing/checkout:
+    post:
+      summary: Start Stripe Checkout
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                plan:
+                  type: string
+                  enum: [basic, pro, team]
+      responses:
+        '200':
+          description: Checkout URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+
+  /api/billing/webhook:
+    post:
+      summary: Stripe webhook
+      responses:
+        '200':
+          description: Received
+          content:
+            application/json:
+              schema:
+                type: object
