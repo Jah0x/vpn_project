@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="description" content="Быстрый и безопасный VPN сервис. Защитите свою конфиденциальность и получите доступ к интернету без ограничений." />
+  
+  <!-- SEO meta теги -->
+  <meta name="keywords" content="VPN, ВПН, безопасность, конфиденциальность, анонимность, интернет, proxy, прокси" />
+  <meta name="author" content="VPN Service Team" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Open Graph meta теги -->
+  <meta property="og:title" content="VPN Service - Быстрый и безопасный VPN" />
+  <meta property="og:description" content="Защитите свою конфиденциальность и получите доступ к интернету без ограничений" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vpn-service.com" />
+  <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
+  <meta property="og:site_name" content="VPN Service" />
+  
+  <!-- Twitter Card meta теги -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="VPN Service - Быстрый и безопасный VPN" />
+  <meta name="twitter:description" content="Защитите свою конфиденциальность и получите доступ к интернету без ограничений" />
+  <meta name="twitter:image" content="%PUBLIC_URL%/twitter-image.png" />
+  
+  <!-- Иконки для разных устройств -->
+  <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <link rel="mask-icon" href="%PUBLIC_URL%/safari-pinned-tab.svg" color="#3b82f6" />
+  <meta name="msapplication-TileColor" content="#111827" />
+  <meta name="msapplication-config" content="%PUBLIC_URL%/browserconfig.xml" />
+  
+  <!-- Предзагрузка шрифтов -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Предзагрузка критических ресурсов -->
+  <link rel="preload" href="%PUBLIC_URL%/static/css/main.css" as="style" />
+  <link rel="preload" href="%PUBLIC_URL%/static/js/main.js" as="script" />
+  
+  <!-- DNS предвыборка -->
+  <link rel="dns-prefetch" href="//api.vpn-service.com" />
+  <link rel="dns-prefetch" href="//cdn.vpn-service.com" />
+  
+  <title>VPN Service - Быстрый и безопасный VPN</title>
+  
+  <!-- Структурированные данные -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "VPN Service",
+    "description": "Быстрый и безопасный VPN сервис для защиты конфиденциальности",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "300",
+      "priceCurrency": "RUB",
+      "priceValidUntil": "2025-12-31"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "1250"
+    }
+  }
+  </script>
+  
+  <!-- Стили для загрузки -->
+  <style>
+    /* Критические стили для первоначальной загрузки */
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background-color: #111827;
+      color: #ffffff;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Экран загрузки */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #111827;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+    
+    .loading-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .loading-logo {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 24px;
+      animation: pulse 2s infinite;
+    }
+    
+    .loading-text {
+      color: #9ca3af;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #374151;
+      border-top: 3px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Скрыть содержимое до загрузки */
+    #root {
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+    }
+    
+    #root.loaded {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <noscript>
+    <div style="padding: 20px; text-align: center; background: #1f2937; color: #fff;">
+      <h1>JavaScript Required</h1>
+      <p>Для работы VPN Service необходимо включить JavaScript в вашем браузере.</p>
+      <p>Please enable JavaScript to use VPN Service.</p>
+    </div>
+  </noscript>
+  
+  <!-- Экран загрузки -->
+  <div id="loading-screen" class="loading-screen">
+    <svg class="loading-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1Z" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#3b82f6" fill-opacity="0.1"/>
+    </svg>
+    <div class="loading-text">Загрузка VPN Service...</div>
+    <div class="loading-spinner"></div>
+  </div>
+  
+  <!-- Основное приложение -->
+  <div id="root"></div>
+  
+  <!-- Скрипт для управления загрузкой -->
+  <script>
+    // Скрыть экран загрузки после загрузки приложения
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        const loadingScreen = document.getElementById('loading-screen');
+        const root = document.getElementById('root');
+        
+        if (loadingScreen && root) {
+          loadingScreen.classList.add('fade-out');
+          root.classList.add('loaded');
+          
+          setTimeout(function() {
+            loadingScreen.style.display = 'none';
+          }, 500);
+        }
+      }, 1000); // Минимальное время показа загрузки
+    });
+    
+    // Обработка ошибок JavaScript
+    window.addEventListener('error', function(e) {
+      console.error('JavaScript Error:', e.error);
+      // Можно добавить отправку ошибок в систему мониторинга
+    });
+    
+    // Отслеживание производительности
+    if ('performance' in window) {
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const timing = performance.timing;
+          const loadTime = timing.loadEventEnd - timing.navigationStart;
+          console.log('Page load time:', loadTime + 'ms');
+        }, 0);
+      });
+    }
+  </script>
+  
+  <!-- Google Analytics (замените на ваш ID) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID');
+  </script>
+  
+  <!-- Yandex.Metrica (замените на ваш ID) -->
+  <script type="text/javascript">
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+    
+    ym(12345678, "init", {
+      clickmap:true,
+      trackLinks:true,
+      accurateTrackBounce:true,
+      webvisor:true
+    });
+  </script>
+  
+  <!-- Fallback для старых браузеров -->
+  <!--[if lt IE 9]>
+    <div style="padding: 20px; text-align: center; background: #1f2937; color: #fff;">
+      <h1>Устаревший браузер</h1>
+      <p>Ваш браузер устарел. Пожалуйста, обновите его для корректной работы сайта.</p>
+    </div>
+  <![endif]-->
+</body>
+</html>
