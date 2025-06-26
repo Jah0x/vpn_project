@@ -1,0 +1,28 @@
+openapi: 3.0.0
+info:
+  title: VPN Service API
+  version: 1.0.0
+paths:
+  /api/vpn/restart/{id}:
+    post:
+      summary: Restart VPN instance
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Job started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  jobId:
+                    type: string
+        '404':
+          description: VPN not found
