@@ -19,6 +19,7 @@ import LoadingSpinner from '../Common/LoadingSpinner';
 import VPNService from '../../services/VPNService';
 import MonitoringService from '../../services/MonitoringService';
 import { useToast } from '../../contexts/ToastContext';
+import Button from '../ui/Button';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -134,12 +135,9 @@ const Dashboard = () => {
                   <p className="text-red-300 text-sm">Для доступа к VPN нужно активировать подписку</p>
                 </div>
               </div>
-              <button
-                onClick={() => window.location.href = '/subscription'}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-              >
+              <Button onClick={() => window.location.href = '/subscription'}>
                 Выбрать тариф
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -156,14 +154,10 @@ const Dashboard = () => {
                     <span>VPN Конфигурация</span>
                   </h2>
                   {hasActiveSubscription && (
-                    <button
-                      onClick={handleRegenerateConfig}
-                      disabled={configLoading}
-                      className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2"
-                    >
-                      <RefreshCw className={`w-4 h-4 ${configLoading ? 'animate-spin' : ''}`} />
+                    <Button onClick={handleRegenerateConfig} isLoading={configLoading} className="px-3 py-1.5 text-sm">
+                      <RefreshCw className="w-4 h-4" />
                       <span>Обновить</span>
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>

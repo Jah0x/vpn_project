@@ -50,6 +50,7 @@ NODE_ENV=development
 | **Testing** | *“Write Jest tests to cover the new restart route (happy + error paths).”* |
 | **Docs** | *“Generate Swagger docs for all `/api/vpn/*` endpoints and expose them at `/api/docs`.”* |
 | **UI** | *"Create `<VpnStatusBadge />` component"* |
+| **i18n** | *"Add new locale string"* |
 
 When working on tasks the agent **must**:
 - Pass `npm run lint` and `npm test`.
