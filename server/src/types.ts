@@ -1,34 +1,11 @@
 export enum Role {
-  ADMIN = 'admin',
-  USER = 'user',
-  VIEWER = 'viewer'
+  ADMIN = 'ADMIN',
+  USER = 'USER',
 }
 
-export interface User {
-  id: string;
-  email: string;
-  password: string;
-  uuid: string;
-  role: Role;
-  subscription?: Subscription;
-}
-
-export interface Subscription {
-  status: string;
-  stripeId?: string;
-}
-
-export interface Vpn {
-  id: string;
-  ownerId: string;
-  name: string;
-  tariffId: string;
-}
-
-export type JobStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
-
-export interface Job {
-  id: string;
-  vpnId: string;
-  status: JobStatus;
+export enum VpnStatus {
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
+  WARNING = 'WARNING',
+  PENDING = 'PENDING',
 }

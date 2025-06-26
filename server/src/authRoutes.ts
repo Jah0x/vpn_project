@@ -1,18 +1,37 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { authenticateJWT, signAccessToken, signRefreshToken, verifyRefreshToken } from './auth';
-import { findUserByEmail } from './store';
+import { prisma } from './lib/prisma';
+import { Role } from './types';
 
 const router = Router();
 
-router.post('/login', (req, res) => {
+router.post('/register', async (req, res) => {
   const { email, password } = req.body as { email: string; password: string };
-  const user = findUserByEmail(email);
-  if (!user || !bcrypt.compareSync(password, user.password)) {
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) return res.status(409).json({ error: 'Email exists' });
+  const user = await prisma.user.create({
+    data: {
+      email,
+      passwordHash: bcrypt.hashSync(password, 10),
+      uuid: crypto.randomUUID(),
+    },
+  });
+  res.status(201).json({ id: user.id });
+});
+
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body as { email: string; password: string };
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
-  const payload = { id: user.id, role: user.role };
-  return res.json({ access: signAccessToken(payload), refresh: signRefreshToken(payload) });
+  const payload = { id: user.id, role: user.role as Role };
+  return res.json({
+    access: signAccessToken(payload),
+    refresh: signRefreshToken(payload),
+  });
 });
 
 router.post('/refresh', (req, res) => {

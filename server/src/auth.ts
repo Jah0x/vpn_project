@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { Role } from './types';
-import { findVpn } from './store';
+import { prisma } from './lib/prisma';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_default_secret_1234';
 const JWT_REFRESH_SECRET =
@@ -65,12 +65,12 @@ export function authorizeRoles(...roles: Role[]) {
   };
 }
 
-export function ownerOrAdmin(
+export async function ownerOrAdmin(
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) {
-  const vpn = findVpn(req.params.id);
+  const vpn = await prisma.vpn.findUnique({ where: { id: req.params.id } });
   if (!vpn) return res.status(404).json({ error: 'Not found' });
   if (req.user?.role === Role.ADMIN || req.user?.id === vpn.ownerId) {
     return next();

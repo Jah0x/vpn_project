@@ -16,3 +16,9 @@
 - Все HTTP запросы считаются и измеряются через Prometheus middleware. Метрики доступны без авторизации по `/metrics`.
 - Alertmanager настроен на Slack и Telegram, правило `HighErrorRate` срабатывает при доле 5xx >5% в течение 5 минут.
 - Сервер защищён через `express-rate-limit` (100 запросов за 15 минут на IP, кроме `/metrics`) и `helmet` с CSP `default-src 'self'`.
+
+## Database & Prisma
+- Используется PostgreSQL 15 и Prisma ORM 5.
+- Все модели описаны в `prisma/schema.prisma`.
+- Миграции запускаются командой `npm run prisma:migrate`, сиды — `npm run seed`.
+- Для локальной разработки БД поднимается через Docker Compose сервис `postgres`.
