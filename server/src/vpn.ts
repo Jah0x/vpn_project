@@ -10,6 +10,7 @@ import {
 import { Role, VpnStatus } from './types';
 import { prisma } from './lib/prisma';
 import { enforceVpnLimit } from './enforceVpnLimit';
+import { VpnCreate, VpnUpdate } from './validators';
 
 const router = Router();
 
@@ -27,14 +28,22 @@ router.post(
   authorizeRoles(Role.USER),
   enforceVpnLimit,
   async (req: AuthenticatedRequest, res) => {
-    const { name } = req.body as { name: string };
+    const parse = VpnCreate.safeParse(req.body);
+    if (!parse.success) {
+      return res.status(400).json({ error: 'Invalid request' });
+    }
+    const { name } = parse.data;
     const vpn = await prisma.vpn.create({ data: { ownerId: req.user!.id, name } });
     res.status(201).json(vpn);
   }
 );
 
 router.patch('/:id', authenticateJWT, ownerOrAdmin, async (req: AuthenticatedRequest, res) => {
-  const { name } = req.body as Partial<{ name: string }>;
+  const parsed = VpnUpdate.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: 'Invalid request' });
+  }
+  const { name } = parsed.data;
   const vpn = await prisma.vpn.update({ where: { id: req.params.id }, data: { name } });
   res.json(vpn);
 });

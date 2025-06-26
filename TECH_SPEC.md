@@ -41,3 +41,12 @@
 Пользователь может получить итоговый URL через `/api/subscription-url`, если его подписка активна.
 Маркер `{{UUID}}` заменяется на `uuid` пользователя.
 Администратор управляет шаблоном через `/api/admin/subscription-template`.
+
+## OpenAPI & Swagger
+
+Документация API описана в формате OpenAPI 3.1 (`server/openapi.yaml`).
+Локально можно открыть Swagger UI по адресу `/api/docs`.
+
+```bash
+curl http://localhost:4000/api/docs
+```

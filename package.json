@@ -23,7 +23,10 @@
     "react-scripts": "5.0.1",
     "stripe": "^18.2.1",
     "swagger-ui-express": "^4.6.3",
-    "web-vitals": "^3.3.2"
+    "web-vitals": "^3.3.2",
+    "yamljs": "^0.3.0",
+    "zod": "^3.5.4",
+    "zod-to-openapi": "^0.2.1"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^9.0.8",

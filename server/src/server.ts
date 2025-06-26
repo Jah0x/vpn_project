@@ -1,8 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import swaggerUi from 'swagger-ui-express';
-import fs from 'fs';
-import path from 'path';
+import { mountSwagger } from './swagger';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 import { securityMiddlewares } from './middleware/security';
@@ -25,14 +23,11 @@ app.use(express.json());
 securityMiddlewares.forEach(mw => app.use(mw));
 
 app.use(metricsMiddleware);
+mountSwagger(app);
 
-const openapiPath = path.join(__dirname, '../openapi.yaml');
-if (fs.existsSync(openapiPath)) {
-  const swaggerDoc = fs.readFileSync(openapiPath, 'utf8');
-  const yaml = require('yaml');
-  const spec = yaml.parse(swaggerDoc);
-  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(spec));
-}
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok' });
+});
 
 app.get('/metrics', async (_req, res) => {
   res.set('Content-Type', register.contentType);
