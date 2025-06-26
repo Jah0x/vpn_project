@@ -1,11 +1,15 @@
+/**
+ * @jest-environment node
+ */
 import request from 'supertest';
 import { app } from '../src/server';
-import { signToken } from '../src/auth';
+import { signAccessToken } from '../src/auth';
+import { Role } from '../src/types';
 import { jobs } from '../src/store';
 
 describe('POST /api/vpn/restart/:id', () => {
   it('returns pending status when vpn exists', async () => {
-    const token = signToken({ id: 'u1', role: 'user' });
+    const token = signAccessToken({ id: 'u1', role: Role.USER });
     const res = await request(app)
       .post('/api/vpn/restart/1')
       .set('Authorization', `Bearer ${token}`);
@@ -15,7 +19,7 @@ describe('POST /api/vpn/restart/:id', () => {
   });
 
   it('returns 404 for missing vpn', async () => {
-    const token = signToken({ id: 'u1', role: 'user' });
+    const token = signAccessToken({ id: 'u1', role: Role.USER });
     const res = await request(app)
       .post('/api/vpn/restart/999')
       .set('Authorization', `Bearer ${token}`);
