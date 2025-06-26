@@ -13,6 +13,7 @@ import vpnRouter from './vpn';
 import authRouter from './authRoutes';
 import configRouter from './configRoutes';
 import billingRouter from './billing';
+import subscriptionLinkRouter from './subscriptionLink';
 
 export const app = express();
 
@@ -58,3 +59,4 @@ app.use('/api/auth', authRouter);
 app.use('/api/vpn', vpnRouter);
 app.use('/api', configRouter);
 app.use('/api/billing', billingRouter);
+app.use('/api', subscriptionLinkRouter);

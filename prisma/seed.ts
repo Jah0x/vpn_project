@@ -13,4 +13,13 @@ await prisma.user.create({
   },
 });
 
+await prisma.subscriptionLinkTemplate.upsert({
+  where: { id: 1 },
+  update: {},
+  create: {
+    id: 1,
+    urlTemplate: 'https://sub.example.com/{{UUID}}',
+  },
+});
+
 await prisma.$disconnect();

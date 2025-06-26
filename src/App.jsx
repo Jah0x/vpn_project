@@ -8,6 +8,7 @@ import SubscriptionPage from './components/Subscription/SubscriptionPage';
 import SettingsPage from './components/Settings/SettingsPage';
 import AdminPanel from './components/Admin/AdminPanel';
 import ConfigTemplatePage from './components/Admin/ConfigTemplatePage';
+import SubscriptionTemplatePage from './components/Admin/SubscriptionTemplatePage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
@@ -127,6 +128,15 @@ const AppContent = () => {
             element={
               <ProtectedRoute requireAdmin={true}>
                 <ConfigTemplatePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/subscription-template"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <SubscriptionTemplatePage />
               </ProtectedRoute>
             }
           />

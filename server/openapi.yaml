@@ -250,3 +250,60 @@ paths:
             application/json:
               schema:
                 type: object
+
+  /api/subscription-url:
+    get:
+      summary: Get subscription URL
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Subscription URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+        '402':
+          description: Subscription required
+
+  /api/admin/subscription-template:
+    get:
+      summary: Get subscription link template
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current template
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  urlTemplate:
+                    type: string
+    put:
+      summary: Update subscription link template
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                urlTemplate:
+                  type: string
+      responses:
+        '200':
+          description: Updated template
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  urlTemplate:
+                    type: string
