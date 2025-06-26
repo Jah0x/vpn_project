@@ -3,3 +3,6 @@ server/dist/
 package-lock.json
 .env
 configs/
+subscription-server/subs.db
+subscription-server/node_modules/
+subscription-server/*.db-journal

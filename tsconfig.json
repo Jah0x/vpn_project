@@ -10,5 +10,5 @@
     "allowJs": true,
     "noEmit": true
   },
-  "include": ["src", "server/src", "server/test"]
+  "include": ["src", "server/src", "server/test", "subscription-server/src", "subscription-server/test"]
 }
