@@ -30,3 +30,10 @@
 Модель `Subscription` хранит активный тариф пользователя и лимит активных VPN. Вебхук `/api/billing/webhook` обновляет статус подписки в зависимости от событий Stripe (`checkout.session.completed`, `invoice.payment_failed`, `customer.subscription.deleted`).
 
 Создание VPN ограничено middleware `enforceVpnLimit`, которое сравнивает количество VPN пользователя с `maxActiveVpns` из его подписки.
+
+## Subscription Link Delivery
+
+Шаблон ссылки на страницу управления подпиской хранится в таблице `SubscriptionLinkTemplate`.
+Пользователь может получить итоговый URL через `/api/subscription-url`, если его подписка активна.
+Маркер `{{UUID}}` заменяется на `uuid` пользователя.
+Администратор управляет шаблоном через `/api/admin/subscription-template`.

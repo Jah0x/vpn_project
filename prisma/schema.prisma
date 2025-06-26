@@ -60,3 +60,9 @@ model Subscription {
   createdAt     DateTime @default(now())
   user          User     @relation(fields: [userId], references: [id])
 }
+
+model SubscriptionLinkTemplate {
+  id          Int      @id @default(1)
+  urlTemplate String
+  updatedAt   DateTime @updatedAt
+}

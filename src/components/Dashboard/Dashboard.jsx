@@ -10,6 +10,7 @@ import {
   Activity,
   QrCode,
   Copy,
+  ClipboardCopy,
   RefreshCw,
   AlertCircle,
   CheckCircle,
@@ -60,6 +61,19 @@ const Dashboard = () => {
     if (vpnConfig?.config_url) {
       navigator.clipboard.writeText(vpnConfig.config_url);
       showToast('Конфигурация скопирована!', 'success');
+    }
+  };
+
+  const handleCopySubLink = async () => {
+    try {
+      const res = await fetch('/api/subscription-url');
+      if (res.ok) {
+        const data = await res.json();
+        await navigator.clipboard.writeText(data.url);
+        showToast('Ссылка скопирована', 'success');
+      }
+    } catch {
+      showToast('Ошибка получения ссылки', 'error');
     }
   };
 
@@ -125,13 +139,21 @@ const Dashboard = () => {
                   Действует до: {new Date(user.subscription.expires_at).toLocaleDateString('ru-RU')}
                 </p>
               </div>
-              <button
-                onClick={() => window.open('/api/config')}
-                className="ml-auto bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded flex items-center"
-                disabled={!hasActiveSubscription}
-              >
-                <Download className="w-4 h-4 mr-1" />Скачать конфиг
-              </button>
+              <div className="ml-auto flex space-x-2">
+                <button
+                  onClick={() => window.open('/api/config')}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded flex items-center"
+                  disabled={!hasActiveSubscription}
+                >
+                  <Download className="w-4 h-4 mr-1" />Скачать конфиг
+                </button>
+                <button
+                  onClick={handleCopySubLink}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded flex items-center"
+                >
+                  <ClipboardCopy className="w-4 h-4 mr-1" />Копировать ссылку
+                </button>
+              </div>
             </div>
           ) : (
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-center justify-between">
