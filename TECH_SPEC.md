@@ -5,6 +5,7 @@
 ## CI/CD & Monitoring
 
 Пайплайн GitHub Actions выполняет lint и тесты, затем собирает и публикует Docker‑образы в GHCR. При пуше в ветку `main` приложения деплоятся на Fly.io. Любая ветка `release/*` запускает обновление образов в Kubernetes.
+- lint-test job: Node 18 + PostgreSQL 15 + Prisma migrate
 
 Мониторинг реализован через Prometheus и Grafana. Бекенд предоставляет endpoint `/metrics` c метриками `http_requests_total` и `http_request_duration_seconds`. Helm‑chart `prometheus-stack` конфигурируется значениями из каталога `k8s/monitoring/`, Alertmanager отправляет уведомления в Slack и Telegram.
 
