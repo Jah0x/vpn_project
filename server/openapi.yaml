@@ -45,8 +45,16 @@ components:
           type: string
         tariffId:
           type: string
-security:
-  - bearerAuth: []
+  responses:
+    TooManyRequests:
+      description: Too many requests
+      headers:
+        Retry-After:
+          description: When to retry the request
+          schema:
+            type: string
+  security:
+    - bearerAuth: []
 paths:
   /api/auth/login:
     post:
@@ -64,6 +72,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Tokens'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
   /api/auth/refresh:
     post:
       summary: Refresh access token
@@ -86,6 +96,8 @@ paths:
                 properties:
                   access:
                     type: string
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
   /api/vpn:
     get:
       summary: List VPNs
@@ -100,6 +112,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Vpn'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
     post:
       summary: Create VPN
       security:
@@ -117,6 +131,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Vpn'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
   /api/vpn/{id}:
     patch:
       summary: Update VPN
@@ -141,6 +157,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Vpn'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
     delete:
       summary: Delete VPN
       security:
@@ -158,6 +176,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Vpn'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
   /api/config:
     get:
       summary: Download VPN config
@@ -172,6 +192,8 @@ paths:
                 type: object
         '402':
           description: Subscription required
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
   /api/admin/config-template:
     get:
       summary: Get config template
@@ -184,6 +206,8 @@ paths:
             application/json:
               schema:
                 type: object
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
     put:
       summary: Update config template
       security:
@@ -201,6 +225,8 @@ paths:
             application/json:
               schema:
                 type: object
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
 
   /metrics:
     get:
@@ -239,6 +265,8 @@ paths:
                 properties:
                   url:
                     type: string
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
 
   /api/billing/webhook:
     post:
@@ -250,6 +278,8 @@ paths:
             application/json:
               schema:
                 type: object
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
 
   /api/subscription-url:
     get:
@@ -268,6 +298,8 @@ paths:
                     type: string
         '402':
           description: Subscription required
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
 
   /api/admin/subscription-template:
     get:
@@ -284,6 +316,8 @@ paths:
                 properties:
                   urlTemplate:
                     type: string
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
     put:
       summary: Update subscription link template
       security:
@@ -307,3 +341,5 @@ paths:
                 properties:
                   urlTemplate:
                     type: string
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
