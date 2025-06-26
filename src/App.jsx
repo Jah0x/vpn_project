@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import SubscriptionPage from './components/Subscription/SubscriptionPage';
 import SettingsPage from './components/Settings/SettingsPage';
 import AdminPanel from './components/Admin/AdminPanel';
+import ConfigTemplatePage from './components/Admin/ConfigTemplatePage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
@@ -112,13 +113,22 @@ const AppContent = () => {
             } 
           />
           
-          <Route 
-            path="/admin" 
+          <Route
+            path="/admin"
             element={
               <ProtectedRoute requireAdmin={true}>
                 <AdminPanel />
               </ProtectedRoute>
-            } 
+            }
+          />
+
+          <Route
+            path="/admin/config"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <ConfigTemplatePage />
+              </ProtectedRoute>
+            }
           />
           
           {/* Редирект на главную */}

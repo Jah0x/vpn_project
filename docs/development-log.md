@@ -27,3 +27,5 @@
 
 ## 2025-06-30b
 - Подготовлены Dockerfile и docker-compose. Настроен CI/CD с Fly.io и Kubernetes. Добавлен monitoring через Prometheus и Grafana.
+## 2025-06-27b
+- Реализовано редактирование шаблона конфигурации и генерация файла после оплаты.

@@ -9,13 +9,29 @@
   provider = "prisma-client-js"
  }
 
- model User {
-   id       String  @id @default(cuid())
-   email    String  @unique
-   password String
-   role     Role    @default(USER)
-   Vpn      Vpn[]
- }
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  password    String
+  uuid        String   @unique
+  role        Role     @default(USER)
+  Subscription Subscription?
+  Vpn         Vpn[]
+}
+
+model Subscription {
+  id       String  @id @default(cuid())
+  user     User    @relation(fields: [userId], references: [id])
+  userId   String  @unique
+  status   String
+  stripeId String?
+}
+
+model ConfigTemplate {
+  id        Int      @id @default(1)
+  json      Json
+  updatedAt DateTime @updatedAt
+}
 
  model Vpn {
    id        String @id @default(cuid())
