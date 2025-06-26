@@ -201,3 +201,15 @@ paths:
             application/json:
               schema:
                 type: object
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      description: Exposes Prometheus metrics for scraping.
+      responses:
+        '200':
+          description: Metrics output
+          content:
+            text/plain:
+              schema:
+                type: string

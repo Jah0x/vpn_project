@@ -29,3 +29,8 @@
 - Подготовлены Dockerfile и docker-compose. Настроен CI/CD с Fly.io и Kubernetes. Добавлен monitoring через Prometheus и Grafana.
 ## 2025-06-27b
 - Реализовано редактирование шаблона конфигурации и генерация файла после оплаты.
+
+## 2025-07-01
+- Подключены метрики Prometheus и обновлён Grafana дашборд.
+- Настроен Alertmanager (Slack, Telegram) и добавлены правила алертов.
+- Усилена безопасность API: rate-limit и secure headers через helmet.

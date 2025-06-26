@@ -5,7 +5,10 @@ import fs from 'fs';
 import path from 'path';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
-import client from 'prom-client';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import { register } from './metrics';
+import { metricsMiddleware } from './metricsMiddleware';
 import vpnRouter from './vpn';
 import authRouter from './authRoutes';
 import configRouter from './configRoutes';
@@ -17,22 +20,24 @@ app.use(pinoHttp({ logger }));
 
 app.use(cors());
 app.use(express.json());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"]
+      }
+    }
+  })
+);
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    skip: req => req.path === '/metrics'
+  })
+);
 
-const register = new client.Registry();
-client.collectDefaultMetrics({ register });
-const httpRequests = new client.Counter({
-  name: 'http_requests_total',
-  help: 'Total HTTP requests',
-  labelNames: ['method', 'path', 'status']
-});
-register.registerMetric(httpRequests);
-
-app.use((req, res, next) => {
-  res.on('finish', () => {
-    httpRequests.inc({ method: req.method, path: req.path, status: res.statusCode });
-  });
-  next();
-});
+app.use(metricsMiddleware);
 
 const openapiPath = path.join(__dirname, '../openapi.yaml');
 if (fs.existsSync(openapiPath)) {

@@ -1,5 +1,46 @@
 {
-  "__inputs": [],
   "title": "VPN Overview",
-  "panels": []
+  "panels": [
+    {
+      "title": "RPS",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total[1m]))",
+          "legendFormat": "RPS"
+        }
+      ]
+    },
+    {
+      "title": "5xx rate",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m])) * 100",
+          "legendFormat": "error %"
+        }
+      ]
+    },
+    {
+      "title": "p95 latency",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95"
+        }
+      ]
+    },
+    {
+      "title": "Active sessions",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "sum(vpn_active_sessions)",
+          "legendFormat": "active"
+        }
+      ]
+    }
+  ]
 }
+
