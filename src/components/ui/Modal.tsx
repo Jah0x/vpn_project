@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import React, { Fragment } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 
 interface ModalProps {
   open: boolean;
@@ -9,7 +9,13 @@ interface ModalProps {
   footer?: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ open, onClose, title, children, footer }) => (
+const Modal: React.FC<ModalProps> = ({
+  open,
+  onClose,
+  title,
+  children,
+  footer,
+}) => (
   <Transition.Root show={open} as={Fragment}>
     <Dialog as="div" className="relative z-50" onClose={onClose}>
       <Transition.Child
@@ -34,9 +40,13 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, title, children, footer })
           leaveTo="opacity-0 scale-95"
         >
           <Dialog.Panel className="bg-white dark:bg-slate-900 rounded-2xl shadow-md max-w-md w-full p-6">
-            <Dialog.Title className="text-lg font-medium mb-4">{title}</Dialog.Title>
+            <Dialog.Title className="text-lg font-medium mb-4">
+              {title}
+            </Dialog.Title>
             {children}
-            {footer && <div className="mt-4 flex justify-end space-x-2">{footer}</div>}
+            {footer && (
+              <div className="mt-4 flex justify-end space-x-2">{footer}</div>
+            )}
           </Dialog.Panel>
         </Transition.Child>
       </div>

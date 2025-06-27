@@ -1,12 +1,12 @@
-import rateLimit from 'express-rate-limit';
-import helmet from 'helmet';
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
 
 export const securityMiddlewares = [
   helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        imgSrc: ["'self'", 'data:'],
+        imgSrc: ["'self'", "data:"],
         scriptSrc: ["'self'"],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: [],
@@ -19,8 +19,7 @@ export const securityMiddlewares = [
     max: 100,
     standardHeaders: true,
     legacyHeaders: false,
-    skip: req =>
-      req.path.startsWith('/metrics') ||
-      req.path.startsWith('/health'),
+    skip: (req) =>
+      req.path.startsWith("/metrics") || req.path.startsWith("/health"),
   }),
 ];

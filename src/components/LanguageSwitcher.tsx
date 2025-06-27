@@ -1,10 +1,10 @@
-import { Globe } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
+import { Globe } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import React, { useState } from "react";
 
 const options = [
-  { code: 'en', label: 'EN' },
-  { code: 'ru', label: 'RU' }
+  { code: "en", label: "EN" },
+  { code: "ru", label: "RU" },
 ];
 
 const LanguageSwitcher: React.FC = () => {
@@ -27,7 +27,7 @@ const LanguageSwitcher: React.FC = () => {
       </button>
       {open && (
         <div className="absolute right-0 mt-2 w-24 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-          {options.map(opt => (
+          {options.map((opt) => (
             <button
               key={opt.code}
               data-testid={`lang-${opt.code}`}

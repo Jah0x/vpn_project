@@ -1,1 +1,1 @@
-declare module 'yamljs';
+declare module "yamljs";

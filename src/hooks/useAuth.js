@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import AuthService from '../services/AuthService';
-import { AUTH_CONFIG } from '../utils/constants';
-import { StorageUtils } from '../utils/helpers';
+import { useState, useEffect, useCallback } from "react";
+import AuthService from "../services/AuthService";
+import { AUTH_CONFIG } from "../utils/constants";
+import { StorageUtils } from "../utils/helpers";
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);
@@ -17,9 +17,9 @@ export const useAuth = () => {
   const checkAuthStatus = useCallback(async () => {
     try {
       setIsLoading(true);
-      
+
       const token = StorageUtils.getItem(AUTH_CONFIG.TOKEN_KEY);
-      
+
       if (!token) {
         setIsLoading(false);
         return;
@@ -27,7 +27,7 @@ export const useAuth = () => {
 
       // Проверяем валидность токена
       const userData = await AuthService.verifyToken(token);
-      
+
       if (userData) {
         setUser(userData);
         setIsAuthenticated(true);
@@ -36,7 +36,7 @@ export const useAuth = () => {
         clearAuthData();
       }
     } catch (error) {
-      console.error('Ошибка проверки авторизации:', error);
+      console.error("Ошибка проверки авторизации:", error);
       clearAuthData();
     } finally {
       setIsLoading(false);
@@ -49,28 +49,28 @@ export const useAuth = () => {
       setError(null);
 
       const response = await AuthService.login(email, password);
-      
+
       if (response.success) {
         const { user: userData, token, refreshToken } = response.data;
-        
+
         // Сохраняем данные
         StorageUtils.setItem(AUTH_CONFIG.TOKEN_KEY, token);
         StorageUtils.setItem(AUTH_CONFIG.USER_KEY, userData);
-        
+
         if (remember && refreshToken) {
           StorageUtils.setItem(AUTH_CONFIG.REFRESH_TOKEN_KEY, refreshToken);
         }
 
         setUser(userData);
         setIsAuthenticated(true);
-        
+
         return { success: true, user: userData };
       } else {
         setError(response.error);
         return { success: false, error: response.error };
       }
     } catch (error) {
-      const errorMessage = error.message || 'Ошибка авторизации';
+      const errorMessage = error.message || "Ошибка авторизации";
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -84,15 +84,15 @@ export const useAuth = () => {
       setError(null);
 
       const response = await AuthService.register(userData);
-      
+
       if (response.success) {
-        return { success: true, message: 'Регистрация успешна' };
+        return { success: true, message: "Регистрация успешна" };
       } else {
         setError(response.error);
         return { success: false, error: response.error };
       }
     } catch (error) {
-      const errorMessage = error.message || 'Ошибка регистрации';
+      const errorMessage = error.message || "Ошибка регистрации";
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -103,14 +103,14 @@ export const useAuth = () => {
   const logout = useCallback(async () => {
     try {
       setIsLoading(true);
-      
+
       const token = StorageUtils.getItem(AUTH_CONFIG.TOKEN_KEY);
-      
+
       if (token) {
         await AuthService.logout(token);
       }
     } catch (error) {
-      console.error('Ошибка при выходе:', error);
+      console.error("Ошибка при выходе:", error);
     } finally {
       clearAuthData();
       setIsLoading(false);
@@ -119,55 +119,63 @@ export const useAuth = () => {
 
   const refreshToken = useCallback(async () => {
     try {
-      const refreshTokenValue = StorageUtils.getItem(AUTH_CONFIG.REFRESH_TOKEN_KEY);
-      
+      const refreshTokenValue = StorageUtils.getItem(
+        AUTH_CONFIG.REFRESH_TOKEN_KEY,
+      );
+
       if (!refreshTokenValue) {
-        throw new Error('Refresh token не найден');
+        throw new Error("Refresh token не найден");
       }
 
       const response = await AuthService.refreshToken(refreshTokenValue);
-      
+
       if (response.success) {
         const { token, user: userData } = response.data;
-        
+
         StorageUtils.setItem(AUTH_CONFIG.TOKEN_KEY, token);
         StorageUtils.setItem(AUTH_CONFIG.USER_KEY, userData);
-        
+
         setUser(userData);
         setIsAuthenticated(true);
-        
+
         return { success: true };
       } else {
         clearAuthData();
         return { success: false };
       }
     } catch (error) {
-      console.error('Ошибка обновления токена:', error);
+      console.error("Ошибка обновления токена:", error);
       clearAuthData();
       return { success: false };
     }
   }, []);
 
-  const updateUser = useCallback((userData) => {
-    const updatedUser = { ...user, ...userData };
-    setUser(updatedUser);
-    StorageUtils.setItem(AUTH_CONFIG.USER_KEY, updatedUser);
-  }, [user]);
+  const updateUser = useCallback(
+    (userData) => {
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      StorageUtils.setItem(AUTH_CONFIG.USER_KEY, updatedUser);
+    },
+    [user],
+  );
 
   const changePassword = useCallback(async (currentPassword, newPassword) => {
     try {
       setError(null);
-      
-      const response = await AuthService.changePassword(currentPassword, newPassword);
-      
+
+      const response = await AuthService.changePassword(
+        currentPassword,
+        newPassword,
+      );
+
       if (response.success) {
-        return { success: true, message: 'Пароль успешно изменен' };
+        return { success: true, message: "Пароль успешно изменен" };
       } else {
         setError(response.error);
         return { success: false, error: response.error };
       }
     } catch (error) {
-      const errorMessage = error.message || 'Ошибка смены пароля';
+      const errorMessage = error.message || "Ошибка смены пароля";
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -176,17 +184,17 @@ export const useAuth = () => {
   const resetPassword = useCallback(async (email) => {
     try {
       setError(null);
-      
+
       const response = await AuthService.resetPassword(email);
-      
+
       if (response.success) {
-        return { success: true, message: 'Инструкции отправлены на email' };
+        return { success: true, message: "Инструкции отправлены на email" };
       } else {
         setError(response.error);
         return { success: false, error: response.error };
       }
     } catch (error) {
-      const errorMessage = error.message || 'Ошибка сброса пароля';
+      const errorMessage = error.message || "Ошибка сброса пароля";
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -201,29 +209,37 @@ export const useAuth = () => {
     setError(null);
   }, []);
 
-  const hasRole = useCallback((role) => {
-    return user?.role === role;
-  }, [user]);
+  const hasRole = useCallback(
+    (role) => {
+      return user?.role === role;
+    },
+    [user],
+  );
 
-  const hasPermission = useCallback((permission) => {
-    return user?.permissions?.includes(permission) || false;
-  }, [user]);
+  const hasPermission = useCallback(
+    (permission) => {
+      return user?.permissions?.includes(permission) || false;
+    },
+    [user],
+  );
 
   const isSubscriptionActive = useCallback(() => {
     if (!user?.subscription) return false;
-    
+
     const subscription = user.subscription;
-    return subscription.status === 'active' && 
-           new Date(subscription.expiresAt) > new Date();
+    return (
+      subscription.status === "active" &&
+      new Date(subscription.expiresAt) > new Date()
+    );
   }, [user]);
 
   const getSubscriptionDaysLeft = useCallback(() => {
     if (!user?.subscription?.expiresAt) return 0;
-    
+
     const now = new Date();
     const expiry = new Date(user.subscription.expiresAt);
     const diffTime = expiry - now;
-    
+
     return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   }, [user]);
 
@@ -233,27 +249,27 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     error,
-    
+
     // Методы авторизации
     login,
     register,
     logout,
     refreshToken,
-    
+
     // Методы управления пользователем
     updateUser,
     changePassword,
     resetPassword,
-    
+
     // Проверки
     hasRole,
     hasPermission,
     isSubscriptionActive,
     getSubscriptionDaysLeft,
-    
+
     // Утилиты
     clearAuthData,
-    checkAuthStatus
+    checkAuthStatus,
   };
 };
 

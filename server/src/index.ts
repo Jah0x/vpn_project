@@ -1,4 +1,4 @@
-import { app } from './server';
+import { app } from "./server";
 
 const PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 4000;
 
