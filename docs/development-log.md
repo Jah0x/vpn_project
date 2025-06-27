@@ -81,3 +81,6 @@
 ## 2025-07-12
 - Перенесён `index.html` в корень проекта для корректной работы `vite build`.
 - Обновлён `tailwind.config.js` (указан путь `./index.html`).
+
+## 2025-07-13
+- Исправлена конфигурация docker-compose: backend теперь собирается из каталога ./server. Ошибка "server/Dockerfile/Dockerfile" больше не возникает.
