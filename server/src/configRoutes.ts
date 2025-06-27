@@ -6,6 +6,7 @@ import { Role } from "./types";
 import { prisma } from "./lib/prisma";
 import { logAction } from "./middleware/audit";
 import { AuditAction } from "./types";
+import { User } from "@prisma/client";
 
 const subscriptions: Record<string, { status: string }> = {};
 let configTemplate: any = { v: "2" };
@@ -59,7 +60,7 @@ router.post("/stripe/webhook", (req, res) => {
   const { type, data } = req.body as { type: string; data: any };
   if (type === "checkout.session.completed") {
     const userId = data.userId as string;
-    prisma.user.findUnique({ where: { id: userId } }).then((user) => {
+    prisma.user.findUnique({ where: { id: userId } }).then((user: User | null) => {
       if (!user) return;
       subscriptions[userId] = { status: "active" };
       const cfg = JSON.parse(

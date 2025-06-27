@@ -1,12 +1,13 @@
 import { prisma } from "../lib/prisma";
 import { retrySubPushQueue, pushSubscription } from "../lib/subPush";
+import { SubPushQueue } from "@prisma/client";
 
 async function main() {
   const cmd = process.argv[2];
   if (cmd === "list") {
     const q = await prisma.subPushQueue.findMany();
     console.table(
-      q.map((r) => ({
+      q.map((r: SubPushQueue) => ({
         id: r.id,
         uuid: r.uuid,
         tries: r.tries,
