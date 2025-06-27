@@ -1,43 +1,42 @@
-import React, { useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import React, { useEffect, useRef } from "react";
 
-const Modal = ({ 
-  isOpen, 
-  onClose, 
-  title, 
-  children, 
-  size = 'md', 
+const Modal = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+  size = "md",
   closable = true,
   overlay = true,
   animation = true,
-  className = ''
+  className = "",
 }) => {
   const modalRef = useRef(null);
 
   const sizeClasses = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl',
-    full: 'max-w-full mx-4'
+    sm: "max-w-md",
+    md: "max-w-lg",
+    lg: "max-w-2xl",
+    xl: "max-w-4xl",
+    full: "max-w-full mx-4",
   };
 
   // Закрытие по Escape
   useEffect(() => {
     const handleEscape = (e) => {
-      if (e.key === 'Escape' && isOpen && closable) {
+      if (e.key === "Escape" && isOpen && closable) {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose, closable]);
 
@@ -58,9 +57,9 @@ const Modal = ({
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${
-        animation ? 'animate-fadeIn' : ''
+        animation ? "animate-fadeIn" : ""
       }`}
       onClick={handleOverlayClick}
     >
@@ -68,7 +67,7 @@ const Modal = ({
       {overlay && (
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       )}
-      
+
       {/* Modal Content */}
       <div
         ref={modalRef}
@@ -77,7 +76,7 @@ const Modal = ({
           relative w-full ${sizeClasses[size]} max-h-[90vh] 
           bg-gray-800 border border-gray-700 rounded-xl shadow-2xl
           flex flex-col overflow-hidden
-          ${animation ? 'animate-slideIn' : ''}
+          ${animation ? "animate-slideIn" : ""}
           ${className}
         `}
       >
@@ -85,9 +84,7 @@ const Modal = ({
         {(title || closable) && (
           <div className="flex items-center justify-between p-6 border-b border-gray-700">
             {title && (
-              <h2 className="text-xl font-semibold text-white">
-                {title}
-              </h2>
+              <h2 className="text-xl font-semibold text-white">{title}</h2>
             )}
             {closable && (
               <button
@@ -102,24 +99,22 @@ const Modal = ({
         )}
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto">
-          {children}
-        </div>
+        <div className="flex-1 overflow-y-auto">{children}</div>
       </div>
     </div>
   );
 };
 
 // Компонент для тела модального окна
-export const ModalBody = ({ children, className = '' }) => (
-  <div className={`p-6 ${className}`}>
-    {children}
-  </div>
+export const ModalBody = ({ children, className = "" }) => (
+  <div className={`p-6 ${className}`}>{children}</div>
 );
 
 // Компонент для подвала модального окна
-export const ModalFooter = ({ children, className = '' }) => (
-  <div className={`flex items-center justify-end space-x-3 p-6 border-t border-gray-700 ${className}`}>
+export const ModalFooter = ({ children, className = "" }) => (
+  <div
+    className={`flex items-center justify-end space-x-3 p-6 border-t border-gray-700 ${className}`}
+  >
     {children}
   </div>
 );
@@ -136,7 +131,7 @@ export const useModal = () => {
     isOpen,
     openModal,
     closeModal,
-    toggleModal
+    toggleModal,
   };
 };
 

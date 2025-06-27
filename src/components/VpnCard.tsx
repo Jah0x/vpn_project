@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { RotateCcw } from 'lucide-react';
-import VpnStatusBadge from './VpnStatusBadge';
-import { Vpn, VpnStatus } from '../types/vpn';
-import Card from './ui/Card';
-import Button from './ui/Button';
-import { useTranslation } from 'react-i18next';
+import React, { useState } from "react";
+import { RotateCcw } from "lucide-react";
+import VpnStatusBadge from "./VpnStatusBadge";
+import { Vpn, VpnStatus } from "../types/vpn";
+import Card from "./ui/Card";
+import Button from "./ui/Button";
+import { useTranslation } from "react-i18next";
 
 interface VpnCardProps {
   vpn: Vpn;
@@ -12,19 +12,19 @@ interface VpnCardProps {
 }
 
 const VpnCard: React.FC<VpnCardProps> = ({ vpn, jwt }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const [status, setStatus] = useState<VpnStatus>(vpn.status);
   const [loading, setLoading] = useState(false);
 
   const handleRestart = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/vpn/restart/' + vpn.id, {
-        method: 'POST',
-        headers: { Authorization: 'Bearer ' + jwt }
+      const res = await fetch("/api/vpn/restart/" + vpn.id, {
+        method: "POST",
+        headers: { Authorization: "Bearer " + jwt },
       });
       if (res.ok) {
-        setStatus('pending');
+        setStatus("pending");
       }
     } finally {
       setLoading(false);
@@ -41,7 +41,7 @@ const VpnCard: React.FC<VpnCardProps> = ({ vpn, jwt }) => {
       </div>
       <Button onClick={handleRestart} isLoading={loading} className="gap-1">
         <RotateCcw className="w-4 h-4" />
-        {t('button.restart')}
+        {t("button.restart")}
       </Button>
     </Card>
   );

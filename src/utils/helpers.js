@@ -1,44 +1,48 @@
-import { VALIDATION_PATTERNS, SUBSCRIPTION_PLANS, SERVER_LOCATIONS } from './constants';
+import {
+  VALIDATION_PATTERNS,
+  SUBSCRIPTION_PLANS,
+  SERVER_LOCATIONS,
+} from "./constants";
 
 // Утилиты для работы с датами
 export const DateUtils = {
   // Форматирование даты для отображения
-  formatDate(date, locale = 'ru-RU', options = {}) {
+  formatDate(date, locale = "ru-RU", options = {}) {
     const defaultOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      ...options
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      ...options,
     };
     return new Date(date).toLocaleDateString(locale, defaultOptions);
   },
 
   // Форматирование даты и времени
-  formatDateTime(date, locale = 'ru-RU') {
+  formatDateTime(date, locale = "ru-RU") {
     return new Date(date).toLocaleString(locale, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   },
 
   // Относительное время (например, "2 часа назад")
-  timeAgo(date, locale = 'ru-RU') {
+  timeAgo(date, locale = "ru-RU") {
     const now = new Date();
     const diffInSeconds = Math.floor((now - new Date(date)) / 1000);
-    
+
     const intervals = {
       year: 31536000,
       month: 2592000,
       week: 604800,
       day: 86400,
       hour: 3600,
-      minute: 60
+      minute: 60,
     };
 
-    const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+    const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
 
     for (const [unit, seconds] of Object.entries(intervals)) {
       const interval = Math.floor(diffInSeconds / seconds);
@@ -47,7 +51,7 @@ export const DateUtils = {
       }
     }
 
-    return rtf.format(-diffInSeconds, 'second');
+    return rtf.format(-diffInSeconds, "second");
   },
 
   // Добавление дней к дате
@@ -68,38 +72,38 @@ export const DateUtils = {
     const expiry = new Date(date);
     const diffTime = expiry - now;
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  }
+  },
 };
 
 // Утилиты для форматирования
 export const FormatUtils = {
   // Форматирование цены
-  formatPrice(amount, currency = 'RUB', locale = 'ru-RU') {
+  formatPrice(amount, currency = "RUB", locale = "ru-RU") {
     return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currency
+      style: "currency",
+      currency: currency,
     }).format(amount);
   },
 
   // Форматирование чисел
-  formatNumber(number, locale = 'ru-RU') {
+  formatNumber(number, locale = "ru-RU") {
     return new Intl.NumberFormat(locale).format(number);
   },
 
   // Форматирование размера файла
   formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    
+    if (bytes === 0) return "0 Bytes";
+
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   },
 
   // Форматирование скорости
   formatSpeed(bitsPerSecond) {
-    const units = ['bps', 'Kbps', 'Mbps', 'Gbps'];
+    const units = ["bps", "Kbps", "Mbps", "Gbps"];
     let unitIndex = 0;
     let speed = bitsPerSecond;
 
@@ -118,25 +122,29 @@ export const FormatUtils = {
     const remainingSeconds = seconds % 60;
 
     if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
     } else {
-      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+      return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
     }
   },
 
   // Маскирование email
   maskEmail(email) {
-    const [name, domain] = email.split('@');
-    const maskedName = name.length > 2 
-      ? name[0] + '*'.repeat(name.length - 2) + name[name.length - 1]
-      : name;
+    const [name, domain] = email.split("@");
+    const maskedName =
+      name.length > 2
+        ? name[0] + "*".repeat(name.length - 2) + name[name.length - 1]
+        : name;
     return `${maskedName}@${domain}`;
   },
 
   // Маскирование телефона
   maskPhone(phone) {
-    return phone.replace(/(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/, '$1***$2***$4$5');
-  }
+    return phone.replace(
+      /(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/,
+      "$1***$2***$4$5",
+    );
+  },
 };
 
 // Утилиты для валидации
@@ -154,38 +162,38 @@ export const ValidationUtils = {
   // Валидация пароля
   validatePassword(password) {
     const errors = [];
-    
+
     if (password.length < 8) {
-      errors.push('Пароль должен содержать минимум 8 символов');
+      errors.push("Пароль должен содержать минимум 8 символов");
     }
-    
+
     if (!/[a-z]/.test(password)) {
-      errors.push('Пароль должен содержать строчные буквы');
+      errors.push("Пароль должен содержать строчные буквы");
     }
-    
+
     if (!/[A-Z]/.test(password)) {
-      errors.push('Пароль должен содержать заглавные буквы');
+      errors.push("Пароль должен содержать заглавные буквы");
     }
-    
+
     if (!/\d/.test(password)) {
-      errors.push('Пароль должен содержать цифры');
+      errors.push("Пароль должен содержать цифры");
     }
-    
+
     if (!/[@$!%*?&]/.test(password)) {
-      errors.push('Пароль должен содержать специальные символы');
+      errors.push("Пароль должен содержать специальные символы");
     }
 
     return {
       isValid: errors.length === 0,
       errors,
-      strength: this.getPasswordStrength(password)
+      strength: this.getPasswordStrength(password),
     };
   },
 
   // Определение силы пароля
   getPasswordStrength(password) {
     let score = 0;
-    
+
     if (password.length >= 8) score++;
     if (password.length >= 12) score++;
     if (/[a-z]/.test(password)) score++;
@@ -194,42 +202,44 @@ export const ValidationUtils = {
     if (/[@$!%*?&]/.test(password)) score++;
     if (password.length >= 16) score++;
 
-    if (score <= 2) return 'weak';
-    if (score <= 4) return 'medium';
-    return 'strong';
+    if (score <= 2) return "weak";
+    if (score <= 4) return "medium";
+    return "strong";
   },
 
   // Валидация имени пользователя
   isValidUsername(username) {
     return VALIDATION_PATTERNS.USERNAME.test(username);
-  }
+  },
 };
 
 // Утилиты для работы с цветами
 export const ColorUtils = {
   // Генерация случайного цвета
   randomColor() {
-    return `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
   },
 
   // Конвертация HEX в RGB
   hexToRgb(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
   },
 
   // Определение контрастности цвета
   getContrastColor(hex) {
     const rgb = this.hexToRgb(hex);
-    if (!rgb) return '#000000';
-    
+    if (!rgb) return "#000000";
+
     const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-    return brightness > 128 ? '#000000' : '#FFFFFF';
-  }
+    return brightness > 128 ? "#000000" : "#FFFFFF";
+  },
 };
 
 // Утилиты для работы с URL
@@ -263,7 +273,7 @@ export const UrlUtils = {
     } catch (_) {
       return false;
     }
-  }
+  },
 };
 
 // Утилиты для работы с массивами
@@ -284,7 +294,7 @@ export const ArrayUtils = {
   unique(array, key = null) {
     if (key) {
       const seen = new Set();
-      return array.filter(item => {
+      return array.filter((item) => {
         const value = item[key];
         if (seen.has(value)) {
           return false;
@@ -316,7 +326,7 @@ export const ArrayUtils = {
       chunks.push(array.slice(i, i + size));
     }
     return chunks;
-  }
+  },
 };
 
 // Утилиты для работы с объектами
@@ -329,9 +339,9 @@ export const ObjectUtils = {
   // Глубокое слияние объектов
   deepMerge(target, source) {
     const output = { ...target };
-    
+
     if (this.isObject(target) && this.isObject(source)) {
-      Object.keys(source).forEach(key => {
+      Object.keys(source).forEach((key) => {
         if (this.isObject(source[key])) {
           if (!(key in target)) {
             Object.assign(output, { [key]: source[key] });
@@ -343,29 +353,29 @@ export const ObjectUtils = {
         }
       });
     }
-    
+
     return output;
   },
 
   // Проверка на объект
   isObject(item) {
-    return item && typeof item === 'object' && !Array.isArray(item);
+    return item && typeof item === "object" && !Array.isArray(item);
   },
 
   // Получение вложенного значения
   get(obj, path, defaultValue = undefined) {
-    const keys = path.split('.');
+    const keys = path.split(".");
     let result = obj;
-    
+
     for (const key of keys) {
-      if (result == null || typeof result !== 'object') {
+      if (result == null || typeof result !== "object") {
         return defaultValue;
       }
       result = result[key];
     }
-    
+
     return result !== undefined ? result : defaultValue;
-  }
+  },
 };
 
 // Утилиты для работы со строками
@@ -377,31 +387,34 @@ export const StringUtils = {
 
   // Преобразование в camelCase
   toCamelCase(str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => {
-      return index === 0 ? word.toLowerCase() : word.toUpperCase();
-    }).replace(/\s+/g, '');
+    return str
+      .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => {
+        return index === 0 ? word.toLowerCase() : word.toUpperCase();
+      })
+      .replace(/\s+/g, "");
   },
 
   // Преобразование в kebab-case
   toKebabCase(str) {
-    return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+    return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, "$1-$2").toLowerCase();
   },
 
   // Усечение строки
-  truncate(str, length, suffix = '...') {
+  truncate(str, length, suffix = "...") {
     if (str.length <= length) return str;
     return str.substring(0, length) + suffix;
   },
 
   // Генерация случайной строки
   randomString(length = 10) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
     for (let i = 0; i < length; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
-  }
+  },
 };
 
 // Утилиты для работы с подписками
@@ -413,7 +426,9 @@ export const SubscriptionUtils = {
 
   // Расчет скидки
   calculateDiscount(originalPrice, discountedPrice) {
-    return Math.round(((originalPrice - discountedPrice) / originalPrice) * 100);
+    return Math.round(
+      ((originalPrice - discountedPrice) / originalPrice) * 100,
+    );
   },
 
   // Расчет стоимости в месяц
@@ -426,14 +441,17 @@ export const SubscriptionUtils = {
   // Проверка активности подписки
   isActive(subscription) {
     if (!subscription) return false;
-    return subscription.status === 'active' && new Date(subscription.expiresAt) > new Date();
+    return (
+      subscription.status === "active" &&
+      new Date(subscription.expiresAt) > new Date()
+    );
   },
 
   // Дни до истечения подписки
   getDaysUntilExpiry(subscription) {
     if (!subscription || !subscription.expiresAt) return 0;
     return DateUtils.daysUntilExpiry(subscription.expiresAt);
-  }
+  },
 };
 
 // Утилиты для работы с серверами
@@ -445,7 +463,7 @@ export const ServerUtils = {
 
   // Группировка серверов по регионам
   groupByRegion(servers) {
-    return ArrayUtils.groupBy(servers, 'region');
+    return ArrayUtils.groupBy(servers, "region");
   },
 
   // Сортировка серверов по пингу
@@ -455,8 +473,8 @@ export const ServerUtils = {
 
   // Фильтрация онлайн серверов
   getOnlineServers(servers) {
-    return servers.filter(server => server.status === 'online');
-  }
+    return servers.filter((server) => server.status === "online");
+  },
 };
 
 // Утилиты для работы с localStorage
@@ -467,7 +485,7 @@ export const StorageUtils = {
       localStorage.setItem(key, JSON.stringify(value));
       return true;
     } catch (error) {
-      console.error('Ошибка сохранения в localStorage:', error);
+      console.error("Ошибка сохранения в localStorage:", error);
       return false;
     }
   },
@@ -478,7 +496,7 @@ export const StorageUtils = {
       const item = localStorage.getItem(key);
       return item ? JSON.parse(item) : defaultValue;
     } catch (error) {
-      console.error('Ошибка чтения из localStorage:', error);
+      console.error("Ошибка чтения из localStorage:", error);
       return defaultValue;
     }
   },
@@ -489,7 +507,7 @@ export const StorageUtils = {
       localStorage.removeItem(key);
       return true;
     } catch (error) {
-      console.error('Ошибка удаления из localStorage:', error);
+      console.error("Ошибка удаления из localStorage:", error);
       return false;
     }
   },
@@ -500,10 +518,10 @@ export const StorageUtils = {
       localStorage.clear();
       return true;
     } catch (error) {
-      console.error('Ошибка очистки localStorage:', error);
+      console.error("Ошибка очистки localStorage:", error);
       return false;
     }
-  }
+  },
 };
 
 // Экспорт всех утилит
@@ -518,5 +536,5 @@ export default {
   StringUtils,
   SubscriptionUtils,
   ServerUtils,
-  StorageUtils
+  StorageUtils,
 };

@@ -1,1 +1,1 @@
-export * from './vpn';
+export * from "./vpn";
