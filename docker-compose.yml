@@ -16,7 +16,7 @@ services:
       retries: 5
 
   backend:
-    build: ./server
+    build: server/Dockerfile
     environment:
       DATABASE_URL: postgres://vpn:vpn@postgres:5432/vpn
       JWT_SECRET: change_this_default_secret_at_least_32_chars!
@@ -27,7 +27,7 @@ services:
       - '4000:4000'
 
   frontend:
-    build: ./src
+    build: src/Dockerfile
     ports:
       - '5173:80'
     depends_on:
