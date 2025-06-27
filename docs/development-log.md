@@ -97,3 +97,7 @@
 - Исправлена конфигурация: контекст сборки backend снова указывает на корень проекта,
   Dockerfile задаётся как `server/Dockerfile`.
 - Теперь `docker compose build` выполняется без ошибок копирования `package.json`.
+
+## 2025-07-17
+- Исправлен `src/Dockerfile`: шаг копирования `package.json` не падaет при отсутствии `package-lock.json`.
+- `docker-compose build frontend` теперь проходит без ошибок.
