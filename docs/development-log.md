@@ -113,3 +113,5 @@
 - Исправлена ошибка "URI malformed" при сборке Vite: удалены placeholder `%PUBLIC_URL%` в `index.html`.
 - Установлены плагины `@tailwindcss/forms` и `@tailwindcss/typography` для корректной сборки.
 
+## 2025-07-21
+- Добавлен шаблон `crm/index.html` для отдельной CRM версии фронтенда.
