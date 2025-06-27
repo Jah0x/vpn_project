@@ -17,8 +17,8 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: server/Dockerfile
+      context: ./server
+      dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgres://vpn:vpn@postgres:5432/vpn
       JWT_SECRET: ${JWT_SECRET}   # пусть берёт из .env

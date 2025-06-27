@@ -88,3 +88,7 @@
 ## 2025-07-14
 - Обновлён Dockerfile сервера: удалена зависимость от package-lock.json, используется `npm install --production`.
 - docker-compose снова собирает backend из корня проекта (`context: .`). Ошибка пути больше не проявляется.
+
+## 2025-07-15
+- При попытке сборки обнаружилось повторное возникновение ошибки `server/Dockerfile/Dockerfile`.
+- Контекст сборки backend снова задан как `./server`, Dockerfile указан явно (`Dockerfile`).
