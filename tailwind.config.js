@@ -93,8 +93,13 @@ module.exports = {
         "9xl": ["8rem", { lineHeight: "1" }],
       },
 
-      // Кастомные отступы
+      // Кастомные отступы (8pt scale)
       spacing: {
+        4: "1rem", // 16px
+        8: "2rem", // 32px
+        16: "4rem", // 64px
+        24: "6rem", // 96px
+        32: "8rem", // 128px
         18: "4.5rem",
         88: "22rem",
         128: "32rem",
