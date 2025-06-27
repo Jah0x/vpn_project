@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install
 COPY server ./server
+COPY prisma ./prisma
 RUN npm run build:server
 RUN npm prune --production
 
