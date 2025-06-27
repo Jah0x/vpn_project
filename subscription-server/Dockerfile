@@ -1,7 +1,7 @@
 FROM node:18-alpine AS build
 WORKDIR /app
-COPY package.json package-lock.json* ./
-RUN npm ci --prod
+COPY package.json ./
+RUN npm install --production
 COPY tsconfig.json ./tsconfig.json
 COPY src ./src
 RUN npx tsc

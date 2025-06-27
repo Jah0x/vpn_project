@@ -101,3 +101,7 @@
 ## 2025-07-17
 - Исправлен `src/Dockerfile`: шаг копирования `package.json` не падaет при отсутствии `package-lock.json`.
 - `docker-compose build frontend` теперь проходит без ошибок.
+
+## 2025-07-18
+- Скорректированы Dockerfile'ы `src` и `subscription-server`: вместо `npm ci` теперь используется `npm install`.
+- Файл `package-lock.json` по-прежнему не хранится в репозитории, сборка образов проходит без ошибок.
