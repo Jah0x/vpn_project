@@ -13,6 +13,8 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.263.1",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.2",
     "pino": "^8.17.0",
     "pino-http": "^9.0.0",
     "pino-pretty": "^10.3.0",
@@ -72,7 +74,10 @@
     "prisma:migrate": "prisma migrate dev --name init",
     "seed": "prisma db seed",
     "storybook": "storybook dev -p 6006",
-    "test:e2e": "cypress run"
+    "test:e2e": "cypress run",
+    "sub:queue:list": "ts-node server/src/cli/subQueue.ts list",
+    "sub:queue:retry": "ts-node server/src/cli/subQueue.ts retry",
+    "sub:queue:flush": "ts-node server/src/cli/subQueue.ts flush"
   },
   "eslintConfig": {
     "extends": [

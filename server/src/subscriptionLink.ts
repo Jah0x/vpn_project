@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { authenticateJWT, authorizeRoles, AuthenticatedRequest } from './auth';
 import { prisma } from './lib/prisma';
-import { Role } from './types';
+import { Role, AuditAction } from './types';
+import { logAction } from './middleware/audit';
 
 const router = Router();
 
@@ -41,6 +42,7 @@ router.put(
       update: { urlTemplate },
       create: { id: 1, urlTemplate },
     });
+    await logAction(AuditAction.TEMPLATE_EDIT, req.user!.id, { template: 'subscription-link' });
     res.json({ urlTemplate: tmpl.urlTemplate });
   }
 );

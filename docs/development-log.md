@@ -62,3 +62,5 @@
 - Введены middleware security (helmet с CSP, глобальный rate-limit).
 - Обновлены Swagger и TECH_SPEC.
 
+## 2025-07-08
+- Реализован аудит действий, secure push подписок и новые метрики.

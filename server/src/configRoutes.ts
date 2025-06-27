@@ -4,6 +4,8 @@ import path from 'path';
 import { authenticateJWT, authorizeRoles, AuthenticatedRequest } from './auth';
 import { Role } from './types';
 import { prisma } from './lib/prisma';
+import { logAction } from './middleware/audit';
+import { AuditAction } from './types';
 
 const subscriptions: Record<string, { status: string }> = {};
 let configTemplate: any = { v: '2' };
@@ -41,13 +43,14 @@ router.put(
   '/admin/config-template',
   authenticateJWT,
   authorizeRoles(Role.ADMIN),
-  (req, res) => {
+  (req: AuthenticatedRequest, res) => {
     if (typeof req.body !== 'object' || Array.isArray(req.body)) {
       return res.status(400).json({ error: 'Invalid JSON' });
     }
     Object.assign(configTemplate, req.body);
     const p = path.join(__dirname, '../config-template.json');
     fs.writeFileSync(p, JSON.stringify(configTemplate, null, 2));
+    logAction(AuditAction.TEMPLATE_EDIT, req.user!.id, {});
     res.json(configTemplate);
   }
 );

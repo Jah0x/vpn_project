@@ -4,6 +4,8 @@ import crypto from 'crypto';
 import { authenticateJWT, signAccessToken, signRefreshToken, verifyRefreshToken } from './auth';
 import { prisma } from './lib/prisma';
 import { Role } from './types';
+import { logAction } from './middleware/audit';
+import { AuditAction } from './types';
 
 const router = Router();
 
@@ -28,10 +30,12 @@ router.post('/login', async (req, res) => {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
   const payload = { id: user.id, role: user.role as Role };
-  return res.json({
+  const tokens = {
     access: signAccessToken(payload),
     refresh: signRefreshToken(payload),
-  });
+  };
+  await logAction(AuditAction.LOGIN, user.id, {});
+  return res.json(tokens);
 });
 
 router.post('/refresh', (req, res) => {

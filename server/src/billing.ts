@@ -3,6 +3,10 @@ import Stripe from 'stripe';
 import express from 'express';
 import { authenticateJWT, AuthenticatedRequest } from './auth';
 import { prisma } from './lib/prisma';
+import { stripeWebhookTotal } from './metrics';
+import { logAction } from './middleware/audit';
+import { AuditAction } from './types';
+import { pushSubscription } from './lib/subPush';
 
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
@@ -74,6 +78,7 @@ router.post(
       }
     }
 
+    stripeWebhookTotal.inc({ event: event.type });
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
@@ -90,7 +95,12 @@ router.post(
               maxActiveVpns,
             },
           });
+          const user = await prisma.user.findUnique({ where: { id: userId } });
+          if (user) {
+            await pushSubscription(user.uuid, `sub://${user.uuid}`);
+          }
         }
+        await logAction(AuditAction.SUBSCRIPTION_STATUS, userId, { status: 'active', planId });
         break;
       }
       case 'invoice.payment_failed': {
@@ -99,6 +109,7 @@ router.post(
           where: { stripeSubId: invoice.subscription as string },
           data: { status: 'past_due' },
         });
+        await logAction(AuditAction.SUBSCRIPTION_STATUS, undefined, { status: 'past_due' });
         break;
       }
       case 'customer.subscription.deleted': {
@@ -107,6 +118,7 @@ router.post(
           where: { stripeSubId: sub.id },
           data: { status: 'canceled' },
         });
+        await logAction(AuditAction.SUBSCRIPTION_STATUS, undefined, { status: 'canceled' });
         break;
       }
       default:

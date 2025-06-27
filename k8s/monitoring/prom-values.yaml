@@ -1,10 +1,19 @@
 alertmanager:
   alertmanagerSpec:
     route:
-      receiver: slack
+      group_by: ['alertname']
+      receiver: telegram
       routes:
-        - receiver: slack
-        - receiver: telegram
+        - matchers:
+            - severity="critical"
+          receiver: slack
+          continue: true
+        - matchers:
+            - severity="critical"
+          receiver: telegram
+        - matchers:
+            - severity="warning"
+          receiver: telegram
     receivers:
       - name: slack
         slack_configs:
@@ -12,8 +21,8 @@ alertmanager:
             webhook_url: "${SLACK_WEBHOOK}"
       - name: telegram
         telegram_configs:
-          - bot_token: "${TELEGRAM_BOT_TOKEN}"
-            chat_id: "${CHAT_ID}"
+          - bot_token: "${TG_BOT_TOKEN}"
+            chat_id: "${TG_CHAT_ID}"
             send_resolved: true
 prometheus:
   prometheusSpec:

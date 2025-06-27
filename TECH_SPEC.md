@@ -13,9 +13,15 @@
 
 Файл шаблона конфигурации VPN хранится в таблице `ConfigTemplate` (см. Prisma schema) и дублируется на диске `server/config-template.json`. Админ может получить и изменить шаблон через `/api/admin/config-template`. После оплаты подписки веб‑хук Stripe создаёт пользовательский конфиг в `configs/<userId>.json`, подставляя `uuid` пользователя вместо `{{USER_UUID}}`.
 
+## Audit logging
+Все действия пользователей (логин, операции с VPN, изменение шаблонов и события оплаты) сохраняются в таблицу `AuditLog`. Маршрут `/api/admin/audit` позволяет просматривать журнал с фильтрами по пользователю и типу действия. Записи можно удалить через `DELETE /api/admin/audit/{id}`.
+
 ## Observability
 - Все HTTP запросы считаются и измеряются через Prometheus middleware. Метрики доступны без авторизации по `/metrics`.
 - Alertmanager настроен на Slack и Telegram, правило `HighErrorRate` срабатывает при доле 5xx >5% в течение 5 минут.
+- Дополнительно собираются `db_query_duration_seconds`, `stripe_webhook_total` и `audit_logs_total`.
+- Правила Prometheus описаны в `k8s/monitoring/alerts.yaml`.
+- Алерты с `severity: critical` отправляются в Slack и Telegram, `warning` — только в Telegram.
 
 ## Security hardening
 - `helmet` со строгой Content-Security-Policy (`default-src 'self'; img-src 'self' data:; script-src 'self'; object-src 'none'`), `crossOriginEmbedderPolicy: false`.
@@ -41,6 +47,10 @@
 Пользователь может получить итоговый URL через `/api/subscription-url`, если его подписка активна.
 Маркер `{{UUID}}` заменяется на `uuid` пользователя.
 Администратор управляет шаблоном через `/api/admin/subscription-template`.
+
+### Subscription push protocol
+После успешной оплаты бэкенд отправляет запрос на `subscription-server` с подписью HMAC (заголовок `X-Signature`). При ошибке запись попадает в очередь `SubPushQueue`, которая повторно отправляется крон-задачей каждые 5 минут. Управление очередью через CLI:
+`npm run sub:queue:list`, `sub:queue:retry`, `sub:queue:flush`.
 
 ## OpenAPI & Swagger
 

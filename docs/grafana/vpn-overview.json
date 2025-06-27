@@ -40,6 +40,23 @@
           "legendFormat": "active"
         }
       ]
+    },
+    {
+      "title": "Audit logs/мин",
+      "type": "graph",
+      "targets": [
+        { "expr": "rate(audit_logs_total[1m])", "legendFormat": "logs" }
+      ]
+    },
+    {
+      "title": "Stripe webhooks/мин",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "sum(rate(stripe_webhook_total[1m])) by (event)",
+          "legendFormat": "{{event}}"
+        }
+      ]
     }
   ]
 }

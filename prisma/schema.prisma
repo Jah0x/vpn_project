@@ -20,6 +20,7 @@ model User {
   role         Role     @default(USER)
   Vpn          Vpn[]
   Subscription Subscription?
+  AuditLog     AuditLog[]
 }
 
 model Vpn {
@@ -65,4 +66,32 @@ model SubscriptionLinkTemplate {
   id          Int      @id @default(1)
   urlTemplate String
   updatedAt   DateTime @updatedAt
+}
+
+enum AuditAction {
+  LOGIN
+  LOGOUT
+  VPN_CREATE
+  VPN_DELETE
+  VPN_RESTART
+  TEMPLATE_EDIT
+  SUBSCRIPTION_STATUS
+}
+
+model AuditLog {
+  id        String      @id @default(cuid())
+  userId    String?
+  action    AuditAction
+  payload   Json
+  createdAt DateTime     @default(now())
+  user      User?        @relation(fields: [userId], references: [id])
+}
+
+model SubPushQueue {
+  id          String   @id @default(cuid())
+  uuid        String   @unique
+  subString   String
+  tries       Int      @default(0)
+  lastError   String?
+  nextRetryAt DateTime?
 }
