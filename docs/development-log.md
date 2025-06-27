@@ -108,3 +108,8 @@
 
 ## 2025-07-19
 - Обновлен Dockerfile сервера: для компиляции устанавливаются dev-зависимости, затем выполняется `npm prune --production`. Сборка проходит без ошибок типов.
+
+## 2025-07-20
+- Исправлена ошибка "URI malformed" при сборке Vite: удалены placeholder `%PUBLIC_URL%` в `index.html`.
+- Установлены плагины `@tailwindcss/forms` и `@tailwindcss/typography` для корректной сборки.
+
