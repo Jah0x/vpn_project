@@ -92,3 +92,8 @@
 ## 2025-07-15
 - При попытке сборки обнаружилось повторное возникновение ошибки `server/Dockerfile/Dockerfile`.
 - Контекст сборки backend снова задан как `./server`, Dockerfile указан явно (`Dockerfile`).
+
+## 2025-07-16
+- Исправлена конфигурация: контекст сборки backend снова указывает на корень проекта,
+  Dockerfile задаётся как `server/Dockerfile`.
+- Теперь `docker compose build` выполняется без ошибок копирования `package.json`.
