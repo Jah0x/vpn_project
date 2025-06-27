@@ -11,6 +11,9 @@ import authRouter from './authRoutes';
 import configRouter from './configRoutes';
 import billingRouter from './billing';
 import subscriptionLinkRouter from './subscriptionLink';
+import auditRouter from './auditRoutes';
+import cron from 'node-cron';
+import { retrySubPushQueue } from './lib/subPush';
 
 export const app = express();
 
@@ -39,3 +42,8 @@ app.use('/api/vpn', vpnRouter);
 app.use('/api', configRouter);
 app.use('/api/billing', billingRouter);
 app.use('/api', subscriptionLinkRouter);
+app.use('/api', auditRouter);
+
+cron.schedule('*/5 * * * *', () => {
+  retrySubPushQueue().catch(err => console.error('subPush retry error', err));
+});

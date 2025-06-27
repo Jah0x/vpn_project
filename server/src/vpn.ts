@@ -8,9 +8,11 @@ import {
   AuthenticatedRequest
 } from './auth';
 import { Role, VpnStatus } from './types';
+import { AuditAction } from './types';
 import { prisma } from './lib/prisma';
 import { enforceVpnLimit } from './enforceVpnLimit';
 import { VpnCreate, VpnUpdate } from './validators';
+import { logAction } from './middleware/audit';
 
 const router = Router();
 
@@ -34,6 +36,7 @@ router.post(
     }
     const { name } = parse.data;
     const vpn = await prisma.vpn.create({ data: { ownerId: req.user!.id, name } });
+    await logAction(AuditAction.VPN_CREATE, req.user!.id, { vpnId: vpn.id });
     res.status(201).json(vpn);
   }
 );
@@ -50,6 +53,7 @@ router.patch('/:id', authenticateJWT, ownerOrAdmin, async (req: AuthenticatedReq
 
 router.delete('/:id', authenticateJWT, ownerOrAdmin, async (req: AuthenticatedRequest, res) => {
   const removed = await prisma.vpn.delete({ where: { id: req.params.id } });
+  await logAction(AuditAction.VPN_DELETE, req.user!.id, { vpnId: req.params.id });
   res.json(removed);
 });
 
@@ -63,6 +67,7 @@ router.post('/restart/:id', authenticateJWT, async (req: AuthenticatedRequest, r
 
   const job = await prisma.job.create({ data: { vpnId, type: 'restart', status: 'PENDING' } });
   await prisma.vpn.update({ where: { id: vpnId }, data: { status: VpnStatus.PENDING } });
+  await logAction(AuditAction.VPN_RESTART, req.user!.id, { vpnId });
   const script = path.join(__dirname, '../scripts/restart.sh');
 
   execFile(script, [vpnId], async err => {
