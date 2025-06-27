@@ -2,9 +2,10 @@ FROM node:18-alpine AS build
 # TODO: configure log rotation via external agent (e.g., Vector/Fluent-bit)
 WORKDIR /app
 COPY package.json ./
-RUN npm install --production
+RUN npm install
 COPY server ./server
 RUN npm run build:server
+RUN npm prune --production
 
 FROM node:18-alpine
 WORKDIR /app
