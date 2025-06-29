@@ -9,9 +9,12 @@ import { AuditAction } from "./types";
 import { pushSubscription } from "./lib/subPush";
 
 const router = Router();
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-05-28.basil",
-});
+const stripe = new Stripe(
+  process.env.STRIPE_SECRET_KEY || "sk_test_dummy",
+  {
+    apiVersion: "2025-05-28.basil",
+  },
+);
 
 const priceMap: Record<string, string | undefined> = {
   basic: process.env.STRIPE_PRICE_BASIC,

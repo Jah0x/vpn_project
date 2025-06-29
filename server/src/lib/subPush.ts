@@ -37,9 +37,10 @@ export async function pushSubscription(uuid: string, subString: string) {
 }
 
 export async function retrySubPushQueue() {
-  const records = await prisma.subPushQueue.findMany({
-    where: { tries: { lt: 5 }, nextRetryAt: { lte: new Date() } },
-  });
+  const records =
+    (await prisma.subPushQueue.findMany({
+      where: { tries: { lt: 5 }, nextRetryAt: { lte: new Date() } },
+    })) || [];
   for (const r of records) {
     try {
       await pushSubscription(r.uuid, r.subString);

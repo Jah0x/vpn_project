@@ -18,7 +18,7 @@ beforeEach(() => {
 
 test("logAction writes entry", async () => {
   await logAction(AuditAction.LOGIN, "u1", { ip: "127.0.0.1" });
-  const logs = await prisma.auditLog.findMany();
-  expect(logs.length).toBe(1);
-  expect(logs[0].action).toBe("LOGIN");
+  expect(prisma.auditLog.create).toHaveBeenCalledWith({
+    data: { action: "LOGIN", userId: "u1", payload: { ip: "127.0.0.1" } },
+  });
 });

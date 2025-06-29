@@ -19,7 +19,7 @@ beforeEach(() => {
 
 describe("Swagger UI", () => {
   it("returns HTML", async () => {
-    const res = await request(app).get("/api/docs");
+    const res = await request(app).get("/api/docs/");
     expect(res.status).toBe(200);
     expect(res.text).toContain("<html");
   });
