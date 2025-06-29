@@ -137,3 +137,6 @@
 - Обновлён `DATABASE_URL` в `.env.example` для соответствия `docker-compose`.
 - Запуск контейнера `frontend` проверяем командой `docker compose up -d frontend`.
 
+
+## 2025-07-29
+- Добавлена общая документация `docs/code-overview.md` с описанием серверных модулей и сервисов.
