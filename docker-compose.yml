@@ -34,8 +34,10 @@ services:
       dockerfile: src/Dockerfile
     depends_on:
       - backend
+    # Слушаем 80-й порт контейнера прямо на 80-м порту хоста,
+    # чтобы домен открывался без указания порта.
     ports:
-      - "5173:80"
+      - "80:80"
 
 volumes:
   postgres-data:
