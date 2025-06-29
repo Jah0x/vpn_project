@@ -6,21 +6,18 @@ services:
     image: traefik:v3.0
     restart: unless-stopped
     command:
+      - "--providers.file.filename=/dynamic/traefik_dynamic.yml"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.le.acme.email=${LE_EMAIL}"
-      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
-      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
-      - "--log.level=INFO"
     ports:
       - "80:80"
       - "443:443"
     volumes:
+      - "./certs:/certs:ro"                       # ← наши .pem
+      - "./traefik_dynamic.yml:/dynamic/traefik_dynamic.yml:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "le_data:/letsencrypt"
 
 # ──────────────────────────── application ───────────────────────────────
   postgres:
