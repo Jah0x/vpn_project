@@ -21,6 +21,6 @@ test("retry job reduces queue", async () => {
     data: { id: "q1", uuid: "u1", subString: "s1" },
   });
   await retrySubPushQueue();
-  const count = await prisma.subPushQueue.count();
-  expect(count).toBe(0);
+  const records = (await prisma.subPushQueue.findMany()) || [];
+  expect(records.length).toBe(0);
 });
