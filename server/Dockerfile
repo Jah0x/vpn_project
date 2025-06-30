@@ -21,6 +21,7 @@ RUN apt-get update -y \
 
 WORKDIR /app
 COPY --from=build /app .
+RUN mv server/dist ./dist
 
 ENV NODE_ENV=production
 EXPOSE 4000
