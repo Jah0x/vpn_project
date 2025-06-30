@@ -39,8 +39,9 @@
      docker compose logs backend 2>&1 | tee logs/backend_migrate_$(date +%F).log
      ```
 8. **Docker Compose проверка статики**
-   - После сборки контейнеров убедитесь в правильном MIME-типе JS:
-     ```bash
-     curl -sI http://localhost/static/js/main.js | grep -q "Content-Type: application/javascript"
-     ```
-   - Сообщения о `libssl` и `host not found` в логах считаем ошибкой.
+  - После сборки контейнеров убедитесь в правильном MIME-типе JS:
+    ```bash
+    curl -sI http://localhost/static/js/main.js | grep -q "Content-Type: application/javascript"
+    ```
+  - Сообщения о `libssl` и `host not found` в логах считаем ошибкой.
+  - В логах backend ищем строку `Server listening on` для подтверждения успешного запуска.
