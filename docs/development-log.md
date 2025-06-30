@@ -235,3 +235,9 @@
 - Исправлены Dockerfile и docker-compose для корректной сборки на Debian 11.
 - Добавлен .dockerignore в каталог server.
 - Workflow CI проверяет MIME типы статики и отсутствие ошибок libssl/libhost.
+
+## 2025-08-19
+- Исправлены пути сборки backend и env-файл в docker-compose.
+- Dockerfile сервера копирует исходники из корня.
+- В CI добавлена проверка docker-test.
+

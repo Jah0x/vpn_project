@@ -71,3 +71,13 @@ jobs:
           docker logs backend | grep -qi "libssl" && exit 1
           docker logs nginx   | grep -q "host not found" && exit 1
           docker compose down
+
+  docker-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose build --no-cache
+      - run: docker compose up -d
+      - run: curl -sI http://localhost/static/js/main.js | grep -q "Content-Type: application/javascript"
+      - run: docker logs nginx   | (! grep -q "host not found")
+      - run: docker logs backend | (! grep -qi "libssl")
