@@ -1,24 +1,28 @@
+###########################  build stage  ###########################
 FROM node:18-alpine AS build
-# TODO: configure log rotation via external agent (e.g., Vector/Fluent-bit)
 WORKDIR /app
 
-# Install dependencies with pnpm
-COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm && pnpm install
+# 1) ДО установки node-модулей тянем совместимость OpenSSL 1.1
+RUN apk add --no-cache libssl1.1-compat              # <-- главное отличие
 
-# Application sources
+# 2) PNPM + deps
+COPY package.json pnpm-lock.yaml ./
+RUN npm i -g pnpm && pnpm install
+
+# 3) исходники + Prisma
 COPY server ./server
 COPY prisma ./prisma
-
-# Generate Prisma client before compiling
 RUN npx prisma generate
 RUN pnpm run build:server
-
-# Remove dev dependencies
 RUN pnpm prune --prod
 
+###########################  runtime stage  ###########################
 FROM node:18-alpine
 WORKDIR /app
+
+# 4) runtime-образу тоже нужен libssl1.1
+RUN apk add --no-cache libssl1.1-compat              # <-- ещё раз
+
 COPY --from=build /app/server/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/prisma ./prisma
