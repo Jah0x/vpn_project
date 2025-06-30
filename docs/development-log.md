@@ -241,3 +241,5 @@
 - Dockerfile сервера копирует исходники из корня.
 - В CI добавлена проверка docker-test.
 
+## 2025-08-20
+- Исправлен upstream Nginx: сервис frontend теперь указывается по имени из docker-compose.
