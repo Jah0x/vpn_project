@@ -263,3 +263,9 @@
 ## 2025-08-24
 - Исправлен healthcheck Postgres в `docker-compose.yml`: теперь используется `pg_isready -U $POSTGRES_USER -d postgres` и заданы переменные `POSTGRES_USER`/`POSTGRES_PASSWORD`.
 - Обновлён `.env.example` и CI, добавлена проверка здоровья Postgres.
+
+## 2025-08-25
+- Исправлен healthcheck backend и обновлена команда запуска в docker-compose.
+- Добавлен маршрут `GET /` в Express для проверки контейнера.
+- Сгенерирована миграция Prisma с таблицей `SubPushQueue`.
+
