@@ -65,6 +65,11 @@ jobs:
           docker compose build --no-cache
           docker compose up -d
 
+      - name: Check services start
+        run: |
+          docker logs backend | grep -q "Server listening"
+          docker logs nginx   | grep -q "emerg" && exit 1
+
       - name: Check nginx logs for DNS errors
         run: docker logs nginx | grep -q "host not found" && exit 1
 
