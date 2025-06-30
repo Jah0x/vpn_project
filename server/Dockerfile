@@ -8,6 +8,7 @@ RUN npm i -g pnpm && pnpm install
 
 COPY server ./server
 COPY prisma ./prisma
+COPY openapi.yaml ./
 RUN npx prisma generate
 RUN pnpm run build:server
 RUN pnpm prune --prod
