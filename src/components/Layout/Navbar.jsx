@@ -1,14 +1,14 @@
 import React from 'react';
-import { 
-  Mail, 
-  MessageCircle, 
-  Shield, 
-  Globe, 
+import {
+  Mail,
+  MessageCircle,
+  Shield,
+  Globe,
   Github,
   Twitter,
-  Telegram,
   Heart
 } from 'lucide-react';
+import { SiTelegram } from 'react-icons/si';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -41,29 +41,29 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { 
-      name: 'Telegram', 
-      href: 'https://t.me/yourvpn', 
-      icon: Telegram,
-      color: 'hover:text-blue-400' 
-    },
-    { 
-      name: 'Twitter', 
-      href: 'https://twitter.com/yourvpn', 
+    {
+      name: 'Twitter',
+      href: 'https://twitter.com/yourvpn',
       icon: Twitter,
-      color: 'hover:text-blue-400' 
+      color: 'hover:text-blue-400'
     },
-    { 
-      name: 'GitHub', 
-      href: 'https://github.com/yourvpn', 
+    {
+      name: 'GitHub',
+      href: 'https://github.com/yourvpn',
       icon: Github,
-      color: 'hover:text-gray-300' 
+      color: 'hover:text-gray-300'
     },
-    { 
-      name: 'Email', 
-      href: 'mailto:support@yourvpn.com', 
+    {
+      name: 'Email',
+      href: 'mailto:support@yourvpn.com',
       icon: Mail,
-      color: 'hover:text-green-400' 
+      color: 'hover:text-green-400'
+    },
+    {
+      name: 'Telegram',
+      href: 'https://t.me/yourvpn',
+      icon: SiTelegram,
+      color: 'hover:text-blue-400'
     }
   ];
 
