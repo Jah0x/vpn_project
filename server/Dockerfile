@@ -8,7 +8,7 @@ RUN npm i -g pnpm && pnpm install
 # исходники
 COPY server ./server
 COPY prisma ./prisma
-COPY server/openapi.yaml ./openapi.yaml    # ← добавили
+COPY server/openapi.yaml ./openapi.yaml    
 
 RUN npx prisma generate
 RUN pnpm run build:server
@@ -22,7 +22,7 @@ WORKDIR /app
 COPY --from=build /app/server/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/prisma ./prisma
-COPY --from=build /app/openapi.yaml ./openapi.yaml   # ← добавили
+COPY --from=build /app/openapi.yaml ./openapi.yaml   
 
 EXPOSE 4000
 CMD ["node", "dist/index.js"]
