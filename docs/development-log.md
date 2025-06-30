@@ -195,3 +195,7 @@
   добавлено кэширование каталога `/static`, скрыт заголовок `Server` и
   включён `X-Content-Type-Options: nosniff`.
 
+
+## 2025-06-30
+- Исправлен `index.html`: добавлен `<script type="module" src="/src/index.js"></script>` для корректной загрузки React-приложения.
+
