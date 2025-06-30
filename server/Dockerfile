@@ -1,6 +1,7 @@
 #################### build stage ####################
 FROM node:18-slim AS build
 WORKDIR /app
+RUN apt-get update -y && apt-get install -y libssl1.1
 
 COPY package.json pnpm-lock.yaml ./
 RUN npm i -g pnpm && pnpm install
@@ -10,12 +11,13 @@ COPY server ./server
 COPY prisma ./prisma
 COPY server/openapi.yaml ./openapi.yaml    
 
-RUN npx prisma generate
+RUN pnpm prisma generate
 RUN pnpm run build:server
 RUN pnpm prune --prod
 
 ################### runtime stage ###################
 FROM node:18-slim
+RUN apt-get update -y && apt-get install -y libssl1.1
 WORKDIR /app
 
 # бинарники + модуль
