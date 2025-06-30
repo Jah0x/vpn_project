@@ -5,10 +5,10 @@
 ## Подготовка
 
 1. Убедитесь, что сервер использует Ubuntu 22.04+ и имеет права `sudo`.
-2. Выполните скрипт `scripts/setup_zerologsvpn.sh`:
+2. Выполните скрипт `scripts/install.sh`:
 
 ```bash
-sudo bash scripts/setup_zerologsvpn.sh
+sudo bash scripts/install.sh
 ```
 
 Скрипт выполнит:
