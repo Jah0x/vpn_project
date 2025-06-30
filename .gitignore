@@ -7,3 +7,4 @@ subscription-server/subs.db
 subscription-server/node_modules/
 subscription-server/*.db-journal
 logs/
+dist/

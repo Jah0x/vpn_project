@@ -216,3 +216,6 @@
 - Заменена иконка Telegram на `SiTelegram` из `react-icons`.
 - Пакет `react-icons` установлен через `pnpm add`.
 - Ошибка сборки о недостающем экспорте Telegram исчезла, но Vite сообщает о проблеме с `useAuth`.
+
+## 2025-08-15
+- Реализованы `AuthContext` и `ToastContext` с экспортом `useAuth` и `useToast`. Исправлена сборка Vite.
