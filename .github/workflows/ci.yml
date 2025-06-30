@@ -65,6 +65,9 @@ jobs:
           docker compose build --no-cache
           docker compose up -d
 
+      - name: Check nginx logs for DNS errors
+        run: docker logs nginx | grep -q "host not found" && exit 1
+
       - name: Integration checks
         run: |
           curl -sI http://localhost/static/js/main.js | grep -q "Content-Type: application/javascript"
