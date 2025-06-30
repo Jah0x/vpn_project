@@ -197,5 +197,9 @@
 
 
 ## 2025-06-30
-- Исправлен `index.html`: добавлен `<script type="module" src="/src/index.js"></script>` для корректной загрузки React-приложения.
+- Исправлен `index.html`: добавлен `<script type="module" src="/src/index.jsx"></script>` для корректной загрузки React-приложения.
+
+
+## 2025-08-11
+- Переименован главный файл в `src/index.jsx` и обновлён `index.html` для сборки Vite.
 
