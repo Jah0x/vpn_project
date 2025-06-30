@@ -174,3 +174,7 @@
 - В `docker-compose.yml` добавлена общая сеть `app`, все сервисы подключены к
   ней. Nginx зависит от backend и frontend.
 - Обновлён пример `.env` и документация.
+## 2025-08-06
+- Добавлен `server/package.json` с командой `build:server`.
+- Dockerfile сервера теперь использует `pnpm run build:server`.
+

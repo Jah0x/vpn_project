@@ -12,7 +12,7 @@ COPY prisma ./prisma
 
 # Generate Prisma client before compiling
 RUN npx prisma generate
-RUN pnpm run build
+RUN pnpm run build:server
 
 # Remove dev dependencies
 RUN pnpm prune --prod
