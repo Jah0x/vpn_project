@@ -65,6 +65,9 @@ jobs:
           docker compose build --no-cache
           docker compose up -d
 
+      - name: Check Postgres health
+        run: docker inspect -f '{{.State.Health.Status}}' postgres | grep healthy
+
       - name: Check services start
         run: |
           docker logs backend | grep -q "Server listening"
@@ -86,6 +89,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: docker compose build --no-cache
       - run: docker compose up -d
+      - run: docker inspect -f '{{.State.Health.Status}}' postgres | grep healthy
       - run: curl -sI http://localhost/static/js/main.js | grep -q "Content-Type: application/javascript"
       - run: docker logs nginx   | (! grep -q "host not found")
       - run: docker logs backend | (! grep -qi "libssl")

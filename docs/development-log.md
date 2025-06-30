@@ -259,3 +259,7 @@
 - Файл `docker-compose.yml` переведён на единый network `app`.
 - `.env.example` теперь содержит параметры PostgreSQL и корректный `DATABASE_URL`.
 - В документацию по логам добавлены рекомендации по ошибке `P1001` и уровню `emerg`.
+
+## 2025-08-24
+- Исправлен healthcheck Postgres в `docker-compose.yml`: теперь используется `pg_isready -U $POSTGRES_USER -d postgres` и заданы переменные `POSTGRES_USER`/`POSTGRES_PASSWORD`.
+- Обновлён `.env.example` и CI, добавлена проверка здоровья Postgres.
