@@ -225,3 +225,8 @@
 - Обновлены Dockerfile и compose: backend устанавливает libssl1.1, выполняет `pnpm prisma generate`, добавлен healthcheck.
 - Все сервисы переведены на сеть `vpn_project`.
 
+
+## 2025-08-17
+- Переведён backend Dockerfile на образ node:18-bullseye, libssl1.1 ставится на этапе runtime.
+- Обновлены конфигурации Nginx: корректные MIME-типы и SPA fallback.
+- docker-compose собирает backend из каталога ./server.
