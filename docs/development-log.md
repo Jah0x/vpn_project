@@ -163,3 +163,14 @@
 
 ## 2025-08-04
 - Перевели HTTP-порт сервиса с 80 на 8081 во всех конфигурациях Docker и Nginx.
+
+## 2025-08-05
+- Исправлены Dockerfile и docker-compose для корректного запуска командой
+  `docker compose up --build -d`.
+- Backend теперь копирует каталог `prisma`, выполняет `npx prisma generate` и
+  использует `pnpm` для сборки.
+- Frontend снова слушает порт 80, Nginx проксирует на него и отдаёт сертификат
+  Let\'s Encrypt из `./certs`.
+- В `docker-compose.yml` добавлена общая сеть `app`, все сервисы подключены к
+  ней. Nginx зависит от backend и frontend.
+- Обновлён пример `.env` и документация.

@@ -1,12 +1,21 @@
 FROM node:18-alpine AS build
 # TODO: configure log rotation via external agent (e.g., Vector/Fluent-bit)
 WORKDIR /app
-COPY package.json ./
-RUN npm install
+
+# Install dependencies with pnpm
+COPY package.json pnpm-lock.yaml ./
+RUN npm install -g pnpm && pnpm install
+
+# Application sources
 COPY server ./server
 COPY prisma ./prisma
-RUN npm run build:server
-RUN npm prune --production
+
+# Generate Prisma client before compiling
+RUN npx prisma generate
+RUN pnpm run build
+
+# Remove dev dependencies
+RUN pnpm prune --prod
 
 FROM node:18-alpine
 WORKDIR /app
