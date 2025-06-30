@@ -32,3 +32,9 @@
 
 Данные рекомендации помогут отслеживать проблемы и сохранять историю для дальнейшего анализа.
 - Перед компиляцией сервера запускайте `prisma generate` и сохраняйте вывод в лог `logs/prisma_generate_<date>.log`.
+7. **Миграции в контейнере**
+   - При запуске backend выполняется `npx prisma migrate deploy`.
+   - Вывод команды фиксируйте:
+     ```bash
+     docker compose logs backend 2>&1 | tee logs/backend_migrate_$(date +%F).log
+     ```
