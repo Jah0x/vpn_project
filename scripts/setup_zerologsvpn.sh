@@ -53,11 +53,11 @@ http {
     }
 
     upstream frontend {
-        server frontend:80;
+        server frontend:8081;
     }
 
     server {
-        listen 80;
+        listen 8081;
         server_name $DOMAIN;
         return 301 https://$host$request_uri;
     }
