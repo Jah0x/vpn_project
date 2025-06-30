@@ -230,3 +230,8 @@
 - Переведён backend Dockerfile на образ node:18-bullseye, libssl1.1 ставится на этапе runtime.
 - Обновлены конфигурации Nginx: корректные MIME-типы и SPA fallback.
 - docker-compose собирает backend из каталога ./server.
+
+## 2025-08-18
+- Исправлены Dockerfile и docker-compose для корректной сборки на Debian 11.
+- Добавлен .dockerignore в каталог server.
+- Workflow CI проверяет MIME типы статики и отсутствие ошибок libssl/libhost.

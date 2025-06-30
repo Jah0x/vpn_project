@@ -59,3 +59,15 @@ jobs:
 
       - name: Test
         run: npm test
+
+      - name: Build and run Docker Compose
+        run: |
+          docker compose build --no-cache
+          docker compose up -d
+
+      - name: Integration checks
+        run: |
+          curl -sI http://localhost/static/js/main.js | grep -q "Content-Type: application/javascript"
+          docker logs backend | grep -qi "libssl" && exit 1
+          docker logs nginx   | grep -q "host not found" && exit 1
+          docker compose down
