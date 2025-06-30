@@ -243,3 +243,8 @@
 
 ## 2025-08-20
 - Исправлен upstream Nginx: сервис frontend теперь указывается по имени из docker-compose.
+## 2025-08-21
+- Исправлена ошибка `host not found in upstream 'frontend:80'`.
+- Сервис nginx и frontend подключены к единой сети `app` в docker-compose.
+- В конфигурацию nginx добавлена строка `resolver 127.0.0.11 valid=30s;`.
+- В CI добавлена отдельная проверка логов nginx сразу после запуска контейнеров.
