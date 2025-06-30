@@ -9,8 +9,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    depends_on: [backend, frontend]
-    networks: [app]
+    depends_on: [backend]
+    networks: [vpn_project]
 
 # ──────────────────────────── application ───────────────────────────────
   postgres:
@@ -26,7 +26,7 @@ services:
       interval: 5s
       retries: 5
       start_period: 10s
-    networks: [app]
+    networks: [vpn_project]
 
   backend:
     build:
@@ -39,7 +39,12 @@ services:
     command: >
       sh -c "npx prisma migrate deploy &&
              node dist/index.js"
-    networks: [app]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+    networks: [vpn_project]
 
   frontend:
     build:
@@ -49,10 +54,10 @@ services:
     depends_on:
       backend:
         condition: service_started
-    networks: [app]
+    networks: [vpn_project]
 
 volumes:
   postgres-data:
 
 networks:
-  app:
+  vpn_project:

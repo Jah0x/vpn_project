@@ -219,3 +219,9 @@
 
 ## 2025-08-15
 - Реализованы `AuthContext` и `ToastContext` с экспортом `useAuth` и `useToast`. Исправлена сборка Vite.
+
+## 2025-08-16
+- Исправлена отдача статики: nginx теперь использует mime.types и fallback index.html.
+- Обновлены Dockerfile и compose: backend устанавливает libssl1.1, выполняет `pnpm prisma generate`, добавлен healthcheck.
+- Все сервисы переведены на сеть `vpn_project`.
+
