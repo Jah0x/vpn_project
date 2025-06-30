@@ -16,4 +16,4 @@ spec:
         - name: vpn-frontend
           image: ghcr.io/jah0x/vpn-frontend:latest
           ports:
-            - containerPort: 80
+            - containerPort: 8081
