@@ -178,3 +178,7 @@
 - Добавлен `server/package.json` с командой `build:server`.
 - Dockerfile сервера теперь использует `pnpm run build:server`.
 
+
+## 2025-08-07
+- Исправлен Dockerfile сервера: на этапе runtime копируется каталог `prisma` для корректной работы `npx prisma`.
+
