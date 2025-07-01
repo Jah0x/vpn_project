@@ -44,6 +44,8 @@
     curl -sI http://localhost/static/js/main.js | grep -q "Content-Type: application/javascript"
     ```
   - Сообщения о `libssl` и `host not found` в логах считаем ошибкой.
+  - При ошибке `host not found in upstream` сверяйте имя сервиса в `nginx.conf` с
+    названием контейнера в `docker-compose` или Kubernetes.
   - В логах backend ищем строку `Server listening on` для подтверждения успешного запуска.
   - Ошибка `P1001` в логах означает недоступность PostgreSQL и требует проверки сети и переменных окружения.
   - В логах `nginx` наличие уровня `emerg` (`grep -i "emerg"`) считается критичной ошибкой.
