@@ -6,10 +6,11 @@ const prisma = new PrismaClient();
 
 await prisma.user.create({
   data: {
-    email: "admin@example.com",
+    email: "admin@zerologsvpn.com",
     passwordHash: bcrypt.hashSync("admin123", 10),
     uuid: crypto.randomUUID(),
     role: "ADMIN",
+    nickname: "admin",
   },
 });
 
