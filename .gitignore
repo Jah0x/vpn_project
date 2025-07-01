@@ -1,6 +1,6 @@
 node_modules/
 server/dist/
-package-lock.json
+# package-lock.json теперь отслеживается для воспроизводимых сборок
 .env
 configs/
 subscription-server/subs.db
