@@ -20,3 +20,10 @@
 docker compose up -d --build
 npm run seed
 ```
+
+## Сборка
+
+```bash
+npm ci            # устанавливает зависимости (axios теперь в prod)
+npm run build     # vite build без ошибок
+```
