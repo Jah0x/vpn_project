@@ -275,3 +275,6 @@
 
 ## 2025-08-27
 - Обновлён nginx.conf: сервисы переименованы в vpn-api и vpn-frontend, ошибка `host not found in upstream` устранена.
+
+## 2025-08-28
+- Исправлена конфигурация nginx: актуальный upstream backend:4000, удалён дублирующий `default_type` во фронтенд-Nginx.
