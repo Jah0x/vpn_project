@@ -19,7 +19,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import LoadingSpinner from '../Common/LoadingSpinner';
-import AuthService from '../../services/AuthService';
+import { validateEmail, validatePassword } from '../../utils/validators';
 
 const SettingsPage = () => {
   const { user, updateUser, logout } = useAuth();
@@ -74,7 +74,7 @@ const SettingsPage = () => {
         throw new Error('Имя не может быть пустым');
       }
       
-      if (!AuthService.validateEmail(profileData.email)) {
+      if (!validateEmail(profileData.email)) {
         throw new Error('Некорректный email');
       }
 
@@ -103,7 +103,7 @@ const SettingsPage = () => {
         throw new Error('Пароли не совпадают');
       }
 
-      const passwordValidation = AuthService.validatePassword(passwordData.newPassword);
+      const passwordValidation = validatePassword(passwordData.newPassword);
       if (!passwordValidation.isValid) {
         throw new Error(passwordValidation.errors[0]);
       }

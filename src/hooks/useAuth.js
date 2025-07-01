@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import AuthService from "../services/AuthService";
+import * as authApi from "../services/auth";
 import { AUTH_CONFIG } from "../utils/constants";
 import { StorageUtils } from "../utils/helpers";
 
@@ -26,7 +26,7 @@ export const useAuth = () => {
       }
 
       // Проверяем валидность токена
-      const userData = await AuthService.verifyToken(token);
+      const userData = await authApi.verifyToken(token);
 
       if (userData) {
         setUser(userData);
@@ -48,7 +48,7 @@ export const useAuth = () => {
       setIsLoading(true);
       setError(null);
 
-      const response = await AuthService.login(email, password);
+      const response = await authApi.login(email, password);
 
       if (response.success) {
         const { user: userData, token, refreshToken } = response.data;
@@ -83,7 +83,7 @@ export const useAuth = () => {
       setIsLoading(true);
       setError(null);
 
-      const response = await AuthService.register(userData);
+      const response = await authApi.register(userData.email, userData.password);
 
       if (response.success) {
         return { success: true, message: "Регистрация успешна" };
@@ -107,7 +107,7 @@ export const useAuth = () => {
       const token = StorageUtils.getItem(AUTH_CONFIG.TOKEN_KEY);
 
       if (token) {
-        await AuthService.logout(token);
+        await authApi.logout(token);
       }
     } catch (error) {
       console.error("Ошибка при выходе:", error);
@@ -127,7 +127,7 @@ export const useAuth = () => {
         throw new Error("Refresh token не найден");
       }
 
-      const response = await AuthService.refreshToken(refreshTokenValue);
+      const response = await authApi.refreshToken(refreshTokenValue);
 
       if (response.success) {
         const { token, user: userData } = response.data;
@@ -163,7 +163,7 @@ export const useAuth = () => {
     try {
       setError(null);
 
-      const response = await AuthService.changePassword(
+      const response = await authApi.changePassword(
         currentPassword,
         newPassword,
       );
@@ -185,7 +185,7 @@ export const useAuth = () => {
     try {
       setError(null);
 
-      const response = await AuthService.resetPassword(email);
+      const response = await authApi.resetPassword(email);
 
       if (response.success) {
         return { success: true, message: "Инструкции отправлены на email" };

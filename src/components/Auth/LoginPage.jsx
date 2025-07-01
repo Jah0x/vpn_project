@@ -3,7 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { Eye, EyeOff, Mail, User, Lock, Zap, Shield, Globe } from 'lucide-react';
 import LoadingSpinner from '../Common/LoadingSpinner';
-import AuthService from '../../services/AuthService';
+import { validateNickname, validateEmail, validatePassword } from '../../utils/validators';
 
 const LoginPage = () => {
   const { login, register, telegramAuth } = useAuth();
@@ -56,7 +56,7 @@ const LoginPage = () => {
     } else {
       if (!formData.nickname.trim()) {
         newErrors.nickname = 'Введите nickname';
-      } else if (!AuthService.validateNickname(formData.nickname)) {
+      } else if (!validateNickname(formData.nickname)) {
         newErrors.nickname = 'Nickname должен содержать 3-50 символов (буквы, цифры, _)';
       }
 
@@ -66,7 +66,7 @@ const LoginPage = () => {
 
       if (!formData.email.trim()) {
         newErrors.email = 'Введите email';
-      } else if (!AuthService.validateEmail(formData.email)) {
+      } else if (!validateEmail(formData.email)) {
         newErrors.email = 'Введите корректный email';
       }
 
@@ -78,7 +78,7 @@ const LoginPage = () => {
     if (!formData.password.trim()) {
       newErrors.password = 'Введите пароль';
     } else if (!isLogin) {
-      const passwordValidation = AuthService.validatePassword(formData.password);
+      const passwordValidation = validatePassword(formData.password);
       if (!passwordValidation.isValid) {
         newErrors.password = passwordValidation.errors[0];
       }
@@ -449,14 +449,14 @@ const TelegramAdditionalDataForm = ({ onSubmit, onCancel, loading }) => {
 
     if (!formData.email.trim()) {
       newErrors.email = 'Введите email';
-    } else if (!AuthService.validateEmail(formData.email)) {
+    } else if (!validateEmail(formData.email)) {
       newErrors.email = 'Введите корректный email';
     }
 
     if (!formData.password.trim()) {
       newErrors.password = 'Введите пароль';
     } else {
-      const passwordValidation = AuthService.validatePassword(formData.password);
+      const passwordValidation = validatePassword(formData.password);
       if (!passwordValidation.isValid) {
         newErrors.password = passwordValidation.errors[0];
       }

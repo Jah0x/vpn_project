@@ -86,6 +86,7 @@
     "seed": "prisma db seed",
     "storybook": "storybook dev -p 6006",
     "test:e2e": "cypress run",
+    "ci:test": "cypress run --browser chrome --headless",
     "sub:queue:list": "ts-node server/src/cli/subQueue.ts list",
     "sub:queue:retry": "ts-node server/src/cli/subQueue.ts retry",
     "sub:queue:flush": "ts-node server/src/cli/subQueue.ts flush"
