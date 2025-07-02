@@ -8,8 +8,24 @@ router.post("/register", async (req, res) => {
   const { email, password } = req.body as { email: string; password: string };
   try {
     const tokens = await userService.register(email, password);
-    res.send(tokens);
+    res.status(201).json(tokens);
   } catch (err: any) {
+    if (err.message === "NO_UID_AVAILABLE") {
+      return res.status(503).json({ error: "NO_UID_AVAILABLE" });
+    }
+    res.status(400).json({ error: err.message });
+  }
+});
+
+router.post("/telegram", async (req, res) => {
+  const { telegramId } = req.body as { telegramId: string };
+  try {
+    const tokens = await userService.loginTelegram(telegramId);
+    res.status(200).json(tokens);
+  } catch (err: any) {
+    if (err.message === "NO_UID_AVAILABLE") {
+      return res.status(503).json({ error: "NO_UID_AVAILABLE" });
+    }
     res.status(400).json({ error: err.message });
   }
 });
