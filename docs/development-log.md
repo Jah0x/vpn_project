@@ -291,3 +291,8 @@
 - Старый компонент из `contexts/AuthContext.jsx` перенесён в `components/Common/Modal.jsx`.
 - Формы входа и регистрации теперь используют контекст и выполняют редирект после успешной авторизации.
 
+
+## 2025-09-02
+- Исправлен `AuthContext` с корректным `AuthProvider` и хуком `useAuth`.
+- `src/index.jsx` гарантированно оборачивает `<App/>` в `AuthProvider`.
+- Сценарий `prisma/seed.ts` обёрнут в `async main()` с `disconnect`.
