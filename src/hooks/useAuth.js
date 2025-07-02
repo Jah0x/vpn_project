@@ -57,12 +57,21 @@ export const useAuth = () => {
       setError(null);
 
       const response = await authApi.login(email, password);
-      const { access_token, refresh_token, user: userData } = response.data || {};
+      const {
+        access_token,
+        refresh_token,
+        access,
+        refresh,
+        user: userData,
+      } = response.data || {};
 
-      if (access_token) {
-        StorageUtils.setItem(AUTH_CONFIG.TOKEN_KEY, access_token);
-        if (refresh_token) {
-          StorageUtils.setItem(AUTH_CONFIG.REFRESH_TOKEN_KEY, refresh_token);
+      const accessToken = access_token || access;
+      const refreshTokenValue = refresh_token || refresh;
+
+      if (accessToken) {
+        StorageUtils.setItem(AUTH_CONFIG.TOKEN_KEY, accessToken);
+        if (refreshTokenValue) {
+          StorageUtils.setItem(AUTH_CONFIG.REFRESH_TOKEN_KEY, refreshTokenValue);
         }
         if (userData) {
           StorageUtils.setItem(AUTH_CONFIG.USER_KEY, userData);
@@ -70,7 +79,7 @@ export const useAuth = () => {
         }
         setIsAuthenticated(true);
 
-        const payload = parseJwt(access_token);
+        const payload = parseJwt(accessToken);
         if (payload?.exp) {
           if (payload.exp * 1000 <= Date.now()) {
             clearAuthData();

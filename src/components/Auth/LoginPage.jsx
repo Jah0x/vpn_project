@@ -100,13 +100,22 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
+      let result;
       if (isLogin) {
-        await login(formData.login, formData.password);
+        result = await login(formData.login, formData.password);
       } else {
-        await register(formData.email, formData.password);
+        result = await register(formData.email, formData.password);
       }
-      navigate('/dashboard');
-      showToast(isLogin ? 'Добро пожаловать!' : 'Регистрация успешна!', 'success');
+
+      if (result?.success) {
+        navigate('/dashboard');
+        showToast(
+          isLogin ? 'Добро пожаловать!' : 'Регистрация успешна!',
+          'success',
+        );
+      } else if (result?.error) {
+        showToast(result.error, 'error');
+      }
     } catch (error) {
       showToast(error.message || 'Произошла ошибка', 'error');
     } finally {
