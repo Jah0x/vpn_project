@@ -99,10 +99,7 @@ const LoginPage = () => {
 
     try {
       if (isLogin) {
-        await login({
-          login: formData.login,
-          password: formData.password
-        });
+        await login(formData.login, formData.password);
         showToast('Добро пожаловать!', 'success');
       } else {
         await register({
