@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 describe("ConfigTemplatePage", () => {
   it("renders textarea for admin", async () => {
     jest.doMock("../../hooks/useAuth", () => ({
-      useAuth: () => ({ user: { role: "admin" } }),
+      useAuth: () => ({ user: { role: "ADMIN" } }),
     }));
     const { default: Page } = await import("../Admin/ConfigTemplatePage");
     render(<Page />);

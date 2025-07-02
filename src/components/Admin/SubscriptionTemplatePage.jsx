@@ -8,7 +8,7 @@ const SubscriptionTemplatePage = () => {
   const [value, setValue] = useState('');
 
   useEffect(() => {
-    if (user?.role === 'admin') {
+    if (user?.role === 'ADMIN') {
       fetch('/api/admin/subscription-template')
         .then(r => r.json())
         .then(data => setValue(data.urlTemplate));
@@ -28,7 +28,7 @@ const SubscriptionTemplatePage = () => {
     showToast('Сохранено', 'success');
   };
 
-  if (user?.role !== 'admin') {
+  if (user?.role !== 'ADMIN') {
     return <div className="p-4 text-red-500">403 Forbidden</div>;
   }
 

@@ -45,7 +45,7 @@ const AdminPanel = () => {
   ];
 
   useEffect(() => {
-    if (user?.role !== 'admin') {
+    if (user?.role !== 'ADMIN') {
       showToast('Доступ запрещен', 'error');
       return;
     }
@@ -390,7 +390,7 @@ const AdminPanel = () => {
     </div>
   );
 
-  if (user?.role !== 'admin') {
+  if (user?.role !== 'ADMIN') {
     return (
       <div className="min-h-screen bg-gray-900 pt-16 flex items-center justify-center">
         <div className="text-center">
