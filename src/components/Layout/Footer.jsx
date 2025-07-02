@@ -90,33 +90,7 @@ const Footer = () => {
       {/* Основной контент футера */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
-          {/* Логотип и описание */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <Shield className="w-8 h-8 text-blue-500" />
-              <span className="text-xl font-bold text-white">VPN Service</span>
-            </div>
-            <p className="text-gray-400 mb-6 max-w-md">
-              Защитите свою конфиденциальность и получите доступ к интернету без ограничений 
-              с нашим надежным VPN-сервисом.
-            </p>
-            
-            {/* Особенности */}
-            <div className="space-y-3">
-              {features.map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <div key={index} className="flex items-center space-x-3">
-                    <Icon className="w-5 h-5 text-blue-400 flex-shrink-0" />
-                    <div>
-                      <p className="text-white text-sm font-medium">{feature.title}</p>
-                      <p className="text-gray-400 text-xs">{feature.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+
 
           {/* Ссылки */}
           <div>
@@ -251,6 +225,32 @@ const Footer = () => {
               </select>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Маркетинговый блок */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-800">
+        <div className="flex items-center space-x-2 mb-4">
+          <Shield className="w-8 h-8 text-blue-500" />
+          <span className="text-xl font-bold text-white">VPN Service</span>
+        </div>
+        <p className="text-gray-400 mb-6 max-w-md">
+          Защитите свою конфиденциальность и получите доступ к интернету без ограничений
+          с нашим надежным VPN-сервисом.
+        </p>
+        <div className="space-y-3">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <div key={index} className="flex items-center space-x-3">
+                <Icon className="w-5 h-5 text-blue-400 flex-shrink-0" />
+                <div>
+                  <p className="text-white text-sm font-medium">{feature.title}</p>
+                  <p className="text-gray-400 text-xs">{feature.description}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </footer>
