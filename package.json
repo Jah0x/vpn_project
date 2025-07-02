@@ -85,6 +85,7 @@
     "build:server": "prisma generate && tsc -p server",
     "prisma:migrate": "prisma migrate dev --name init",
     "seed": "prisma db seed",
+    "seed:test": "ts-node server/src/cli/test-seed.ts",
     "storybook": "storybook dev -p 6006",
     "test:e2e": "cypress run",
     "ci:test": "cypress run --browser chrome --headless",
