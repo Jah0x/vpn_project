@@ -34,7 +34,7 @@ describe('UID pool registration', () => {
 
   it('registers with free uid', async () => {
     const tokens = await register('t@example.com', 'pass');
-    expect(tokens.access).toBeDefined();
+    expect(tokens.access_token).toBeDefined();
     expect(__stores.userStore[0].uuid).toBe('uid-1');
     expect(__stores.uidStore[0].isFree).toBe(false);
   });

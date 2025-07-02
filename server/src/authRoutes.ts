@@ -47,7 +47,7 @@ router.post("/refresh", (req, res) => {
   try {
     const payload = verifyRefreshToken(refresh);
     return res.json({
-      access: signAccessToken({ id: payload.id, role: payload.role }),
+      access_token: signAccessToken({ id: payload.id, role: payload.role }),
     });
   } catch {
     return res.status(401).json({ error: "Invalid token" });

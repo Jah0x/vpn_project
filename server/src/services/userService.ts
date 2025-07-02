@@ -12,8 +12,8 @@ export async function login(email: string, password: string) {
   }
   const payload = { id: user.id, role: user.role as Role };
   const tokens = {
-    access: signAccessToken(payload),
-    refresh: signRefreshToken(payload),
+    access_token: signAccessToken(payload),
+    refresh_token: signRefreshToken(payload),
   };
   await logAction(AuditAction.LOGIN, user.id, {});
   return tokens;
@@ -43,8 +43,8 @@ export async function register(email: string, password: string) {
 
   const payload = { id: user.id, role: user.role as Role };
   const tokens = {
-    access: signAccessToken(payload),
-    refresh: signRefreshToken(payload),
+    access_token: signAccessToken(payload),
+    refresh_token: signRefreshToken(payload),
   };
   await logAction(AuditAction.LOGIN, user.id, {});
   return tokens;
@@ -75,8 +75,8 @@ export async function loginTelegram(telegramId: string) {
 
   const payload = { id: user.id, role: user.role as Role };
   const tokens = {
-    access: signAccessToken(payload),
-    refresh: signRefreshToken(payload),
+    access_token: signAccessToken(payload),
+    refresh_token: signRefreshToken(payload),
   };
   await logAction(AuditAction.LOGIN, user.id, { method: 'telegram' });
   return tokens;

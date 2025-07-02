@@ -27,7 +27,7 @@ it.skip("register -> login -> create vpn", async () => {
     .post("/api/auth/login")
     .send({ email: "test@example.com", password: "pass" });
   expect(login.status).toBe(200);
-  const token = login.body.access as string;
+  const token = login.body.access_token as string;
 
   const res = await request(app)
     .post("/api/vpn")
