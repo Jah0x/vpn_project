@@ -26,6 +26,17 @@ async function main() {
       data: { isFree: false, assignedAt: new Date() },
     }),
   ]);
+
+  await prisma.plan.upsert({
+    where: { code: 'basic' },
+    update: {},
+    create: {
+      code: 'basic',
+      name: 'Базовый',
+      priceId: process.env.STRIPE_PRICE_BASIC!,
+      maxVpns: 1,
+    },
+  });
 }
 
 main()

@@ -40,6 +40,18 @@ npm run seed
 ```
 и тарифный план с id `pro` на этого пользователя.
 
+## Администрирование
+
+Тарифные планы можно управлять из админ‑панели:
+
+```bash
+docker compose up -d
+docker compose exec backend npx prisma migrate deploy
+docker compose exec backend npm run seed
+```
+
+Зайдите под учёткой `admin@zerologsvpn.com` / `admin123` и перейдите в пункт «Админка». API для работы с тарифами находится по пути `/api/admin/plans`.
+
 ## UID pool logic
 
 Для выдачи VPN-конфигов заранее создаётся пул UID в таблице `PreallocatedUid`.
