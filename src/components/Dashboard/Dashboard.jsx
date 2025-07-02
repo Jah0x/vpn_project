@@ -126,6 +126,13 @@ const Dashboard = () => {
           <p className="text-gray-400">
             Управляйте своим VPN подключением и отслеживайте статистику
           </p>
+          {user?.role === 'ADMIN' && (
+            <div className="mt-4">
+              <Button onClick={() => (window.location.href = '/admin')}>
+                Админ-панель
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Статус подписки */}

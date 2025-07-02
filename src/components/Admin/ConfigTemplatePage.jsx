@@ -8,7 +8,7 @@ const ConfigTemplatePage = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (user?.role === 'admin') {
+    if (user?.role === 'ADMIN') {
       fetch('/api/admin/config-template')
         .then(r => r.json())
         .then(data => setValue(JSON.stringify(data, null, 2)));
@@ -29,7 +29,7 @@ const ConfigTemplatePage = () => {
     }
   };
 
-  if (user?.role !== 'admin') {
+  if (user?.role !== 'ADMIN') {
     return <div className="p-4 text-red-500">403 Forbidden</div>;
   }
 

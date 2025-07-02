@@ -50,7 +50,7 @@ docker compose exec backend npx prisma migrate deploy
 docker compose exec backend npm run seed
 ```
 
-Зайдите под учёткой `admin@zerologsvpn.com` / `admin123` и перейдите в пункт «Админка». API для работы с тарифами находится по пути `/api/admin/plans`.
+Зайдите под учёткой `admin@zerologsvpn.com` / `admin123` и нажмите кнопку «Админка» (кнопка видна только при роли `ADMIN`). Она ведёт на страницу `/admin`, откуда доступна работа с тарифами по API `/api/admin/plans`.
 
 ## UID pool logic
 
