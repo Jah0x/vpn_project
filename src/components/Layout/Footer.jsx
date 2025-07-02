@@ -1,12 +1,12 @@
 import React from 'react';
-import { 
-  Mail, 
-  MessageCircle, 
-  Shield, 
-  Globe, 
+import {
+  Mail,
+  MessageCircle,
+  Shield,
+  Globe,
   Github,
   Twitter,
-  Telegram,
+  Send,
   Heart
 } from 'lucide-react';
 
@@ -41,11 +41,11 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { 
-      name: 'Telegram', 
-      href: 'https://t.me/yourvpn', 
-      icon: Telegram,
-      color: 'hover:text-blue-400' 
+    {
+      name: 'Telegram',
+      href: 'https://t.me/yourvpn',
+      icon: Send,
+      color: 'hover:text-blue-400'
     },
     { 
       name: 'Twitter', 
