@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, User, Lock, Zap, Shield, Globe } from 'lucide-react';
 import LoadingSpinner from '../Common/LoadingSpinner';
 import { validateNickname, validateEmail, validatePassword } from '../../utils/validators';
 
 const LoginPage = () => {
   const { login, register, telegramAuth } = useAuth();
+  const navigate = useNavigate();
   const { showToast } = useToast();
   
   const [isLogin, setIsLogin] = useState(true);
@@ -100,16 +102,11 @@ const LoginPage = () => {
     try {
       if (isLogin) {
         await login(formData.login, formData.password);
-        showToast('Добро пожаловать!', 'success');
       } else {
-        await register({
-          nickname: formData.nickname,
-          name: formData.name,
-          email: formData.email,
-          password: formData.password
-        });
-        showToast('Регистрация успешна!', 'success');
+        await register(formData.email, formData.password);
       }
+      navigate('/dashboard');
+      showToast(isLogin ? 'Добро пожаловать!' : 'Регистрация успешна!', 'success');
     } catch (error) {
       showToast(error.message || 'Произошла ошибка', 'error');
     } finally {
@@ -153,6 +150,7 @@ const LoginPage = () => {
 
       await telegramAuth(user, additionalData);
       showToast('Авторизация через Telegram успешна!', 'success');
+      navigate('/dashboard');
     } catch (error) {
       showToast(error.message || 'Ошибка авторизации', 'error');
     } finally {
