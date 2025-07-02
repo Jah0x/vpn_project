@@ -31,8 +31,7 @@
     "web-vitals": "^3.3.2",
     "yamljs": "^0.3.0",
     "zod": "^3.5.4",
-    "zod-to-openapi": "^0.2.1",
-    "axios": "^1.6.8"
+    "zod-to-openapi": "^0.2.1"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^9.0.8",
