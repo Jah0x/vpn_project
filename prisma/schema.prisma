@@ -107,3 +107,14 @@ model PreallocatedUid {
   user       User?     @relation(fields: [userId], references: [id])
   userId     String?   @unique
 }
+
+model Plan {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  name      String
+  priceId   String   @unique
+  maxVpns   Int
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

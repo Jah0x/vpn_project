@@ -10,6 +10,8 @@ import SettingsPage from './components/Settings/SettingsPage';
 import AdminPanel from './components/Admin/AdminPanel';
 import ConfigTemplatePage from './components/Admin/ConfigTemplatePage';
 import SubscriptionTemplatePage from './components/Admin/SubscriptionTemplatePage';
+import AdminLayout from './components/Admin/plans/AdminLayout';
+import AdminPlansPage from './components/Admin/plans/AdminPlansPage';
 import { useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
@@ -119,28 +121,15 @@ const AppContent = () => {
             path="/admin"
             element={
               <ProtectedRoute requireAdmin={true}>
-                <AdminPanel />
+                <AdminLayout />
               </ProtectedRoute>
             }
-          />
-
-          <Route
-            path="/admin/config"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <ConfigTemplatePage />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/admin/subscription-template"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <SubscriptionTemplatePage />
-              </ProtectedRoute>
-            }
-          />
+          >
+            <Route index element={<AdminPanel />} />
+            <Route path="plans" element={<AdminPlansPage />} />
+            <Route path="config" element={<ConfigTemplatePage />} />
+            <Route path="subscription-template" element={<SubscriptionTemplatePage />} />
+          </Route>
           
           {/* Редирект на главную */}
           <Route 

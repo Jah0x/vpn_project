@@ -12,6 +12,7 @@ import configRouter from "./configRoutes";
 import billingRouter from "./billing";
 import subscriptionLinkRouter from "./subscriptionLink";
 import auditRouter from "./auditRoutes";
+import adminPlansRouter from "./routes/admin/plans";
 import cron from "node-cron";
 import { retrySubPushQueue } from "./lib/subPush";
 
@@ -47,6 +48,7 @@ app.use("/api", configRouter);
 app.use("/api/billing", billingRouter);
 app.use("/api", subscriptionLinkRouter);
 app.use("/api", auditRouter);
+app.use("/api/admin/plans", adminPlansRouter);
 
 cron.schedule("*/5 * * * *", () => {
   retrySubPushQueue().catch((err) => console.error("subPush retry error", err));

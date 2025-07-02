@@ -1,7 +1,9 @@
 import React from 'react';
 import { Shield, Globe, MessageCircle } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const PromoBanner = () => {
+  const { user } = useAuth();
   const features = [
     { icon: Shield, title: 'Безопасность', description: 'Шифрование военного уровня' },
     { icon: Globe, title: 'Глобальная сеть', description: '50+ серверов по всему миру' },
@@ -19,7 +21,7 @@ const PromoBanner = () => {
           Защитите свою конфиденциальность и получите доступ к интернету без ограничений
           с нашим надежным VPN-сервисом.
         </p>
-        <div className="flex flex-col md:flex-row md:space-x-6">
+        <div className="flex flex-col md:flex-row md:space-x-6 flex-1">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -33,6 +35,11 @@ const PromoBanner = () => {
             );
           })}
         </div>
+        {user?.role === 'ADMIN' && (
+          <a href="/admin/plans" className="text-blue-400 hover:underline mt-2 md:mt-0">
+            Админка
+          </a>
+        )}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { stripeWebhookTotal } from "./metrics";
 import { logAction } from "./middleware/audit";
 import { AuditAction } from "./types";
 import { pushSubscription } from "./lib/subPush";
+import { getPlanByCode } from "./services/planService";
 
 const router = Router();
 const stripe = new Stripe(
@@ -16,24 +17,14 @@ const stripe = new Stripe(
   },
 );
 
-const priceMap: Record<string, string | undefined> = {
-  basic: process.env.STRIPE_PRICE_BASIC,
-  pro: process.env.STRIPE_PRICE_PRO,
-  team: process.env.STRIPE_PRICE_TEAM,
-};
-
-const planLimits: Record<string, number> = {
-  basic: 1,
-  pro: 5,
-  team: 20,
-};
 
 router.post(
   "/checkout",
   authenticateJWT,
   async (req: AuthenticatedRequest, res: Response) => {
-    const { plan } = req.body as { plan: "basic" | "pro" | "team" };
-    if (!plan || !priceMap[plan]) {
+    const { plan } = req.body as { plan: string };
+    const planData = await getPlanByCode(plan);
+    if (!planData) {
       return res.status(400).json({ error: "Invalid plan" });
     }
     try {
@@ -42,7 +33,7 @@ router.post(
         payment_method_types: ["card"],
         line_items: [
           {
-            price: priceMap[plan]!,
+            price: planData.priceId,
             quantity: 1,
           },
         ],
@@ -52,7 +43,7 @@ router.post(
         cancel_url:
           (req.headers.origin || "http://localhost:5173") + "/dashboard",
         client_reference_id: req.user!.id,
-        metadata: { userId: req.user!.id, planId: plan },
+        metadata: { userId: req.user!.id, planId: planData.code },
       });
       return res.json({ url: session.url });
     } catch (e) {
@@ -85,7 +76,8 @@ router.post("/webhook", async (req: Request, res: Response) => {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = (session.metadata as any).userId as string;
       const planId = (session.metadata as any).planId as string;
-      const maxActiveVpns = planLimits[planId];
+      const planData = await getPlanByCode(planId);
+      const maxActiveVpns = planData?.maxVpns ?? 0;
       if (userId && session.subscription) {
         await prisma.subscription.create({
           data: {
