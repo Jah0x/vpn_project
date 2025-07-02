@@ -1,6 +1,6 @@
 import React from 'react';
 import { Shield, Globe, MessageCircle } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const PromoBanner = () => {
   const { user } = useAuth();
