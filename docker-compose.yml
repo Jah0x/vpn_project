@@ -44,6 +44,9 @@ services:
       interval: 10s
       retries: 5
     networks: [app]
+      ports:
+    - 5555:5555
+
 
   frontend:
     build:
