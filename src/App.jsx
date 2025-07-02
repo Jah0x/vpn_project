@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/Layout/Navbar';
+import Footer from './components/Layout/Footer';
 import TelegramWarning from './components/Auth/TelegramWarning';
 import LoginPage from './components/Auth/LoginPage';
 import Dashboard from './components/Dashboard/Dashboard';
@@ -72,7 +72,7 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      {isAuthenticated && <Navbar />}
+
       
       <main className={isAuthenticated ? 'pt-16' : ''}>
         <Routes>
@@ -172,7 +172,9 @@ const AppContent = () => {
           />
         </Routes>
       </main>
-      
+
+      <Footer />
+
       <Toast />
     </div>
   );
