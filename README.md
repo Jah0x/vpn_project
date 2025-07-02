@@ -14,6 +14,17 @@
 Пароль: admin123
 ```
 
+### API: логин
+
+При POST `/api/auth/login` сервер теперь возвращает JSON вида:
+
+```json
+{ "access_token": "<JWT>", "refresh_token": "<token>" }
+```
+
+`access_token` следует сохранять в `localStorage` под ключом `auth_token` и
+передавать в заголовке `Authorization: Bearer <JWT>` во все защищённые запросы.
+
 Для локального запуска выполните:
 
 ```

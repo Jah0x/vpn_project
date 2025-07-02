@@ -3,6 +3,16 @@ import * as authApi from "../services/auth";
 import { AUTH_CONFIG } from "../utils/constants";
 import { StorageUtils } from "../utils/helpers";
 
+const parseJwt = (token) => {
+  try {
+    const base64 = token.split(".")[1];
+    const payload = atob(base64);
+    return JSON.parse(payload);
+  } catch {
+    return null;
+  }
+};
+
 export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -25,16 +35,14 @@ export const useAuth = () => {
         return;
       }
 
-      // Проверяем валидность токена
-      const userData = await authApi.verifyToken(token);
-
-      if (userData) {
-        setUser(userData);
-        setIsAuthenticated(true);
-      } else {
-        // Токен недействителен, очищаем данные
+      const payload = parseJwt(token);
+      if (!payload || payload.exp * 1000 <= Date.now()) {
         clearAuthData();
+        setIsLoading(false);
+        return;
       }
+
+      setIsAuthenticated(true);
     } catch (error) {
       console.error("Ошибка проверки авторизации:", error);
       clearAuthData();
@@ -43,34 +51,40 @@ export const useAuth = () => {
     }
   }, []);
 
-  const login = useCallback(async (email, password, remember = false) => {
+  const login = useCallback(async (email, password) => {
     try {
       setIsLoading(true);
       setError(null);
 
       const response = await authApi.login(email, password);
+      const { access_token, refresh_token, user: userData } = response.data || {};
 
-      if (response.success) {
-        const { user: userData, token, refreshToken } = response.data;
-
-        // Сохраняем данные
-        StorageUtils.setItem(AUTH_CONFIG.TOKEN_KEY, token);
-        StorageUtils.setItem(AUTH_CONFIG.USER_KEY, userData);
-
-        if (remember && refreshToken) {
-          StorageUtils.setItem(AUTH_CONFIG.REFRESH_TOKEN_KEY, refreshToken);
+      if (access_token) {
+        StorageUtils.setItem(AUTH_CONFIG.TOKEN_KEY, access_token);
+        if (refresh_token) {
+          StorageUtils.setItem(AUTH_CONFIG.REFRESH_TOKEN_KEY, refresh_token);
         }
-
-        setUser(userData);
+        if (userData) {
+          StorageUtils.setItem(AUTH_CONFIG.USER_KEY, userData);
+          setUser(userData);
+        }
         setIsAuthenticated(true);
 
+        const payload = parseJwt(access_token);
+        if (payload?.exp) {
+          if (payload.exp * 1000 <= Date.now()) {
+            clearAuthData();
+            return { success: false, error: "Token expired" };
+          }
+        }
+
         return { success: true, user: userData };
-      } else {
-        setError(response.error);
-        return { success: false, error: response.error };
       }
+
+      setError("Неверные учетные данные");
+      return { success: false, error: "Неверные учетные данные" };
     } catch (error) {
-      const errorMessage = error.message || "Ошибка авторизации";
+      const errorMessage = error.response?.data?.error || error.message || "Ошибка авторизации";
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -242,6 +256,20 @@ export const useAuth = () => {
 
     return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   }, [user]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const token = StorageUtils.getItem(AUTH_CONFIG.TOKEN_KEY);
+    const payload = parseJwt(token);
+    if (!payload?.exp) return;
+    const timeout = payload.exp * 1000 - Date.now();
+    if (timeout <= 0) {
+      logout();
+      return;
+    }
+    const id = setTimeout(() => logout(), timeout);
+    return () => clearTimeout(id);
+  }, [isAuthenticated, logout]);
 
   return {
     // Состояние

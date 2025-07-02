@@ -33,8 +33,8 @@ describe.skip("Auth routes", () => {
       .post("/api/auth/login")
       .send({ email: "user@test.com", password: "user" });
     expect(res.status).toBe(200);
-    expect(res.body.access).toBeDefined();
-    expect(res.body.refresh).toBeDefined();
+    expect(res.body.access_token).toBeDefined();
+    expect(res.body.refresh_token).toBeDefined();
   });
 
   it("refresh returns new access", async () => {
@@ -43,8 +43,8 @@ describe.skip("Auth routes", () => {
       .send({ email: "user@test.com", password: "user" });
     const res = await request(app)
       .post("/api/auth/refresh")
-      .send({ refresh: login.body.refresh });
+      .send({ refresh: login.body.refresh_token });
     expect(res.status).toBe(200);
-    expect(res.body.access).toBeDefined();
+    expect(res.body.access_token).toBeDefined();
   });
 });
