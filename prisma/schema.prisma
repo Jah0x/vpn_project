@@ -13,15 +13,17 @@ enum Role {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  nickname     String?  @unique
-  passwordHash String
-  uuid         String   @unique
-  role         Role     @default(USER)
-  Vpn          Vpn[]
-  Subscription Subscription?
-  AuditLog     AuditLog[]
+  id              String           @id @default(cuid())
+  email           String           @unique
+  nickname        String?          @unique
+  telegramId      String?          @unique
+  passwordHash    String
+  uuid            String           @unique
+  role            Role             @default(USER)
+  preallocatedUid PreallocatedUid?
+  Vpn             Vpn[]
+  Subscription    Subscription?
+  AuditLog        AuditLog[]
 }
 
 model Vpn {
@@ -84,15 +86,24 @@ model AuditLog {
   userId    String?
   action    AuditAction
   payload   Json
-  createdAt DateTime     @default(now())
-  user      User?        @relation(fields: [userId], references: [id])
+  createdAt DateTime    @default(now())
+  user      User?       @relation(fields: [userId], references: [id])
 }
 
 model SubPushQueue {
-  id          String   @id @default(cuid())
-  uuid        String   @unique
+  id          String    @id @default(cuid())
+  uuid        String    @unique
   subString   String
-  tries       Int      @default(0)
+  tries       Int       @default(0)
   lastError   String?
   nextRetryAt DateTime?
+}
+
+model PreallocatedUid {
+  id         Int       @id @default(autoincrement())
+  uuid       String    @unique
+  isFree     Boolean   @default(true)
+  assignedAt DateTime?
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?   @unique
 }
