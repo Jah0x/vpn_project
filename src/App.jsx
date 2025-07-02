@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Footer from './components/Layout/Footer';
+import PromoBanner from './components/Layout/PromoBanner';
 import TelegramWarning from './components/Auth/TelegramWarning';
 import LoginPage from './components/Auth/LoginPage';
 import Dashboard from './components/Dashboard/Dashboard';
@@ -72,8 +73,8 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen bg-gray-900">
+      <PromoBanner />
 
-      
       <main className={isAuthenticated ? 'pt-16' : ''}>
         <Routes>
           {/* Публичные маршруты */}
