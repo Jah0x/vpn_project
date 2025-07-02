@@ -1,47 +1,16 @@
-import api from './api';
+import axios from 'axios';
 
-export const login = async (email: string, password: string) => {
-  const res = await api.post('/auth/login', { email, password });
-  return res.data;
-};
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  withCredentials: true,
+});
 
-export const register = async (email: string, password: string) => {
-  const res = await api.post('/auth/register', { email, password });
-  return res.data;
-};
+export const login = (email: string, password: string) =>
+  api.post('/auth/login', { email, password });
 
-export const verifyToken = async (token: string) => {
-  const res = await api.get('/auth/profile', {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
-};
+export const register = (email: string, password: string) =>
+  api.post('/auth/register', { email, password });
 
-export const logout = async (token: string) => {
-  await api.post(
-    '/auth/logout',
-    {},
-    { headers: { Authorization: `Bearer ${token}` } },
-  );
-};
+export const logout = () => api.post('/auth/logout');
 
-export const refreshToken = async (refresh: string) => {
-  const res = await api.post('/auth/refresh', { refresh });
-  return res.data;
-};
-
-export const changePassword = async (
-  currentPassword: string,
-  newPassword: string,
-) => {
-  const res = await api.post('/auth/change-password', {
-    currentPassword,
-    newPassword,
-  });
-  return res.data;
-};
-
-export const resetPassword = async (email: string) => {
-  const res = await api.post('/auth/reset-password', { email });
-  return res.data;
-};
+export default api;

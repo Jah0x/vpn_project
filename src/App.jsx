@@ -9,7 +9,7 @@ import SettingsPage from './components/Settings/SettingsPage';
 import AdminPanel from './components/Admin/AdminPanel';
 import ConfigTemplatePage from './components/Admin/ConfigTemplatePage';
 import SubscriptionTemplatePage from './components/Admin/SubscriptionTemplatePage';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
 import Toast from './components/Common/Toast';
@@ -182,11 +182,9 @@ const AppContent = () => {
 const App = () => {
   return (
     <Router>
-      <AuthProvider>
-        <ToastProvider>
-          <AppContent />
-        </ToastProvider>
-      </AuthProvider>
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </Router>
   );
 };
