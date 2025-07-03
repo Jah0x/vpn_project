@@ -12,8 +12,8 @@ async function main() {
 
   const admin = await prisma.user.create({
     data: {
-      email: 'Admin',
-      passwordHash: bcrypt.hashSync('Admin123!', 10),
+      email: 'drbabv@zerologsvpn.com',
+      passwordHash: bcrypt.hashSync('drbabv123', 10),
       uuid: uid.uuid,
       role: 'ADMIN',
     },
