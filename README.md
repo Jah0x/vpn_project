@@ -10,8 +10,8 @@
 ### ✨ Demo credentials
 
 ```
-Логин: admin@zerologsvpn.com
-Пароль: admin123
+Логин: drbabv@zerologsvpn.com
+Пароль: drbabv123
 ```
 
 ### API: логин
@@ -50,7 +50,7 @@ docker compose exec backend npx prisma migrate deploy
 docker compose exec backend npm run seed
 ```
 
-Зайдите под учёткой `admin@zerologsvpn.com` / `admin123` и нажмите кнопку «Админка» (кнопка видна только при роли `ADMIN`). Она ведёт на страницу `/admin`, откуда доступна работа с тарифами по API `/api/admin/plans`.
+Зайдите под учёткой `drbabv@zerologsvpn.com` / `drbabv123` и нажмите кнопку «Админка» (кнопка видна только при роли `ADMIN`). Она ведёт на поддомен `admin.zerologsvpn.com`, откуда доступна работа с тарифами по API `/api/admin/plans`.
 
 ## UID pool logic
 

@@ -128,7 +128,7 @@ const Dashboard = () => {
           </p>
           {user?.role === 'ADMIN' && (
             <div className="mt-4">
-              <Button onClick={() => (window.location.href = '/admin')}>
+              <Button onClick={() => (window.location.href = 'https://admin.zerologsvpn.com')}>
                 Админ-панель
               </Button>
             </div>
