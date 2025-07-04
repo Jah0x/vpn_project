@@ -7,7 +7,6 @@ import createPrismaMock from "prisma-mock";
 import { mockReset } from "jest-mock-extended";
 import { Prisma } from "@prisma/client";
 
-process.env.STRIPE_SECRET_KEY = "sk_test";
 jest.mock("../src/lib/prisma", () => ({
   prisma: createPrismaMock({}, (Prisma as any).dmmf.datamodel),
 }));
@@ -34,7 +33,7 @@ beforeEach(async () => {
       id: "s1",
       userId: "u1",
       stripeSubId: "sub_1",
-      planId: "basic",
+      planId: "BASIC_1M",
       maxActiveVpns: 1,
       status: "active",
     },

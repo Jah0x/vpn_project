@@ -27,15 +27,13 @@ async function main() {
     }),
   ]);
 
-  await prisma.plan.upsert({
-    where: { code: 'basic' },
-    update: {},
-    create: {
-      code: 'basic',
-      name: 'Базовый',
-      priceId: process.env.STRIPE_PRICE_BASIC!,
-      maxVpns: 1,
-    },
+  await prisma.plan.createMany({
+    data: [
+      { code: 'BASIC_1M', name: '1 месяц', priceRub: 400, durationMo: 1 },
+      { code: 'BASIC_3M', name: '3 месяца', priceRub: 1200, durationMo: 3 },
+      { code: 'BASIC_6M', name: '6 месяцев', priceRub: 2400, durationMo: 6 },
+      { code: 'BASIC_12M', name: '12 мес', priceRub: 4500, durationMo: 12 },
+    ],
   });
 }
 

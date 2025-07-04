@@ -35,11 +35,6 @@ const PromoBanner = () => {
             );
           })}
         </div>
-        {user?.role === 'ADMIN' && (
-          <a href="https://admin.zerologsvpn.com" className="text-blue-400 hover:underline mt-2 md:mt-0">
-            Админка
-          </a>
-        )}
       </div>
     </div>
   );

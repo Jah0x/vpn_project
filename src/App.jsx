@@ -7,11 +7,7 @@ import LoginPage from './components/Auth/LoginPage';
 import Dashboard from './components/Dashboard/Dashboard';
 import SubscriptionPage from './components/Subscription/SubscriptionPage';
 import SettingsPage from './components/Settings/SettingsPage';
-import AdminPanel from './components/Admin/AdminPanel';
-import ConfigTemplatePage from './components/Admin/ConfigTemplatePage';
-import SubscriptionTemplatePage from './components/Admin/SubscriptionTemplatePage';
-import AdminLayout from './components/Admin/plans/AdminLayout';
-import AdminPlansPage from './components/Admin/plans/AdminPlansPage';
+import Pricing from './pages/Pricing';
 import { useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
@@ -108,28 +104,17 @@ const AppContent = () => {
             } 
           />
           
-          <Route 
-            path="/settings" 
+          <Route
+            path="/settings"
             element={
               <ProtectedRoute>
                 <SettingsPage />
               </ProtectedRoute>
-            } 
-          />
-          
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <AdminLayout />
-              </ProtectedRoute>
             }
-          >
-            <Route index element={<AdminPanel />} />
-            <Route path="plans" element={<AdminPlansPage />} />
-            <Route path="config" element={<ConfigTemplatePage />} />
-            <Route path="subscription-template" element={<SubscriptionTemplatePage />} />
-          </Route>
+          />
+
+          <Route path="/pricing" element={<Pricing />} />
+          
           
           {/* Редирект на главную */}
           <Route 
