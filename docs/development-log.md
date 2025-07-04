@@ -353,3 +353,8 @@
 - Удалён Stripe и маршрут /api/config. CRM выделена в отдельную БД.
 - Добавлен компонент OnramperPayButton и страница Pricing.
 
+
+## 2025-09-16
+- В Dockerfile фронтенда установлена опция `npm install --legacy-peer-deps` для устранения конфликта зависимостей React.
+- Сборка `docker compose build` выполняется без ошибки `ERESOLVE`.
+- Запущены `npm run lint` и `npm test`.
