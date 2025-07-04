@@ -3,7 +3,7 @@ import type { Plan } from '../types/plan';
 
 export const subscriptionApi = {
   getPlans: async (): Promise<Plan[]> => {
-    const { data } = await api.get('/plans');
+    const { data } = await api.get('/public/plans');
     return data;
   },
 };

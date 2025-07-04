@@ -14,6 +14,7 @@ import subscriptionLinkRouter from "./subscriptionLink";
 import auditRouter from "./auditRoutes";
 import adminPlansRouter from "./routes/admin/plans";
 import plansRouter from "./routes/plans";
+import publicPlansRouter from "./routes/publicPlans";
 import cron from "node-cron";
 import { retrySubPushQueue } from "./lib/subPush";
 
@@ -50,6 +51,7 @@ app.use("/api/pay/onramper", onramperRouter);
 app.use("/api", subscriptionLinkRouter);
 app.use("/api", auditRouter);
 app.use("/api/plans", plansRouter);
+app.use("/api/public/plans", publicPlansRouter);
 app.use("/api/admin/plans", adminPlansRouter);
 
 cron.schedule("*/5 * * * *", () => {
