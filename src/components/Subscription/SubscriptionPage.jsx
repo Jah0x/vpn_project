@@ -121,8 +121,22 @@ const SubscriptionPage = () => {
 
   if (loading) {
     return (
+      <div className="min-h-screen bg-gray-900 pt-16">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="animate-pulse h-40 bg-slate-800 rounded-2xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const plansArr = Array.isArray(plans) ? plans : [];
+
+  if (plansArr.length === 0) {
+    return (
       <div className="min-h-screen bg-gray-900 pt-16 flex items-center justify-center">
-        <LoadingSpinner size="large" />
+        <p className="text-gray-400">Тарифы скоро появятся</p>
       </div>
     );
   }
@@ -234,7 +248,7 @@ const SubscriptionPage = () => {
 
         {/* Тарифные планы */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {plans.map((plan) => {
+          {plansArr.map((plan) => {
             const isActive = isPlanActive(plan.id);
             const originalPrice = plan.price;
             const discountedPrice = calculateDiscountedPrice(originalPrice);
@@ -288,7 +302,7 @@ const SubscriptionPage = () => {
 
                   {/* Особенности */}
                   <div className="space-y-3 mb-6">
-                    {plan.features.map((feature, index) => (
+                    {(Array.isArray(plan.features) ? plan.features : []).map((feature, index) => (
                       <div key={index} className="flex items-center space-x-2">
                         <Check className="w-4 h-4 text-green-400 flex-shrink-0" />
                         <span className="text-gray-300 text-sm">{feature}</span>
