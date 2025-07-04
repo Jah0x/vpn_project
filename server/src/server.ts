@@ -51,7 +51,6 @@ app.use("/api/pay/onramper", onramperRouter);
 app.use("/api", subscriptionLinkRouter);
 app.use("/api", auditRouter);
 app.use("/api/plans", plansRouter);
-app.use("/api/public/plans", publicPlansRouter);
 app.use("/api/admin/plans", adminPlansRouter);
 
 cron.schedule("*/5 * * * *", () => {
