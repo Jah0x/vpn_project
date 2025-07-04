@@ -11,6 +11,9 @@ export const login = (email: string, password: string) =>
 export const register = (email: string, password: string) =>
   api.post('/auth/register', { email, password });
 
+export const telegramAuth = (telegramId: string) =>
+  api.post('/auth/telegram', { telegramId });
+
 export const logout = () => api.post('/auth/logout');
 
 export default api;
