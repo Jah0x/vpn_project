@@ -15,8 +15,8 @@ async function main() {
   await prisma.$transaction([
     prisma.user.create({
       data: {
-        email: 'drbabv@zerologsvpn.com',
-        passwordHash: bcrypt.hashSync('drbabv123', 10),
+        email: 'Admin@zerologsvpn.com',
+        passwordHash: bcrypt.hashSync('admin123', 10),
         uuid: adminUid!.uuid,
         role: 'ADMIN',
       },
