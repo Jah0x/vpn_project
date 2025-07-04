@@ -33,12 +33,12 @@ describe('Admin plans CRUD', () => {
     const createRes = await request(app)
       .post('/api/admin/plans')
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({ id: 'p1', code: 'pro', name: 'Pro', priceId: 'price_1', maxVpns: 5 });
+      .send({ code: 'BASIC_1M', name: '1m', priceRub: 400, durationMo: 1 });
     expect(createRes.status).toBe(201);
     const listRes = await request(app)
       .get('/api/admin/plans')
       .set('Authorization', `Bearer ${adminToken}`);
-    const planId = 'p1';
+    const planId = 'BASIC_1M';
 
     const updateRes = await request(app)
       .put(`/api/admin/plans/${planId}`)

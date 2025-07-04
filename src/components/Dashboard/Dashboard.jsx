@@ -126,13 +126,6 @@ const Dashboard = () => {
           <p className="text-gray-400">
             Управляйте своим VPN подключением и отслеживайте статистику
           </p>
-          {user?.role === 'ADMIN' && (
-            <div className="mt-4">
-              <Button onClick={() => (window.location.href = 'https://admin.zerologsvpn.com')}>
-                Админ-панель
-              </Button>
-            </div>
-          )}
         </div>
 
         {/* Статус подписки */}
@@ -147,13 +140,6 @@ const Dashboard = () => {
                 </p>
               </div>
               <div className="ml-auto flex space-x-2">
-                <button
-                  onClick={() => window.open('/api/config')}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded flex items-center"
-                  disabled={!hasActiveSubscription}
-                >
-                  <Download className="w-4 h-4 mr-1" />Скачать конфиг
-                </button>
                 <button
                   onClick={handleCopySubLink}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded flex items-center"

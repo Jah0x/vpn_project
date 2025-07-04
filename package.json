@@ -5,6 +5,7 @@
   "homepage": ".",
   "private": true,
   "dependencies": {
+    "@onramper/widget": "^2.2.35",
     "@prisma/client": "^5.4.0",
     "axios": "1.6.7",
     "bcryptjs": "^3.0.2",

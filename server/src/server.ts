@@ -9,7 +9,7 @@ import { metricsMiddleware } from "./metricsMiddleware";
 import vpnRouter from "./vpn";
 import authRouter from "./authRoutes";
 import configRouter from "./configRoutes";
-import billingRouter from "./billing";
+import onramperRouter from "./onramper";
 import subscriptionLinkRouter from "./subscriptionLink";
 import auditRouter from "./auditRoutes";
 import adminPlansRouter from "./routes/admin/plans";
@@ -22,7 +22,7 @@ const logger = pino({ level: "info" });
 app.use(pinoHttp({ logger }));
 
 app.use(cors());
-app.use("/api/billing/webhook", express.raw({ type: "application/json" }));
+app.use("/api/pay/onramper/webhook", express.raw({ type: "application/json" }));
 app.use(express.json());
 securityMiddlewares.forEach((mw) => app.use(mw));
 
@@ -45,7 +45,7 @@ app.get("/metrics", async (_req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/vpn", vpnRouter);
 app.use("/api", configRouter);
-app.use("/api/billing", billingRouter);
+app.use("/api/pay/onramper", onramperRouter);
 app.use("/api", subscriptionLinkRouter);
 app.use("/api", auditRouter);
 app.use("/api/admin/plans", adminPlansRouter);

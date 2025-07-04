@@ -347,3 +347,9 @@
 - Админ-панель вынесена на поддомен `admin.zerologsvpn.com` (правки Nginx и ссылок).
 - В seed-скриптах создан единственный аккаунт `drbabv@zerologsvpn.com` с паролем `drbabv123`.
 - Обновлены README и тесты Cypress.
+
+## 2025-09-15
+- Перевод платежей на Onramper, добавлены модели Invoice и PlanCode.
+- Удалён Stripe и маршрут /api/config. CRM выделена в отдельную БД.
+- Добавлен компонент OnramperPayButton и страница Pricing.
+

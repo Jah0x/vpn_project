@@ -15,15 +15,15 @@ router.post('/', authenticateJWT, authorizeRoles(Role.ADMIN), async (req: Authen
   res.status(201).json(plan);
 });
 
-router.put('/:id', authenticateJWT, authorizeRoles(Role.ADMIN), async (req, res) => {
-  const { id } = req.params;
-  const plan = await prisma.plan.update({ where: { id }, data: req.body });
+router.put('/:code', authenticateJWT, authorizeRoles(Role.ADMIN), async (req, res) => {
+  const { code } = req.params;
+  const plan = await prisma.plan.update({ where: { code: code as any }, data: req.body });
   res.json(plan);
 });
 
-router.delete('/:id', authenticateJWT, authorizeRoles(Role.ADMIN), async (req, res) => {
-  const { id } = req.params;
-  const plan = await prisma.plan.update({ where: { id }, data: { isActive: false } });
+router.delete('/:code', authenticateJWT, authorizeRoles(Role.ADMIN), async (req, res) => {
+  const { code } = req.params;
+  const plan = await prisma.plan.update({ where: { code: code as any }, data: { isActive: false } });
   res.json(plan);
 });
 

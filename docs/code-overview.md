@@ -54,17 +54,15 @@ CRUD для VPN‑записей и перезапуск через shell‑ск
 ### `server/src/configRoutes.ts`
 Работа с конфигурационными файлами VPN.
 
-- `GET /config` – скачивание конфигурации пользователя (при активной подписке).
 - `GET /admin/config-template` – чтение шаблона конфигурации (ADMIN).
 - `PUT /admin/config-template` – обновление шаблона конфигурации (ADMIN).
-- `POST /stripe/webhook` – вебхуки Stripe для генерации файлов конфигурации.
 
-### `server/src/billing.ts`
-Интеграция со Stripe.
+### `server/src/onramper.ts`
+Интеграция с Onramper.
 
 Маршруты:
-- `POST /checkout` – создание сессии оплаты и редирект на форму Stripe.
-- `POST /webhook` – обработка событий Stripe (активация/отмена подписки).
+- `POST /pay/onramper/start` – создание счёта и возврат URL оплаты.
+- `POST /pay/onramper/webhook` – подтверждение оплаты.
 
 ### `server/src/subscriptionLink.ts`
 Управление шаблоном ссылки на подписку.
