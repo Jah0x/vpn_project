@@ -1,6 +1,9 @@
 import { app } from "./server";
+import publicPlansRouter from "./routes/publicPlans";
 
 const PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 4000;
+
+app.use("/api/public", publicPlansRouter);
 
 const server = app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
