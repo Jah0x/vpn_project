@@ -5,7 +5,7 @@ import PromoBanner from './components/Layout/PromoBanner';
 import TelegramWarning from './components/Auth/TelegramWarning';
 import LoginPage from './components/Auth/LoginPage';
 import Dashboard from './components/Dashboard/Dashboard';
-import SubscriptionPage from './components/Subscription/SubscriptionPage';
+import Subscription from './pages/Subscription';
 import SettingsPage from './components/Settings/SettingsPage';
 import Pricing from './pages/Pricing';
 import { useAuth } from './contexts/AuthContext';
@@ -99,7 +99,7 @@ const AppContent = () => {
             path="/subscription" 
             element={
               <ProtectedRoute>
-                <SubscriptionPage />
+                <Subscription />
               </ProtectedRoute>
             } 
           />
