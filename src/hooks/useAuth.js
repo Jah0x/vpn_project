@@ -123,6 +123,37 @@ export const useAuth = () => {
     }
   }, []);
 
+  const telegramAuth = useCallback(async (tgUser) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await authApi.telegramAuth(tgUser.id);
+      const { access_token, refresh_token, user: userData } = response.data || {};
+
+      if (access_token) {
+        StorageUtils.setItem(AUTH_CONFIG.TOKEN_KEY, access_token);
+        if (refresh_token) {
+          StorageUtils.setItem(AUTH_CONFIG.REFRESH_TOKEN_KEY, refresh_token);
+        }
+        if (userData) {
+          StorageUtils.setItem(AUTH_CONFIG.USER_KEY, userData);
+          setUser(userData);
+        }
+        setIsAuthenticated(true);
+        return { success: true, user: userData };
+      }
+
+      return { success: false };
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || error.message || 'Ошибка авторизации';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -290,6 +321,7 @@ export const useAuth = () => {
     // Методы авторизации
     login,
     register,
+    telegramAuth,
     logout,
     refreshToken,
 

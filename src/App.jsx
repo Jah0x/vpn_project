@@ -8,6 +8,8 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Subscription from './pages/Subscription';
 import SettingsPage from './components/Settings/SettingsPage';
 import Pricing from './pages/Pricing';
+import FaqPage from './pages/FaqPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import { useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
@@ -114,6 +116,9 @@ const AppContent = () => {
           />
 
           <Route path="/pricing" element={<Pricing />} />
+
+          <Route path="/faq" element={<FaqPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
           
           
           {/* Редирект на главную */}

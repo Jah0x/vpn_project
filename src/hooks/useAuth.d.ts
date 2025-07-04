@@ -15,6 +15,7 @@ export interface UseAuthReturn {
   error: string | null;
   login(email: string, password: string, remember?: boolean): Promise<AuthResult<User>>;
   register(data: { email: string; password: string }): Promise<AuthResult>;
+  telegramAuth(user: { id: number }): Promise<AuthResult<User>>;
   logout(): Promise<void>;
   refreshToken(): Promise<AuthResult>;
   updateUser(data: Partial<User & { [key: string]: any }>): void;
