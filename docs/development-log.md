@@ -358,3 +358,7 @@
 - В Dockerfile фронтенда установлена опция `npm install --legacy-peer-deps` для устранения конфликта зависимостей React.
 - Сборка `docker compose build` выполняется без ошибки `ERESOLVE`.
 - Запущены `npm run lint` и `npm test`.
+
+## 2025-09-17
+- Исправлена типизация функции `getPlanByCode` на стороне сервера (используется `PlanCode`).
+- Запущены `npm run lint` и `npm test`.
