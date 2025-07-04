@@ -85,7 +85,8 @@ const Footer = () => {
               <span className="text-xl font-bold text-white">VPN Service</span>
             </div>
             <p className="text-gray-400 mb-6 max-w-md">
-              Быстрый и безопасный VPN без ограничений.
+              Защитите свою конфиденциальность и получите доступ к интернету без
+              ограничений с нашим надежным VPN-сервисом.
             </p>
             
             {/* Особенности */}

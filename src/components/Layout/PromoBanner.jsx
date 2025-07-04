@@ -19,7 +19,8 @@ const PromoBanner = () => {
           <span className="text-xl font-bold text-white">VPN Service</span>
         </div>
         <p className="text-gray-400 mb-4 md:mb-0 md:mr-8">
-          Быстрый и безопасный VPN без ограничений.
+          Защитите свою конфиденциальность и получите доступ к интернету без
+          ограничений с нашим надежным VPN-сервисом.
         </p>
         <div className="flex flex-col md:flex-row md:space-x-6 flex-1">
           {features.map((feature, index) => (
