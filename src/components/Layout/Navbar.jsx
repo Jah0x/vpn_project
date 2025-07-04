@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Mail,
-  MessageCircle,
   Shield,
   Globe,
   Github,
@@ -68,21 +67,10 @@ const Footer = () => {
   ];
 
   const features = [
-    {
-      icon: Shield,
-      title: 'Безопасность',
-      description: 'Шифрование военного уровня'
-    },
-    {
-      icon: Globe,
-      title: 'Глобальная сеть',
-      description: '50+ серверов по всему миру'
-    },
-    {
-      icon: MessageCircle,
-      title: 'Поддержка 24/7',
-      description: 'Всегда готовы помочь'
-    }
+    { icon: '🔒', text: 'Шифрование военного уровня' },
+    { icon: '🚫', text: 'Нет логирования' },
+    { icon: '🚀', text: 'Скорость без лимитов' },
+    { icon: '📺', text: 'YouTube без рекламы' }
   ];
 
   return (
@@ -97,24 +85,17 @@ const Footer = () => {
               <span className="text-xl font-bold text-white">VPN Service</span>
             </div>
             <p className="text-gray-400 mb-6 max-w-md">
-              Защитите свою конфиденциальность и получите доступ к интернету без ограничений 
-              с нашим надежным VPN-сервисом.
+              Быстрый и безопасный VPN без ограничений.
             </p>
             
             {/* Особенности */}
             <div className="space-y-3">
-              {features.map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <div key={index} className="flex items-center space-x-3">
-                    <Icon className="w-5 h-5 text-blue-400 flex-shrink-0" />
-                    <div>
-                      <p className="text-white text-sm font-medium">{feature.title}</p>
-                      <p className="text-gray-400 text-xs">{feature.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
+              {features.map((feature, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <span className="text-lg">{feature.icon}</span>
+                  <p className="text-gray-400 text-xs">{feature.text}</p>
+                </div>
+              ))}
             </div>
           </div>
 
