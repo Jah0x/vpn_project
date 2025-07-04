@@ -70,6 +70,19 @@ components:
       properties:
         url:
           type: string
+    Plan:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        priceRub:
+          type: integer
+        durationMo:
+          type: integer
+        maxVpns:
+          type: integer
     Error:
       type: object
       properties:
@@ -356,6 +369,21 @@ paths:
                 properties:
                 urlTemplate:
                   type: string
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /api/plans:
+    get:
+      summary: List active plans
+      responses:
+        '200':
+          description: Active plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plan'
         '429':
           $ref: '#/components/responses/TooManyRequests'
 

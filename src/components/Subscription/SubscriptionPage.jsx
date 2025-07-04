@@ -15,9 +15,8 @@ import {
   RefreshCw
 } from 'lucide-react';
 import LoadingSpinner from '../Common/LoadingSpinner';
-import SubscriptionService from '../../services/SubscriptionService';
-import PaymentService from '../../services/PaymentService';
-import CouponService from '../../services/CouponService';
+import subscriptionApi from '../../services/subscription';
+import couponApi from '../../services/coupon';
 
 const SubscriptionPage = () => {
   const { user, updateUser } = useAuth();
@@ -41,13 +40,8 @@ const SubscriptionPage = () => {
     try {
       setLoading(true);
       
-      const [plansData, subscriptionData] = await Promise.all([
-        SubscriptionService.getPlans(),
-        SubscriptionService.getCurrentSubscription()
-      ]);
-
+      const plansData = await subscriptionApi.getPlans();
       setPlans(plansData);
-      setCurrentSubscription(subscriptionData);
     } catch (error) {
       console.error('Ошибка загрузки данных подписки:', error);
       showToast('Ошибка загрузки данных', 'error');
@@ -64,7 +58,7 @@ const SubscriptionPage = () => {
 
     try {
       setCouponLoading(true);
-      const couponData = await CouponService.validateCoupon(couponCode);
+      const couponData = await couponApi.validateCoupon(couponCode);
       setCouponDiscount(couponData);
       showToast(`Купон применен! Скидка ${couponData.discount}%`, 'success');
     } catch (error) {
@@ -86,33 +80,7 @@ const SubscriptionPage = () => {
     try {
       setPurchasing(selectedPlan.id);
       
-      // Создаем заявку на подписку
-      const subscriptionData = await SubscriptionService.createPurchase(selectedPlan.id, couponCode);
-      
-      // Обрабатываем платеж
-      const paymentData = await PaymentService.processPayment({
-        subscription_id: subscriptionData.subscription_id,
-        payment_method: paymentMethod,
-        return_url: window.location.origin + '/subscription'
-      });
-
-      if (paymentData.payment_url) {
-        // Перенаправляем на платежную систему
-        window.location.href = paymentData.payment_url;
-      } else {
-        // Платеж прошел успешно
-        showToast('Подписка успешно активирована!', 'success');
-        await loadSubscriptionData();
-        
-        // Обновляем данные пользователя
-        updateUser({
-          subscription: {
-            active: true,
-            type: selectedPlan.id,
-            expires_at: new Date(Date.now() + selectedPlan.duration_days * 24 * 60 * 60 * 1000).toISOString()
-          }
-        });
-      }
+      showToast('Оплата временно недоступна', 'error');
     } catch (error) {
       showToast(error.message || 'Ошибка при покупке подписки', 'error');
     } finally {

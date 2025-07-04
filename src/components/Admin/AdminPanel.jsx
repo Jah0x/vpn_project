@@ -21,8 +21,6 @@ import {
 } from 'lucide-react';
 import LoadingSpinner from '../Common/LoadingSpinner';
 import MonitoringService from '../../services/MonitoringService';
-import SubscriptionService from '../../services/SubscriptionService';
-import CouponService from '../../services/CouponService';
 
 const AdminPanel = () => {
   const { user } = useAuth();
