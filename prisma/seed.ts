@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -27,33 +26,12 @@ async function main() {
     { uuid: 'e2a4a43d-77f7-4b8a-9d77-229f11e9e7b2' },
     { uuid: '527bbd10-6e71-4b89-9987-2435e0ecdd34' },
   ];
-  // Проверка: если нет ни одного uid, добавляем
   const count = await prisma.preallocatedUid.count();
   if (count === 0) {
     await prisma.preallocatedUid.createMany({ data: predefinedUids });
   }
 
-  // 2. Админ-аккаунт
-  const adminUid = await prisma.preallocatedUid.findFirst({ where: { isFree: true } });
-  if (!adminUid) throw new Error('No available UID for admin!');
-  await prisma.$transaction([
-    prisma.user.upsert({
-      where: { email: 'Admin1@bk.com' },
-      update: {},
-      create: {
-        email: 'Admin1@bk.com',
-        passwordHash: bcrypt.hashSync('Фdmin123', 10),
-        uuid: adminUid.uuid,
-        role: 'ADMIN',
-      },
-    }),
-    prisma.preallocatedUid.update({
-      where: { id: adminUid.id },
-      data: { isFree: false, assignedAt: new Date() },
-    }),
-  ]);
-
-  // 3. Тарифы
+  // 2. Тарифы
   await prisma.plan.createMany({
     data: [
       { code: 'BASIC_1M', name: '1 месяц', priceRub: 400, durationMo: 1 },
@@ -61,7 +39,7 @@ async function main() {
       { code: 'BASIC_6M', name: '6 месяцев', priceRub: 2400, durationMo: 6 },
       { code: 'BASIC_12M', name: '12 мес', priceRub: 4500, durationMo: 12 },
     ],
-    skipDuplicates: true, // не дублирует при повторном запуске
+    skipDuplicates: true,
   });
 }
 
@@ -71,4 +49,3 @@ main()
     process.exit(1);
   })
   .finally(async () => await prisma.$disconnect());
-
