@@ -15,7 +15,8 @@ const Footer = () => {
               <a href="#faq" className="text-gray-400 hover:text-white text-sm">FAQ</a>
             </div>
             <div className="text-gray-400 text-sm text-center md:text-right">
-              VPN Service — быстрый и безопасный доступ в интернет.
+              Защитите свою конфиденциальность и получите доступ к интернету без
+              ограничений с нашим надежным VPN-сервисом.
             </div>
           </div>
           <div className="flex items-center justify-center mt-4 text-gray-400 text-sm space-x-1">
