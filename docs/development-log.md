@@ -392,3 +392,6 @@
 - Nginx проксирует `/api/public/plans` на backend.
 - Тест Cypress проверяет длину массива тарифов.
 - Запущены `npm run lint` и `npm test`.
+## 2025-09-22
+- Созданы документы docs/privacy-policy.md и docs/faq.md.
+- Обновлён журнал разработки.
