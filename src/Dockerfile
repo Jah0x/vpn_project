@@ -1,7 +1,8 @@
 FROM node:18-alpine AS build
 WORKDIR /app
 COPY package.json ./
-RUN npm install
+# Используем legacy-peer-deps для обхода конфликтов зависимостей React
+RUN npm install --legacy-peer-deps
 COPY . ./
 RUN npm run build
 
