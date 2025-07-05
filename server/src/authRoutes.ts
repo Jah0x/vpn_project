@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { signAccessToken, verifyRefreshToken } from "./auth";
 import * as userService from "./services/userService";
+import { verifyTelegramHash, TelegramAuthData } from "./lib/telegram";
 
 const router = Router();
 
@@ -18,9 +19,12 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/telegram", async (req, res) => {
-  const { telegramId } = req.body as { telegramId: string };
+  const data = req.body as TelegramAuthData;
+  if (!verifyTelegramHash(data)) {
+    return res.status(400).json({ error: "INVALID_SIGNATURE" });
+  }
   try {
-    const tokens = await userService.loginTelegram(telegramId);
+    const tokens = await userService.loginTelegram(data);
     res.status(200).json(tokens);
   } catch (err: any) {
     if (err.message === "NO_UID_AVAILABLE") {

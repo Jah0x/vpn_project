@@ -4,6 +4,7 @@ import { prisma } from '../lib/prisma';
 import { signAccessToken, signRefreshToken } from '../auth';
 import { Role, AuditAction } from '../types';
 import { logAction } from '../middleware/audit';
+import { TelegramAuthData } from '../lib/telegram';
 
 export async function login(email: string, password: string) {
   const user = await prisma.user.findUnique({ where: { email } });
@@ -50,7 +51,9 @@ export async function register(email: string, password: string) {
   return tokens;
 }
 
-export async function loginTelegram(telegramId: string) {
+
+export async function loginTelegram(data: TelegramAuthData) {
+  const telegramId = String(data.id);
   let user = await prisma.user.findUnique({ where: { telegramId } });
   if (!user) {
     const uid = await prisma.preallocatedUid.findFirst({ where: { isFree: true } });
@@ -60,6 +63,7 @@ export async function loginTelegram(telegramId: string) {
         data: {
           email: `tg${telegramId}@telegram.local`,
           telegramId,
+          nickname: data.username,
           passwordHash: bcrypt.hashSync(crypto.randomUUID(), 10),
           uuid: uid.uuid,
           role: 'USER',
