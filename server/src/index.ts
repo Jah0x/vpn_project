@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
+dotenv.config();
+
 import { app } from "./server";
 import publicPlansRouter from "./routes/publicPlans";
-
-dotenv.config();
 
 const PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 4000;
 
