@@ -416,3 +416,8 @@
 - Создана страница `AuthPage` отправляющая `initDataUnsafe` на сервер.
 - Документация и nginx конфигурация обновлены.
 - Запущены `npm run lint` и `npm test`.
+
+## 2025-09-27
+- Перенесён Telegram init скрипт из index.html в модуль `src/auth/tgInit.ts`.
+- CSP ограничен: разрешены скрипты только с `self` и `https://telegram.org`.
+- Запущены `pnpm run test:unit` и `pnpm run test:e2e`.

@@ -6,6 +6,9 @@ import "./i18n/i18n";
 // eslint-disable-next-line no-unused-vars
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
+import { bootstrapFromTelegram } from "./auth/tgInit";
+
+bootstrapFromTelegram();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
