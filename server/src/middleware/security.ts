@@ -7,7 +7,7 @@ export const securityMiddlewares = [
       directives: {
         defaultSrc: ["'self'"],
         imgSrc: ["'self'", "data:"],
-        scriptSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://telegram.org"],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: [],
       },

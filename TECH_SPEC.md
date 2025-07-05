@@ -24,7 +24,7 @@
 - Алерты с `severity: critical` отправляются в Slack и Telegram, `warning` — только в Telegram.
 
 ## Security hardening
-- `helmet` со строгой Content-Security-Policy (`default-src 'self'; img-src 'self' data:; script-src 'self'; object-src 'none'`), `crossOriginEmbedderPolicy: false`.
+- `helmet` со строгой Content-Security-Policy (`default-src 'self'; img-src 'self' data:; script-src 'self' https://telegram.org; object-src 'none'`), `crossOriginEmbedderPolicy: false`.
 - `express-rate-limit` – 100 запросов за 15 минут на IP, исключая `/metrics` и `/health`.
 
 ## Database & Prisma

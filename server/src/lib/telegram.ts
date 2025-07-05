@@ -12,6 +12,7 @@ export interface TelegramAuthData {
   [key: string]: any;
 }
 
+// Token берётся из переменной окружения
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 
 /**
