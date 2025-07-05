@@ -19,5 +19,22 @@ root.render(
     <AuthProvider>
       <App />
     </AuthProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
+
+function hideLoading() {
+  const loadingEl = document.getElementById("loading-screen");
+  const rootEl = document.getElementById("root");
+  if (loadingEl) {
+    loadingEl.classList.add("fade-out");
+  }
+  if (rootEl) {
+    rootEl.classList.add("loaded");
+  }
+}
+
+if (document.readyState === "complete") {
+  hideLoading();
+} else {
+  window.addEventListener("load", hideLoading);
+}
