@@ -429,3 +429,8 @@
 - В `bootstrapFromTelegram` добавлен ранний выход при отсутствии `initData`.
 - Дополнена документация `telegram-auth.md` описанием этой инициализации.
 - Запущены `npm run lint` и `npm test`.
+## 2025-09-30
+- Исправлен запуск фронтенда вне Telegram: добавлен модуль `src/lib/telegram.ts`.
+- Все обращения к `window.Telegram.WebApp` обернуты в проверки.
+- README дополнено разделом "Локальная отладка".
+- Запущены `npm run lint` и `npm test` — успешно.

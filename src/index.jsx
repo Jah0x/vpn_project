@@ -7,8 +7,11 @@ import "./i18n/i18n";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { bootstrapFromTelegram } from "./auth/tgInit";
+import { getTelegram } from "./lib/telegram";
 
-bootstrapFromTelegram();
+if (getTelegram()) {
+  bootstrapFromTelegram();
+}
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

@@ -14,10 +14,12 @@ import { useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
 import Toast from './components/Common/Toast';
+import { getTelegram } from './lib/telegram';
 
 // Проверка Telegram Web App
 const isTelegramWebApp = () => {
-  return window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData;
+  const tg = getTelegram();
+  return Boolean(tg && tg.initData);
 };
 
 // Компонент для защищенных маршрутов

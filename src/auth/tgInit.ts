@@ -1,7 +1,8 @@
 import { setInitParams } from './store';
+import { getTelegram, ready } from '../lib/telegram';
 
 export function bootstrapFromTelegram() {
-  const tg = (window as any)?.Telegram?.WebApp;
+  const tg = getTelegram();
   const initData = tg?.initData || '';
 
   // Если приложение открыто не внутри Telegram, выходим
@@ -17,5 +18,5 @@ export function bootstrapFromTelegram() {
   window.dispatchEvent(new Event('telegram-initialized'));
 
   // 4️⃣ уведомляем контейнер Telegram
-  tg?.ready?.();
+  ready();
 }
