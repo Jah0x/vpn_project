@@ -1,0 +1,9 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "roots": ["<rootDir>/server/test"],
+  "testRegex": ".*\\.e2e-spec\\.ts$",
+  "globals": {
+    "ts-jest": { "tsconfig": "<rootDir>/tsconfig.json" }
+  }
+}

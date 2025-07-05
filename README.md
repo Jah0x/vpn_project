@@ -101,3 +101,10 @@ Nginx корректно перенаправляет запросы к серв
 ## Дополнительные материалы
 - [Политика конфиденциальности](docs/privacy-policy.md)
 - [FAQ](docs/faq.md)
+
+## CI / Проверка локально
+
+```bash
+pnpm docker:up          # поднимает nginx+backend для локал-теста
+pnpm run curl:matrix    # быстрый smoke-тест
+```
