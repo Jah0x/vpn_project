@@ -4,17 +4,18 @@ export function bootstrapFromTelegram() {
   const tg = (window as any)?.Telegram?.WebApp;
   const initData = tg?.initData || '';
 
-  if (initData) {
-    // 1. keep it in memory
-    setInitParams(initData);
+  // Если приложение открыто не внутри Telegram, выходим
+  if (!initData) return;
 
-    // 2. persist for other hooks / hard refresh
-    window.localStorage.setItem('tg_init_data', initData);
+  // 1️⃣ кладём initData в память
+  setInitParams(initData);
 
-    // 3. let React hooks know we're ready
-    window.dispatchEvent(new Event('telegram-initialized'));
+  // 2️⃣ сохраняем в localStorage — на это смотрят React‑хуки
+  window.localStorage.setItem('tg_init_data', initData);
 
-    // 4. notify Telegram container
-    tg?.ready?.();
-  }
+  // 3️⃣ сообщаем React-хукам, что данные готовы
+  window.dispatchEvent(new Event('telegram-initialized'));
+
+  // 4️⃣ уведомляем контейнер Telegram
+  tg?.ready?.();
 }
