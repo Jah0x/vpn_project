@@ -11,7 +11,11 @@
     "skipLibCheck": true,
     "jsx": "react-jsx",
     "allowJs": true,
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src", "server/src", "server/test", "subscription-server/src", "subscription-server/test"]
 }
