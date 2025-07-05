@@ -132,14 +132,20 @@ const LoginPage = () => {
 
     try {
       const tg = window.Telegram.WebApp;
-      const data = tg.initDataUnsafe;
+      const initData = tg.initDataUnsafe;
 
-      if (!data?.user || !data.hash) {
+      if (!initData?.user || !initData.hash) {
         showToast('Не удалось получить данные пользователя Telegram', 'error');
         return;
       }
 
-      await telegramAuth(data);
+      const payload = {
+        ...initData.user,
+        auth_date: initData.auth_date,
+        hash: initData.hash,
+      };
+
+      await telegramAuth(payload);
       showToast('Авторизация через Telegram успешна!', 'success');
       navigate('/dashboard');
     } catch (error) {
