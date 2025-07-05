@@ -421,3 +421,7 @@
 - Перенесён Telegram init скрипт из index.html в модуль `src/auth/tgInit.ts`.
 - CSP ограничен: разрешены скрипты только с `self` и `https://telegram.org`.
 - Запущены `pnpm run test:unit` и `pnpm run test:e2e`.
+## 2025-09-28
+- Расширен bootstrap в `tgInit.ts`: сохраняет `initData` в localStorage, шлёт событие `telegram-initialized` и вызывает `ready()`.
+- Добавлен тест `tgInit.test.ts`.
+- Запущены `npm run lint` и `npm test`.
