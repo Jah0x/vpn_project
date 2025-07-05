@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { useNavigate } from 'react-router-dom';
-import { getTelegram } from '../../lib/telegram';
 import { Eye, EyeOff, Mail, User, Lock, Zap, Shield, Globe } from 'lucide-react';
 import LoadingSpinner from '../Common/LoadingSpinner';
 import { validateNickname, validateEmail, validatePassword } from '../../utils/validators';
@@ -12,18 +11,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  useEffect(() => {
-    const tg = getTelegram();
-    if (tg?.initDataUnsafe?.user && tg?.initDataUnsafe?.hash) {
-      telegramAuth({
-        ...tg.initDataUnsafe.user,
-        auth_date: tg.initDataUnsafe.auth_date,
-        hash: tg.initDataUnsafe.hash,
-      })
-        .then(() => navigate('/dashboard'))
-        .catch(() => {});
-    }
-  }, [navigate, telegramAuth]);
   
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);

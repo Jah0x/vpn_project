@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Footer from './components/Layout/Footer';
 import PromoBanner from './components/Layout/PromoBanner';
 import TelegramWarning from './components/Auth/TelegramWarning';
+import TelegramLogin from './components/Auth/telegram-login';
 import LoginPage from './components/Auth/LoginPage';
 import Dashboard from './components/Dashboard/Dashboard';
 import Subscription from './pages/Subscription';
@@ -49,6 +50,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 const AppContent = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const [showTelegramWarning, setShowTelegramWarning] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Проверяем, если пользователь зашел через Telegram Web App
@@ -67,8 +69,11 @@ const AppContent = () => {
 
   if (showTelegramWarning) {
     return (
-      <TelegramWarning 
-        onContinue={() => setShowTelegramWarning(false)}
+      <TelegramWarning
+        onContinue={() => {
+          setShowTelegramWarning(false);
+          navigate('/telegram');
+        }}
       />
     );
   }
@@ -80,14 +85,15 @@ const AppContent = () => {
       <main className={isAuthenticated ? 'pt-16' : ''}>
         <Routes>
           {/* Публичные маршруты */}
-          <Route 
-            path="/login" 
+          <Route
+            path="/login"
             element={
-              isAuthenticated ? 
-                <Navigate to="/dashboard" replace /> : 
+              isAuthenticated ?
+                <Navigate to="/dashboard" replace /> :
                 <LoginPage />
-            } 
+            }
           />
+          <Route path="/telegram" element={<TelegramLogin />} />
           
           {/* Защищенные маршруты */}
           <Route 
