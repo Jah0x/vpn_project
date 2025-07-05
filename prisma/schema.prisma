@@ -28,6 +28,8 @@ model User {
   Subscription    Subscription?
   AuditLog        AuditLog[]
   RefreshToken    RefreshToken[]
+  telegram        TelegramAccount?
+  creds           Credentials?
 }
 
 model Vpn {
@@ -151,4 +153,19 @@ model RefreshToken {
   userId    String
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model TelegramAccount {
+  userId   String   @id @map("user_id")
+  user     User     @relation(fields: [userId], references: [id])
+  tgid     BigInt   @unique
+  hash     String
+  username String?
+}
+
+model Credentials {
+  userId  String @id
+  email   String @unique
+  passHash String
+  user    User   @relation(fields: [userId], references: [id])
 }
