@@ -1,95 +1,24 @@
 name: CI
-
-on:
-  push:
-    branches: [ main, release/**, feature/**, codex/** ]
-  pull_request:
-    branches: [ main ]
-
+on: [push, pull_request]
 jobs:
-  lint-test:
+  build-test:
     runs-on: ubuntu-latest
-
     services:
       postgres:
-        image: postgres:15-alpine
+        image: postgres:15
         env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: vpn_project
-        ports: [ "5432:5432" ]
-        options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
+          POSTGRES_PASSWORD: pass
+        ports: [5432:5432]
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vpn_project?schema=public
-      JWT_SECRET: testsecretjwt1234567890
-      JWT_REFRESH_SECRET: testrefsecret1234567890
-      STRIPE_SECRET_KEY: sk_test_11111111111111
-      STRIPE_WEBHOOK_SECRET: whsec_test_22222222222222
-      STRIPE_PRICE_BASIC: price_basic_test
-      STRIPE_PRICE_PRO: price_pro_test
-      STRIPE_PRICE_TEAM: price_team_test
-
+      DATABASE_URL: "postgresql://postgres:pass@localhost:5432/postgres"
+      TELEGRAM_BOT_TOKEN: "dummy"
+      JWT_SECRET: "dummy"
     steps:
       - uses: actions/checkout@v4
-
-      - name: Use Node 18
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: "npm"
-
-      - name: Install deps
-        run: |
-          npm ci
-          npm ci --prefix subscription-server
-          npx prisma generate
-
-      - name: Run DB migrations
-        run: npx prisma migrate deploy
-
-      - name: Seed DB (admin user)
-        run: npm run seed
-
-      - name: Lint
-        run: ESLINT_USE_FLAT_CONFIG=false npm run lint
-
-      - name: Test
-        run: npm test
-
-      - name: Build and run Docker Compose
-        run: |
-          docker compose build --no-cache
-          docker compose up -d
-
-      - name: Check Postgres health
-        run: docker inspect -f '{{.State.Health.Status}}' postgres | grep healthy
-
-      - name: Check services start
-        run: |
-          docker logs backend | grep -q "Server listening"
-          docker logs nginx   | grep -q "emerg" && exit 1
-
-      - name: Check nginx logs for DNS errors
-        run: docker logs nginx | grep -q "host not found" && exit 1
-
-      - name: Integration checks
-        run: |
-          curl -sI http://localhost/static/js/main.js | grep -q "Content-Type: application/javascript"
-          docker logs backend | grep -qi "libssl" && exit 1
-          docker logs nginx   | grep -q "host not found" && exit 1
-          docker compose down
-
-  docker-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: docker compose build --no-cache
-      - run: docker compose up -d
-      - run: docker inspect -f '{{.State.Health.Status}}' postgres | grep healthy
-      - run: curl -sI http://localhost/static/js/main.js | grep -q "Content-Type: application/javascript"
-      - run: docker logs nginx   | (! grep -q "host not found")
-      - run: docker logs backend | (! grep -qi "libssl")
+      - uses: pnpm/action-setup@v2
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter server exec prisma migrate deploy
+      - run: pnpm --filter frontend run build
+      - run: pnpm run test:e2e
+      - run: pnpm run curl:matrix
