@@ -123,12 +123,12 @@ export const useAuth = () => {
     }
   }, []);
 
-  const telegramAuth = useCallback(async (tgUser) => {
+  const telegramAuth = useCallback(async (tgData) => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response = await authApi.telegramAuth(tgUser.id);
+      const response = await authApi.telegramAuth(tgData);
       const { access_token, refresh_token, user: userData } = response.data || {};
 
       if (access_token) {
