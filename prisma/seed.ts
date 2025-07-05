@@ -55,6 +55,19 @@ async function main() {
       role: 'USER',
     },
   });
+
+  const user = await prisma.user.findUnique({ where: { email: 'demo@demo.dev' } });
+  if (user) {
+    await prisma.credentials.upsert({
+      where: { userId: user.id },
+      update: { email: 'demo@demo.dev', passHash: user.passwordHash ?? '' },
+      create: {
+        userId: user.id,
+        email: 'demo@demo.dev',
+        passHash: user.passwordHash ?? '',
+      },
+    });
+  }
 }
 
 main()

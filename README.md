@@ -5,7 +5,15 @@
 ## Разработка/Запуск
 - Скопируйте `.env.example` в `.env` и при необходимости отредактируйте.
 - Укажите переменную `TELEGRAM_BOT_TOKEN` для проверки подписи от Telegram.
-- Запустите сервер командой `npm run start:server` и фронтенд `npm run dev`.
+- Запустите сервер командой `npm run start:server`.
+- Фронт разделён на два приложения: `apps/main` и `apps/tg-webapp`.
+  Запуск локально:
+
+```bash
+pnpm --filter apps/main dev        # http://localhost:5173
+pnpm --filter apps/tg-webapp dev   # http://localhost:5174
+```
+
 - Для работы входа через Telegram Web App задайте `TELEGRAM_BOT_TOKEN` и
   укажите URL мини‑приложения в настройках бота. После нажатия «Войти» данные
   Telegram отправятся на `/api/auth/telegram`, где сервер создаст профиль и
@@ -17,6 +25,13 @@
 ```
 Логин: drbabv@zerologsvpn.com
 Пароль: drbabv123
+```
+
+### Схема БД
+
+```
+User --1:1--> Credentials
+User --1:1--> TelegramAccount
 ```
 
 ### API: логин

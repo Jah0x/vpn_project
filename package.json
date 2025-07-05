@@ -78,7 +78,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build:main": "vite build --config apps/main/vite.config.ts",
+    "build:tg": "vite build --config apps/tg-webapp/vite.config.ts",
+    "build": "pnpm build:main && pnpm build:tg",
     "preview": "vite preview",
     "test": "jest --runInBand",
     "lint": "eslint \"src/**/*.{ts,tsx,js}\" --max-warnings=0",
