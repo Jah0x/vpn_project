@@ -51,12 +51,12 @@ export const useAuth = () => {
     }
   }, []);
 
-  const login = useCallback(async (email, password) => {
+  const login = useCallback(async (loginField, password) => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response = await authApi.login(email, password);
+      const response = await authApi.login(loginField, password);
       const {
         access_token,
         refresh_token,
@@ -106,7 +106,11 @@ export const useAuth = () => {
       setIsLoading(true);
       setError(null);
 
-      const response = await authApi.register(userData.email, userData.password);
+      const response = await authApi.register(
+        userData.email,
+        userData.username,
+        userData.password,
+      );
 
       if (response.success) {
         return { success: true, message: "Регистрация успешна" };

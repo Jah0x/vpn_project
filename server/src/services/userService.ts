@@ -6,22 +6,38 @@ import { Role, AuditAction } from '../types';
 import { logAction } from '../middleware/audit';
 import { TelegramAuthData } from '../lib/telegram';
 
-export async function login(email: string, password: string) {
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
-    throw new Error('Invalid credentials');
-  }
+export async function issueTokens(user: { id: string; role: Role | string }) {
   const payload = { id: user.id, role: user.role as Role };
   const tokens = {
     access_token: signAccessToken(payload),
     refresh_token: signRefreshToken(payload),
   };
+  await prisma.refreshToken.create({
+    data: { id: crypto.randomUUID(), token: tokens.refresh_token, userId: user.id },
+  });
+  return tokens;
+}
+
+export async function login(login: string, password: string) {
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [{ email: login }, { username: login }],
+    },
+  });
+  if (!user || !user.passwordHash || !bcrypt.compareSync(password, user.passwordHash)) {
+    throw new Error('Invalid credentials');
+  }
+  const tokens = await issueTokens(user);
   await logAction(AuditAction.LOGIN, user.id, {});
   return tokens;
 }
 
-export async function register(email: string, password: string) {
-  const existing = await prisma.user.findUnique({ where: { email } });
+export async function register(email: string, username: string, password: string) {
+  const existing = await prisma.user.findFirst({
+    where: {
+      OR: [{ email }, { username }],
+    },
+  });
   if (existing) throw new Error('Email exists');
   const uid = await prisma.preallocatedUid.findFirst({ where: { isFree: true } });
   if (!uid) throw new Error('NO_UID_AVAILABLE');
@@ -30,6 +46,7 @@ export async function register(email: string, password: string) {
     const created = await tx.user.create({
       data: {
         email,
+        username,
         passwordHash: bcrypt.hashSync(password, 10),
         uuid: uid.uuid,
         role: 'USER',
@@ -42,11 +59,7 @@ export async function register(email: string, password: string) {
     return created;
   });
 
-  const payload = { id: user.id, role: user.role as Role };
-  const tokens = {
-    access_token: signAccessToken(payload),
-    refresh_token: signRefreshToken(payload),
-  };
+  const tokens = await issueTokens(user);
   await logAction(AuditAction.LOGIN, user.id, {});
   return tokens;
 }
@@ -63,7 +76,7 @@ export async function loginTelegram(data: TelegramAuthData) {
         data: {
           email: `tg${telegramId}@telegram.local`,
           telegramId,
-          nickname: data.username,
+          username: data.username,
           passwordHash: bcrypt.hashSync(crypto.randomUUID(), 10),
           uuid: uid.uuid,
           role: 'USER',
@@ -77,11 +90,7 @@ export async function loginTelegram(data: TelegramAuthData) {
     });
   }
 
-  const payload = { id: user.id, role: user.role as Role };
-  const tokens = {
-    access_token: signAccessToken(payload),
-    refresh_token: signRefreshToken(payload),
-  };
+  const tokens = await issueTokens(user);
   await logAction(AuditAction.LOGIN, user.id, { method: 'telegram' });
   return tokens;
 }

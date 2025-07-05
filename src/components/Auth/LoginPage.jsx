@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,19 @@ const LoginPage = () => {
   const { login, register, telegramAuth } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
+
+  useEffect(() => {
+    const tg = getTelegram();
+    if (tg?.initDataUnsafe?.user && tg?.initDataUnsafe?.hash) {
+      telegramAuth({
+        ...tg.initDataUnsafe.user,
+        auth_date: tg.initDataUnsafe.auth_date,
+        hash: tg.initDataUnsafe.hash,
+      })
+        .then(() => navigate('/dashboard'))
+        .catch(() => {});
+    }
+  }, [navigate, telegramAuth]);
   
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -19,7 +32,7 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({
     login: '',
     email: '',
-    nickname: '',
+    username: '',
     name: '',
     password: '',
     confirmPassword: ''
@@ -53,13 +66,13 @@ const LoginPage = () => {
 
     if (isLogin) {
       if (!formData.login.trim()) {
-        newErrors.login = 'Введите email или nickname';
+        newErrors.login = 'Введите email или username';
       }
     } else {
-      if (!formData.nickname.trim()) {
-        newErrors.nickname = 'Введите nickname';
-      } else if (!validateNickname(formData.nickname)) {
-        newErrors.nickname = 'Nickname должен содержать 3-50 символов (буквы, цифры, _)';
+      if (!formData.username.trim()) {
+        newErrors.username = 'Введите username';
+      } else if (!validateNickname(formData.username)) {
+        newErrors.username = 'Username должен содержать 3-50 символов (буквы, цифры, _)';
       }
 
       if (!formData.name.trim()) {
@@ -104,7 +117,7 @@ const LoginPage = () => {
       if (isLogin) {
         result = await login(formData.login, formData.password);
       } else {
-        result = await register(formData.email, formData.password);
+        result = await register(formData.email, formData.username, formData.password);
       }
 
       if (result?.success) {
@@ -197,16 +210,16 @@ const LoginPage = () => {
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <input
                       type="text"
-                      name="nickname"
-                      placeholder="Nickname"
-                      value={formData.nickname}
+                    name="username"
+                    placeholder="Username"
+                    value={formData.username}
                       onChange={handleInputChange}
                       className={`w-full pl-10 pr-4 py-3 bg-gray-700/50 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
-                        errors.nickname ? 'border-red-500' : 'border-gray-600'
+                        errors.username ? 'border-red-500' : 'border-gray-600'
                       }`}
                     />
                   </div>
-                  {errors.nickname && <p className="text-red-400 text-sm mt-1">{errors.nickname}</p>}
+                  {errors.username && <p className="text-red-400 text-sm mt-1">{errors.username}</p>}
                 </div>
 
                 <div>
@@ -344,7 +357,7 @@ const LoginPage = () => {
                   setFormData({
                     login: '',
                     email: '',
-                    nickname: '',
+                    username: '',
                     name: '',
                     password: '',
                     confirmPassword: ''

@@ -8,8 +8,13 @@ jest.mock('../src/lib/prisma', () => {
   const userStore: any[] = [];
   const prismaMock: any = {
     user: {
-      findUnique: jest.fn(async ({ where: { email } }: any) => userStore.find(u => u.email === email)),
+      findFirst: jest.fn(async ({ where: { OR } }: any) =>
+        userStore.find(u => OR.some((c: any) => (c.email && u.email === c.email) || (c.username && u.username === c.username)))
+      ),
       create: jest.fn(async ({ data }: any) => { const u = { id: `u${userStore.length+1}`, ...data }; userStore.push(u); return u; }),
+    },
+    refreshToken: {
+      create: jest.fn(),
     },
     preallocatedUid: {
       findFirst: jest.fn(async ({ where: { isFree } }: any) => uidStore.find(u => u.isFree === isFree)),
@@ -33,7 +38,7 @@ describe('UID pool registration', () => {
   });
 
   it('registers with free uid', async () => {
-    const tokens = await register('t@example.com', 'pass');
+    const tokens = await register('t@example.com', 'testuser', 'pass');
     expect(tokens.access_token).toBeDefined();
     expect(__stores.userStore[0].uuid).toBe('uid-1');
     expect(__stores.uidStore[0].isFree).toBe(false);
@@ -41,6 +46,6 @@ describe('UID pool registration', () => {
 
   it('returns error when pool empty', async () => {
     __stores.uidStore.length = 0;
-    await expect(register('x@example.com', 'pass')).rejects.toThrow('NO_UID_AVAILABLE');
+    await expect(register('x@example.com', 'testuser', 'pass')).rejects.toThrow('NO_UID_AVAILABLE');
   });
 });
