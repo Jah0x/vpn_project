@@ -20,16 +20,20 @@ router.post("/register", async (req, res) => {
 
 router.post("/telegram", async (req, res) => {
   const data = req.body as TelegramAuthData;
+  req.log.info({ telegramId: data.id }, "Telegram auth attempt");
   if (!verifyTelegramHash(data)) {
+    req.log.warn("Invalid Telegram signature");
     return res.status(400).json({ error: "INVALID_SIGNATURE" });
   }
   try {
     const tokens = await userService.loginTelegram(data);
+    req.log.info({ telegramId: data.id }, "Telegram auth success");
     res.status(200).json(tokens);
   } catch (err: any) {
     if (err.message === "NO_UID_AVAILABLE") {
       return res.status(503).json({ error: "NO_UID_AVAILABLE" });
     }
+    req.log.error({ err }, "Telegram auth failed");
     res.status(400).json({ error: err.message });
   }
 });
