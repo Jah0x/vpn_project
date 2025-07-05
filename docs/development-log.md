@@ -434,3 +434,7 @@
 - Все обращения к `window.Telegram.WebApp` обернуты в проверки.
 - README дополнено разделом "Локальная отладка".
 - Запущены `npm run lint` и `npm test` — успешно.
+## 2025-10-01
+- Обновлена схема initData для Bot API 9.0 (device_storage, secure_storage).
+- Добавлен parseInitData с предупреждением об ошибках.
+- Тесты и линт проходят.
