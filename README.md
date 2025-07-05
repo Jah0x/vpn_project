@@ -6,6 +6,10 @@
 - Скопируйте `.env.example` в `.env` и при необходимости отредактируйте.
 - Укажите переменную `TELEGRAM_BOT_TOKEN` для проверки подписи от Telegram.
 - Запустите сервер командой `npm run start:server` и фронтенд `npm run dev`.
+- Для работы входа через Telegram Web App задайте `TELEGRAM_BOT_TOKEN` и
+  укажите URL мини‑приложения в настройках бота. После нажатия «Войти» данные
+  Telegram отправятся на `/api/auth/telegram`, где сервер создаст профиль и
+  вернёт JWT.
 - Исправлена конфигурация nginx: актуальный upstream backend:4000, удалён дублирующий default_type во фронтенд-Nginx.
 
 ### ✨ Demo credentials

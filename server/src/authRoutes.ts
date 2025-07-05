@@ -3,7 +3,8 @@ import rateLimit from "express-rate-limit";
 import crypto from "crypto";
 import { signAccessToken, verifyRefreshToken } from "./auth";
 import * as userService from "./services/userService";
-import { verifyTelegramHash, TelegramAuthData } from "./lib/telegram";
+import { TelegramAuthData } from "./lib/telegram";
+import { authTelegram } from "./services/authTelegramService";
 import { prisma } from "./lib/prisma";
 
 const router = Router();
@@ -36,10 +37,6 @@ router.post("/register", async (req, res) => {
 router.post("/telegram", telegramLimiter, async (req, res) => {
   const data = req.body as TelegramAuthData;
   req.log.info({ telegramId: data.id }, "Telegram auth attempt");
-  if (!verifyTelegramHash(data)) {
-    req.log.warn("Invalid Telegram signature");
-    return res.status(400).json({ error: "INVALID_SIGNATURE" });
-  }
   try {
     const key = crypto
       .createHash("sha256")
@@ -50,11 +47,15 @@ router.post("/telegram", telegramLimiter, async (req, res) => {
       return res.status(200).json(cached.tokens);
     }
 
-    const tokens = await userService.loginTelegram(data);
+    const tokens = await authTelegram(data);
     telegramCache.set(key, { tokens, expires: Date.now() + 10 * 60 * 1000 });
     req.log.info({ telegramId: data.id }, "Telegram auth success");
     res.status(200).json(tokens);
   } catch (err: any) {
+    if (err.message === "INVALID_SIGNATURE") {
+      req.log.warn("Invalid Telegram signature");
+      return res.status(400).json({ error: "INVALID_SIGNATURE" });
+    }
     if (err.message === "NO_UID_AVAILABLE") {
       return res.status(503).json({ error: "NO_UID_AVAILABLE" });
     }

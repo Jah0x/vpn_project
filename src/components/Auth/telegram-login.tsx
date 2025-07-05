@@ -24,7 +24,11 @@ const TelegramLogin: React.FC = () => {
     }
 
     const payload = {
-      ...tg.initDataUnsafe.user,
+      id: tg.initDataUnsafe.user.id,
+      username: tg.initDataUnsafe.user.username,
+      first_name: tg.initDataUnsafe.user.first_name,
+      last_name: tg.initDataUnsafe.user.last_name,
+      photo_url: tg.initDataUnsafe.user.photo_url,
       auth_date: tg.initDataUnsafe.auth_date,
       hash: tg.initDataUnsafe.hash,
     };
