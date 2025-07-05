@@ -425,3 +425,7 @@
 - Расширен bootstrap в `tgInit.ts`: сохраняет `initData` в localStorage, шлёт событие `telegram-initialized` и вызывает `ready()`.
 - Добавлен тест `tgInit.test.ts`.
 - Запущены `npm run lint` и `npm test`.
+## 2025-09-29
+- В `bootstrapFromTelegram` добавлен ранний выход при отсутствии `initData`.
+- Дополнена документация `telegram-auth.md` описанием этой инициализации.
+- Запущены `npm run lint` и `npm test`.
