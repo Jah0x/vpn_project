@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { useNavigate } from 'react-router-dom';
+import { getTelegram } from '../../lib/telegram';
 import { Eye, EyeOff, Mail, User, Lock, Zap, Shield, Globe } from 'lucide-react';
 import LoadingSpinner from '../Common/LoadingSpinner';
 import { validateNickname, validateEmail, validatePassword } from '../../utils/validators';
@@ -28,7 +29,7 @@ const LoginPage = () => {
 
   // Проверка наличия Telegram Web App
   const isTelegramWebApp = () => {
-    return window.Telegram && window.Telegram.WebApp;
+    return Boolean(getTelegram());
   };
 
   const handleInputChange = (e) => {
@@ -131,8 +132,8 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const tg = window.Telegram.WebApp;
-      const initData = tg.initDataUnsafe;
+      const tg = getTelegram();
+      const initData = tg?.initDataUnsafe;
 
       if (!initData?.user || !initData.hash) {
         showToast('Не удалось получить данные пользователя Telegram', 'error');
