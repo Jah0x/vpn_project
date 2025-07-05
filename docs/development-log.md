@@ -438,3 +438,9 @@
 - Обновлена схема initData для Bot API 9.0 (device_storage, secure_storage).
 - Добавлен parseInitData с предупреждением об ошибках.
 - Тесты и линт проходят.
+## 2025-07-05
+- Расширена модель `User` полями `username`, `passwordHash?` и таблицей `RefreshToken`.
+- Реализована функция `issueTokens` и обновлены маршруты аутентификации.
+- В `seed.ts` добавлен демонстрационный пользователь `demo@demo.dev`.
+- Логин-форма автоматически авторизует через Telegram внутри WebApp.
+- Создан `src/api/index.ts` с базовым экземпляром Axios.

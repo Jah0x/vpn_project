@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -40,6 +41,19 @@ async function main() {
       { code: 'BASIC_12M', name: '12 мес', priceRub: 4500, durationMo: 12 },
     ],
     skipDuplicates: true,
+  });
+
+  // 3. Demo user
+  await prisma.user.upsert({
+    where: { email: 'demo@demo.dev' },
+    update: {},
+    create: {
+      email: 'demo@demo.dev',
+      username: 'demo',
+      passwordHash: await bcrypt.hash('Demo1234', 10),
+      uuid: predefinedUids[0].uuid,
+      role: 'USER',
+    },
   });
 }
 

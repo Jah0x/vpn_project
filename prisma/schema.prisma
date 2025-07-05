@@ -14,16 +14,17 @@ enum Role {
 
 model User {
   id              String           @id @default(cuid())
-  email           String           @unique
-  nickname        String?          @unique
+  email           String?          @unique
+  username        String?          @unique
   telegramId      String?          @unique
-  passwordHash    String
+  passwordHash    String?
   uuid            String           @unique
   role            Role             @default(USER)
   preallocatedUid PreallocatedUid?
   Vpn             Vpn[]
   Subscription    Subscription?
   AuditLog        AuditLog[]
+  RefreshToken    RefreshToken[]
 }
 
 model Vpn {
@@ -139,4 +140,12 @@ model Invoice {
   onramperId String?
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String
+  userId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
