@@ -13,10 +13,10 @@ sudo bash scripts/install.sh
 
 Скрипт выполнит:
 - клонирование репозитория в `/opt/vpn_project`;
-- установку Docker, docker-compose, nginx, certbot, Node.js 18, pnpm и PostgreSQL;
+- установку Docker, docker-compose, nginx, certbot, Node.js 20, pnpm и PostgreSQL;
 - создание файла `.env` с сгенерированными секретами;
 - сборку и запуск контейнеров (`docker compose up --build`);
-- настройку nginx внутри Docker (роутинг `/` → frontend, `/api` → backend);
+- настройку nginx для доменов `zerologsvpn.com` и `tg.zerologsvpn.com` (основной домен используется для логина по паролю, поддомен — для входа через Telegram);
 - запрос SSL‑сертификата через `certbot` и подключение его к контейнеру;
 - добавление cron‑задачи на автоматическое продление сертификата и перезагрузку nginx.
 
