@@ -18,6 +18,7 @@ pnpm --filter apps/tg-webapp dev   # http://localhost:5174
   укажите URL мини‑приложения в настройках бота. После нажатия «Войти» данные
   Telegram отправятся на `/api/auth/telegram`, где сервер создаст профиль и
   вернёт JWT.
+- Авторизация по логину и паролю доступна на домене `zerologsvpn.com`, а вход через Telegram работает на поддомене `tg.zerologsvpn.com`.
 - Исправлена конфигурация nginx: актуальный upstream backend:4000, удалён дублирующий default_type во фронтенд-Nginx.
 
 ### ✨ Demo credentials
