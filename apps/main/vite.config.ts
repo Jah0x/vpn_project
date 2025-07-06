@@ -4,14 +4,14 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  root: __dirname,
+  root: resolve(__dirname, '../..'),
   build: {
-    outDir: '../../dist/main',
+    outDir: resolve(__dirname, '../../dist/main'),
     emptyOutDir: true,
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, '../..', 'src'),
+      '@': resolve(__dirname, '../../src'),
     },
   },
   define: {
