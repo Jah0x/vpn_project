@@ -487,3 +487,8 @@
 - В `tg-webapp` импорт компонента `TelegramLogin` переведён на alias `@`.
 - Сборка `npm run build` завершается успешно.
 
+## 2025-07-06b
+- Написан скрипт `scripts/install-dev.sh` для развёртывания dev-окружения.
+- В package.json добавлена команда `dev:install`, README дополнен быстрым стартом.
+- `npm run lint` и `npm test` выполнены без ошибок.
+
