@@ -16,4 +16,15 @@ export const telegramAuth = (data: any) =>
 
 export const logout = () => api.post('/auth/logout');
 
+export const refreshToken = (refresh: string) =>
+  api.post('/auth/refresh', { refresh });
+
+export const changePassword = (
+  currentPassword: string,
+  newPassword: string,
+) => api.post('/auth/change-password', { currentPassword, newPassword });
+
+export const resetPassword = (email: string) =>
+  api.post('/auth/reset-password', { email });
+
 export default api;

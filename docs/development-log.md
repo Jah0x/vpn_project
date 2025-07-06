@@ -482,3 +482,8 @@
 ## 2025-07-06
 - Исправлена сборка приложения main: vite.config.ts теперь использует корневой каталог и абсолютный outDir.
 - Команды `npm run lint` и `npm test` прошли успешно.
+## 2025-10-10
+- Добавлены недостающие методы `refreshToken`, `changePassword`, `resetPassword` в `src/services/auth.ts`.
+- В `tg-webapp` импорт компонента `TelegramLogin` переведён на alias `@`.
+- Сборка `npm run build` завершается успешно.
+
