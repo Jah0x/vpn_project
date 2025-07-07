@@ -77,11 +77,11 @@ build_frontend() {
   header "Install deps & build front‑end apps"
   # Устанавливаем все зависимости в корне репо (pnpm workspace)
   pnpm --dir "$REPO_DIR" install --frozen-lockfile
-  # Запускаем скрипт build из package.json, который сам собирает оба фронта
+  # Запускаем корневой скрипт build (vite собирает оба фронта)
   pnpm --dir "$REPO_DIR" run build
 }
 
-run_migrations() {() {
+run_migrations() {
   header "Run Prisma migrate + seed"
   compose up -d postgres
   until compose exec postgres pg_isready -U vpn -d postgres &>/dev/null; do
