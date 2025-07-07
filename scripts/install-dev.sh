@@ -75,14 +75,13 @@ prepare_env() {
 
 build_frontend() {
   header "Install deps & build front‑end apps"
-  # install root deps (workspace)
+  # Устанавливаем все зависимости в корне репо (pnpm workspace)
   pnpm --dir "$REPO_DIR" install --frozen-lockfile
-  # build both apps explicitly
-  pnpm --dir "$REPO_DIR/apps/main" run build
-  pnpm --dir "$REPO_DIR/apps/tg-webapp" run build
+  # Запускаем скрипт build из package.json, который сам собирает оба фронта
+  pnpm --dir "$REPO_DIR" run build
 }
 
-run_migrations() {
+run_migrations() {() {
   header "Run Prisma migrate + seed"
   compose up -d postgres
   until compose exec postgres pg_isready -U vpn -d postgres &>/dev/null; do
