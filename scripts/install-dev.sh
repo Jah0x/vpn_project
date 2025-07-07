@@ -115,20 +115,20 @@ run_migrations() {
   header "Run Prisma migrate + seed"
   # bring up only Postgres first
   compose up -d postgres
-  until compose exec postgres pg_isready -U vpn -d postgres &>/dev/null; do
+  until compose exec -T postgres pg_isready -U vpn -d postgres &>/dev/null; do
     echo " waiting for Postgres …"; sleep 2
   done
 
   # apply migrations (with safe fallback)
-  if ! compose run --rm backend npx prisma migrate deploy; then
+  if ! compose run --rm -T backend npx prisma migrate deploy; then
     warn "migrate deploy failed ⇒ resetting schema and re‑applying migrations"
-    compose run --rm backend sh -c "npx prisma migrate reset --force --skip-seed && npx prisma migrate deploy"
+    compose run --rm -T backend sh -c "npx prisma migrate reset --force --skip-seed && npx prisma migrate deploy"
   fi
-  compose run --rm backend npx prisma db push
+  compose run --rm -T backend npx prisma db push
 
   # seed (non‑fatal)
   set +e
-  compose run --rm backend npx prisma db seed || warn "Seeding failed, but schema is in sync — continue."
+  compose run --rm -T backend npx prisma db seed || warn "Seeding failed, but schema is in sync — continue."
   set -e
 }
 
