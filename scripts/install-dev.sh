@@ -79,9 +79,16 @@ obtain_certs() {
   header "Ensure TLS certificates"
   mkdir -p "$CERT_DIR"
 
-  # если оба файла уже существуют и не пусты — считаем задачу выполненной
+  # убрать нулевые файлы или битые symlink‑и, оставшиеся от неудачной попытки
+  for f in fullchain.pem privkey.pem; do
+    if [[ -L $CERT_DIR/$f || ! -s $CERT_DIR/$f ]]; then
+      rm -f "$CERT_DIR/$f"
+    fi
+  done
+
+  # если настоящие (не‑symlink) файлы уже есть и непустые — задача выполнена
   if [[ -s $CERT_DIR/fullchain.pem && -s $CERT_DIR/privkey.pem ]]; then
-    echo "certs already present — skip obtain"
+    echo "valid certs already present — skip obtain"
     return 0
   fi
 
@@ -94,8 +101,6 @@ obtain_certs() {
   local CERTBOT_ARGS=( --standalone --non-interactive --agree-tos -m "$EMAIL" -d "$DOMAIN" -d "tg.$DOMAIN" )
 
   if certbot certonly "${CERTBOT_ARGS[@]}"; then
-    # Docker не прокидывает файлы, находящиеся ЗА пределами bind‑mount каталога,
-    # поэтому не используем symlink — копируем реальные файлы внутрь $CERT_DIR.
     cp "$LE_LIVE/fullchain.pem" "$CERT_DIR/fullchain.pem"
     cp "$LE_LIVE/privkey.pem"   "$CERT_DIR/privkey.pem"
     chmod 644 "$CERT_DIR/"*.pem
