@@ -5,26 +5,21 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # ──────────────── CONFIG ────────────────
-DOMAIN="zerologsvpn.com"           # основной домен
-EMAIL="admin@${DOMAIN}"            # для Let's Encrypt
-REPO_DIR="/opt/vpn_project"        # куда кладём репо
-CERT_DIR="$REPO_DIR/certs"         # сюда будут ссылаться certbot‑файлы
+DOMAIN="zerologsvpn.com"            # основной домен
+EMAIL="admin@${DOMAIN}"             # для Let's Encrypt
+REPO_DIR="/opt/vpn_project"         # куда кладём репо
+CERT_DIR="$REPO_DIR/certs"          # сюда будут ссылаться certbot‑файлы
 ENV_FILE="$REPO_DIR/.env"
-COMPOSE="docker compose -f $REPO_DIR/docker-compose.yml"
+
+# docker‑compose wrapper (чтобы не играться с кавычками)
+compose() {
+  docker compose -f "$REPO_DIR/docker-compose.yml" "$@"
+}
 
 # ───────────── helper functions ─────────────
-header() {
-  echo -e "\n\033[1;36m==> $*\033[0m"
-}
-
-die() {
-  echo -e "\033[1;31m$*\033[0m"
-  exit 1
-}
-
-need_root() {
-  [[ $EUID -eq 0 ]] || die "Run as root (sudo)."
-}
+header() { echo -e "\n\033[1;36m==> $*\033[0m"; }
+die()    { echo -e "\033[1;31m$*\033[0m"; exit 1; }
+need_root() { [[ $EUID -eq 0 ]] || die "Run as root (sudo)." ; }
 
 install_packages() {
   header "Install system packages"
@@ -39,7 +34,8 @@ install_docker() {
     install -m0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
       gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
       https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
       > /etc/apt/sources.list.d/docker.list
     apt-get update -qq
@@ -72,17 +68,40 @@ prepare_env() {
   header "Create .env if absent"
   if [[ ! -f $ENV_FILE ]]; then
     cp "$REPO_DIR/.env.example" "$ENV_FILE"
-    sed -i "s/^JWT_SECRET=.*/JWT_SECRET=$(uuidgen)/" "$ENV_FILE"
+    sed -i "s/^JWT_SECRET=.*/JWT_SECRET=$(uuidgen)/"        "$ENV_FILE"
     sed -i "s/^POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$(uuidgen)/" "$ENV_FILE"
   fi
+}
+
+build_frontend() {
+  header "Install deps & build front‑end apps"
+  # install root deps (workspace)
+  pnpm --dir "$REPO_DIR" install --frozen-lockfile
+  # build both apps explicitly
+  pnpm --dir "$REPO_DIR/apps/main" run build
+  pnpm --dir "$REPO_DIR/apps/tg-webapp" run build
+}
+
+run_migrations() {
+  header "Run Prisma migrate + seed"
+  compose up -d postgres
+  until compose exec postgres pg_isready -U vpn -d postgres &>/dev/null; do
+    echo "   waiting for Postgres …"; sleep 2
+  done
+  compose run --rm backend npx prisma migrate deploy
+  compose run --rm backend npx prisma db seed
+}
+
+start_stack() {
+  header "Build & start all containers"
+  compose pull
+  compose up -d --build
 }
 
 obtain_certs() {
   header "Obtain/renew Let's Encrypt certs"
   apt-get install -y certbot
   mkdir -p "$CERT_DIR"
-
-  # если сертификат уже существует и не истёк – certbot пропустит
   certbot certonly --standalone --non-interactive --agree-tos \
     -m "$EMAIL" -d "$DOMAIN" -d "tg.$DOMAIN" || true
 
@@ -90,38 +109,12 @@ obtain_certs() {
   if [[ ! -f $LE_LIVE/fullchain.pem ]]; then
     die "Certbot failed — certs not found in $LE_LIVE"
   fi
-
   ln -sf "$LE_LIVE/fullchain.pem" "$CERT_DIR/fullchain.pem"
-  ln -sf "$LE_LIVE/privkey.pem" "$CERT_DIR/privkey.pem"
-}
-
-build_frontend() {
-  header "Build both front‑end apps"
-  pnpm --prefix "$REPO_DIR" --filter apps/main build
-  pnpm --prefix "$REPO_DIR" --filter apps/tg-webapp build
-}
-
-run_migrations() {
-  header "Run Prisma migrate + seed"
-  $COMPOSE up -d postgres
-
-  until $COMPOSE exec postgres pg_isready -U vpn -d postgres &>/dev/null; do
-    echo " waiting for Postgres …"
-    sleep 2
-  done
-
-  $COMPOSE run --rm backend npx prisma migrate deploy
-  $COMPOSE run --rm backend npx prisma db seed
-}
-
-start_stack() {
-  header "Build & start all containers"
-  $COMPOSE pull
-  $COMPOSE up -d --build
+  ln -sf "$LE_LIVE/privkey.pem"  "$CERT_DIR/privkey.pem"
 }
 
 smoke_test() {
-  header "Smoke‑test (curl‑matrix)"
+  header "Smoke-test (curl-matrix)"
   pushd "$REPO_DIR" >/dev/null
   if ./scripts/curl-matrix.sh; then
     echo -e "\033[32m✓ stack looks healthy\033[0m"
@@ -133,9 +126,8 @@ smoke_test() {
 
 schedule_renew() {
   header "Add certbot renew cron"
-  (
-    crontab -l 2>/dev/null
-    echo "0 4 * * * certbot renew --quiet && docker compose -f $REPO_DIR/docker-compose.yml exec nginx nginx -s reload"
+  ( crontab -l 2>/dev/null; \
+    echo "0 4 * * * certbot renew --quiet && docker compose -f $REPO_DIR/docker-compose.yml exec nginx nginx -s reload" \
   ) | crontab -
 }
 
@@ -149,8 +141,8 @@ prepare_env
 build_frontend
 run_migrations
 start_stack
-obtain_certs   # ← после nginx запущен, но до перезапуска
-docker compose -f "$REPO_DIR/docker-compose.yml" restart nginx
+obtain_certs
+compose restart nginx
 smoke_test
 schedule_renew
 
