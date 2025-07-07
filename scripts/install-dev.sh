@@ -108,21 +108,32 @@ start_stack() {
 }
 
 obtain_certs() {
-  header "Obtain/renew Let's Encrypt certs"
-  apt-get install -y certbot
+  header "Obtain / renew Let's Encrypt certs (zerologsvpn.com + tg)"
+  apt-get install -y certbot >/dev/null
   mkdir -p "$CERT_DIR"
-  certbot certonly --standalone --non-interactive --agree-tos \
-    -m "$EMAIL" -d "$DOMAIN" -d "tg.$DOMAIN" || true
+
+  # Проверяем, есть ли уже выписанный сертификат на основной домен
+  if certbot certificates 2>/dev/null | grep -q "Certificate Name: ${DOMAIN}"; then
+    # расширяем существующий сертификат, добавляя поддомен tg
+    certbot certonly --standalone --non-interactive --agree-tos \
+      --cert-name "$DOMAIN" --expand \
+      -m "$EMAIL" -d "$DOMAIN" -d "tg.$DOMAIN"
+  else
+    # создаём новый сертификат сразу на два домена
+    certbot certonly --standalone --non-interactive --agree-tos \
+      -m "$EMAIL" -d "$DOMAIN" -d "tg.$DOMAIN"
+  fi
 
   local LE_LIVE="/etc/letsencrypt/live/${DOMAIN}"
   if [[ ! -f $LE_LIVE/fullchain.pem ]]; then
-    die "Certbot failed — certs not found in $LE_LIVE"
+    die "Certbot failed — certs not found in $LE_LIVE (check logs)"
   fi
+
   ln -sf "$LE_LIVE/fullchain.pem" "$CERT_DIR/fullchain.pem"
   ln -sf "$LE_LIVE/privkey.pem"  "$CERT_DIR/privkey.pem"
 }
 
-smoke_test() {
+smoke_test() {() {
   header "Smoke‑test (curl‑matrix)"
   pushd "$REPO_DIR" >/dev/null
   if ./scripts/curl-matrix.sh; then
