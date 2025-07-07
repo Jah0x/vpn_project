@@ -79,13 +79,13 @@ obtain_certs() {
   header "Ensure TLS certificates"
   mkdir -p "$CERT_DIR"
 
-  # Skip if certs already exist
+  # если оба файла уже существуют и не пусты — считаем задачу выполненной
   if [[ -s $CERT_DIR/fullchain.pem && -s $CERT_DIR/privkey.pem ]]; then
     echo "certs already present — skip obtain"
     return 0
   fi
 
-  # Install certbot if missing
+  # certbot нужен даже если упадёт → логика fallback
   if ! command -v certbot >/dev/null 2>&1; then
     apt-get install -y certbot >/dev/null
   fi
@@ -94,8 +94,11 @@ obtain_certs() {
   local CERTBOT_ARGS=( --standalone --non-interactive --agree-tos -m "$EMAIL" -d "$DOMAIN" -d "tg.$DOMAIN" )
 
   if certbot certonly "${CERTBOT_ARGS[@]}"; then
-    ln -sf "$LE_LIVE/fullchain.pem" "$CERT_DIR/fullchain.pem"
-    ln -sf "$LE_LIVE/privkey.pem"  "$CERT_DIR/privkey.pem"
+    # Docker не прокидывает файлы, находящиеся ЗА пределами bind‑mount каталога,
+    # поэтому не используем symlink — копируем реальные файлы внутрь $CERT_DIR.
+    cp "$LE_LIVE/fullchain.pem" "$CERT_DIR/fullchain.pem"
+    cp "$LE_LIVE/privkey.pem"   "$CERT_DIR/privkey.pem"
+    chmod 644 "$CERT_DIR/"*.pem
   else
     warn "Let's Encrypt failed — falling back to self‑signed cert"
     openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
@@ -168,8 +171,10 @@ smoke_test() {
 
 schedule_renew() {
   header "Add certbot renew cron"
+  # deploy‑hook копирует сертификаты внутрь bind‑mount каталога, чтобы nginx видел реальный файл
+  local HOOK="cp /etc/letsencrypt/live/${DOMAIN}/fullchain.pem $CERT_DIR/fullchain.pem && cp /etc/letsencrypt/live/${DOMAIN}/privkey.pem $CERT_DIR/privkey.pem && docker compose -f $REPO_DIR/docker-compose.yml exec -T nginx nginx -s reload || true"
   ( crontab -l 2>/dev/null; \
-    echo "0 4 * * * certbot renew --quiet && docker compose -f $REPO_DIR/docker-compose.yml exec -T nginx nginx -s reload || true" \
+    echo "0 4 * * * certbot renew --quiet --deploy-hook \"$HOOK\"" \
   ) | crontab -
 }
 
