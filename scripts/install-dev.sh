@@ -75,9 +75,7 @@ prepare_env() {
 
 build_frontend() {
   header "Install deps & build front‑end apps"
-  # Устанавливаем все зависимости в корне репо (pnpm workspace)
   pnpm --dir "$REPO_DIR" install --frozen-lockfile
-  # Запускаем корневой скрипт build (vite собирает оба фронта)
   pnpm --dir "$REPO_DIR" run build
 }
 
@@ -87,16 +85,14 @@ run_migrations() {
   until compose exec postgres pg_isready -U vpn -d postgres &>/dev/null; do
     echo "   waiting for Postgres …"; sleep 2
   done
-  # 1) Попытаться применить миграции нормально
   if ! compose run --rm backend npx prisma migrate deploy; then
-    echo "migrate deploy failed ⇒ сбрасываем схему и применяем заново"
+    echo "migrate deploy failed ⇒ resetting schema and re‑applying migrations"
     compose run --rm backend sh -c "npx prisma migrate reset --force --skip-seed && npx prisma migrate deploy"
   fi
-  # 2) сидим данные
   compose run --rm backend npx prisma db seed
 }
 
-start_stack() {() {
+start_stack() {
   header "Build & start all containers"
   compose pull
   compose up -d --build
@@ -118,12 +114,12 @@ obtain_certs() {
 }
 
 smoke_test() {
-  header "Smoke-test (curl-matrix)"
+  header "Smoke‑test (curl‑matrix)"
   pushd "$REPO_DIR" >/dev/null
   if ./scripts/curl-matrix.sh; then
     echo -e "\033[32m✓ stack looks healthy\033[0m"
   else
-    echo -e "\033[31mSmoke-test failed – check logs!\033[0m"
+    echo -e "\033[31mSmoke‑test failed – check logs!\033[0m"
   fi
   popd >/dev/null
 }
