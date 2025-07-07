@@ -119,16 +119,19 @@ run_migrations() {
     echo " waiting for Postgres …"; sleep 2
   done
 
+  # Helper to reduce repetition
+  local RUN=(compose run --rm -T -e CI=true backend)
+
   # apply migrations (with safe fallback)
-  if ! compose run --rm -T backend npx prisma migrate deploy; then
+  if ! "${RUN[@]}" npx prisma migrate deploy; then
     warn "migrate deploy failed ⇒ resetting schema and re‑applying migrations"
-    compose run --rm -T backend sh -c "npx prisma migrate reset --force --skip-seed && npx prisma migrate deploy"
+    "${RUN[@]}" sh -c "npx prisma migrate reset --force --skip-seed && npx prisma migrate deploy"
   fi
-  compose run --rm -T backend npx prisma db push
+  "${RUN[@]}" npx prisma db push
 
   # seed (non‑fatal)
   set +e
-  compose run --rm -T backend npx prisma db seed || warn "Seeding failed, but schema is in sync — continue."
+  "${RUN[@]}" npx prisma db seed || warn "Seeding failed, but schema is in sync — continue."
   set -e
 }
 
