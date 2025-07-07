@@ -101,7 +101,7 @@ run_migrations() {
   set -e
 }
 
-start_stack() {() 
+start_stack() (){ 
   header "Build & start all containers"
   compose pull
   compose up -d --build
