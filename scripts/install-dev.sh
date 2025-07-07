@@ -1,104 +1,140 @@
 #!/usr/bin/env bash
+# complete (prod + dev) installer for vpn_project
 set -euo pipefail
 IFS=$'\n\t'
 
-# ───────────────────────────── helpers ─────────────────────────────
+# ──────────────── CONFIG ────────────────
+DOMAIN="zerologsvpn.com"          # основной домен
+EMAIL="admin@${DOMAIN}"           # для Let's Encrypt
+REPO_DIR="/opt/vpn_project"       # куда кладём репо
+CERT_DIR="$REPO_DIR/certs"        # сюда будут ссылаться certbot-файлы
+ENV_FILE="$REPO_DIR/.env"
+COMPOSE="docker compose -f $REPO_DIR/docker-compose.yml"
 
-check_docker() {
+# ───────────── helper functions ─────────────
+header()  { echo -e "\n\033[1;36m==> $*\033[0m"; }
+die()     { echo -e "\033[1;31m$*\033[0m"; exit 1; }
+
+need_root()          { [[ $EUID -eq 0 ]] || die "Run as root (sudo)." ; }
+install_packages()   {
+  header "Install system packages"
+  apt-get update -qq
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    ca-certificates curl gnupg lsb-release openssl git software-properties-common
+}
+
+install_docker()     {
+  header "Install Docker + Compose"
   if ! command -v docker >/dev/null 2>&1; then
-    echo "❌  Docker не установлен." >&2; exit 1
-  fi
-  # major version
-  local v
-  v=$(docker version --format '{{.Server.Version}}' | cut -d. -f1)
-  if [[ -z "$v" || $v -lt 24 ]]; then
-    echo "❌  Требуется Docker ≥ 24." >&2; exit 1
-  fi
-  if ! docker compose version >/dev/null 2>&1; then
-    echo "❌  Требуется Docker Compose V2." >&2; exit 1
+    install -m0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+      gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    echo "deb [arch=$(dpkg --print-architecture) \
+      signed-by=/etc/apt/keyrings/docker.gpg] \
+      https://download.docker.com/linux/ubuntu  $(lsb_release -cs) stable" \
+      > /etc/apt/sources.list.d/docker.list
+    apt-get update -qq
+    apt-get install -y docker-ce docker-ce-cli docker-compose-plugin
+    systemctl enable --now docker
   fi
 }
 
-check_pnpm() {
+install_node()       {
+  header "Install Node 20 + pnpm"
+  if ! command -v node >/dev/null 2>&1; then
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    apt-get install -y nodejs
+  fi
   if ! command -v pnpm >/dev/null 2>&1; then
-    echo "→ pnpm не найден, устанавливаю через corepack"
-    corepack enable pnpm@9
+    npm install -g pnpm
   fi
 }
 
-setup_env() {
-  if [[ ! -f .env ]]; then
-    cp .env.example .env
-    sed -i "s/^JWT_SECRET=.*/JWT_SECRET=$(uuidgen)/" .env
-    sed -i "s/^POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$(uuidgen)/" .env
-    echo "✓ Создан дефолтный .env"
+clone_repo()         {
+  header "Clone / update repository"
+  if [[ ! -d $REPO_DIR/.git ]]; then
+    git clone https://github.com/Jah0x/vpn_project.git "$REPO_DIR"
+  else
+    git -C "$REPO_DIR" pull --ff-only
   fi
 }
 
-check_certs() {
-  mkdir -p certs
-  if [[ ! -f certs/fullchain.pem || ! -f certs/privkey.pem ]]; then
-    echo -e "\n❌  Не найдены certs/fullchain.pem и/или certs/privkey.pem"
-    echo "   Получите валидный SSL-сертификат (Let’s Encrypt / ZeroSSL) и"
-    echo "   положите файлы в каталог certs/ перед запуском установки."
-    exit 1
+prepare_env()        {
+  header "Create .env if absent"
+  if [[ ! -f $ENV_FILE ]]; then
+    cp "$REPO_DIR/.env.example" "$ENV_FILE"
+    sed -i "s/^JWT_SECRET=.*/JWT_SECRET=$(uuidgen)/"   "$ENV_FILE"
+    sed -i "s/^POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$(uuidgen)/" "$ENV_FILE"
   fi
 }
 
-wait_postgres() {
-  until docker compose exec postgres pg_isready -U "${POSTGRES_USER:-vpn}" >/dev/null 2>&1; do
-    echo "⌛  Жду готовности Postgres…"; sleep 2
-  done
-}
-
-health_check() {
-  local svc=$1 id
-  id=$(docker compose ps -q "$svc")
-  if [[ -z $id ]]; then echo "❌  Сервис $svc не запущен"; exit 1; fi
-  # если HEALTHCHECK не определён — пропускаем ожидание
-  if docker inspect "$id" | grep -q '"Health":'; then
-    until [[ "$(docker inspect -f '{{.State.Health.Status}}' "$id")" == "healthy" ]]; do
-      echo "⌛  Жду $svc (healthcheck)…"; sleep 2
-    done
+obtain_certs()       {
+  header "Obtain/renew Let's Encrypt certs"
+  apt-get install -y certbot
+  mkdir -p "$CERT_DIR"
+  # если сертификат уже существует и не истёк – certbot пропустит
+  certbot certonly --standalone --non-interactive --agree-tos \
+          -m "$EMAIL" -d "$DOMAIN" -d "tg.$DOMAIN" || true
+  local LE_LIVE="/etc/letsencrypt/live/${DOMAIN}"
+  if [[ ! -f $LE_LIVE/fullchain.pem ]]; then
+    die "Certbot failed — certs not found in $LE_LIVE"
   fi
+  ln -sf "$LE_LIVE/fullchain.pem" "$CERT_DIR/fullchain.pem"
+  ln -sf "$LE_LIVE/privkey.pem"   "$CERT_DIR/privkey.pem"
 }
 
-run_matrix() {
-  local out ok=0
-  out=$(bash scripts/curl-matrix.sh); echo "$out"
-  echo "$out" | grep -Eq 'tg\.zerologsvpn\.com .*telegram.*→ (400|401)' || ok=1
-  echo "$out" | grep -Eq 'zerologsvpn\.com .*\/auth\/telegram.*→ 403'      || ok=1
-  echo "$out" | grep -Eq 'zerologsvpn\.com .*\/auth\/login.*→ 401'         || ok=1
-  echo "$out" | grep -Eq 'tg\.zerologsvpn\.com .*\/auth\/login.*→ 403'     || ok=1
-  if (( ok )); then
-    echo -e "\e[31mRED ❌  Smoke-тест не пройден. Смотрите логи: pnpm docker:logs\e[0m"
-    exit 1
+build_frontend()     {
+  header "Build both front-end apps"
+  pnpm --prefix "$REPO_DIR" --filter apps/main build
+  pnpm --prefix "$REPO_DIR" --filter apps/tg-webapp build
+}
+
+run_migrations()     {
+  header "Run Prisma migrate + seed"
+  $COMPOSE up -d postgres
+  until $COMPOSE exec postgres pg_isready -U vpn -d postgres &>/dev/null; do
+    echo "  waiting for Postgres …"; sleep 2; done
+  $COMPOSE run --rm backend npx prisma migrate deploy
+  $COMPOSE run --rm backend npx prisma db seed
+}
+
+start_stack()        {
+  header "Build & start all containers"
+  $COMPOSE pull
+  $COMPOSE up -d --build
+}
+
+smoke_test()         {
+  header "Smoke-test (curl-matrix)"
+  pushd "$REPO_DIR" >/dev/null
+  if ./scripts/curl-matrix.sh; then
+    echo -e "\033[32m✓ stack looks healthy\033[0m"
+  else
+    echo -e "\033[31mSmoke-test failed – check logs!\033[0m"
   fi
+  popd >/dev/null
 }
 
-# ───────────────────────────── workflow ────────────────────────────
-
-main() {
-  check_docker
-  check_pnpm
-  setup_env
-  check_certs                    # ← сертификаты обязаны быть до compose-старта
-
-  docker compose up -d postgres
-  wait_postgres
-
-  pnpm --filter server exec prisma migrate deploy
-  pnpm --filter server exec prisma db seed
-
-  pnpm --filter apps/main build
-  pnpm --filter apps/tg-webapp build
-
-  docker compose up -d --build backend frontend nginx
-  health_check backend
-  health_check nginx
-
-  run_matrix
-  echo -e "\e[32m✓ Всё поднято! → https://localhost/login\e[0m"
+schedule_renew()     {
+  header "Add certbot renew cron"
+  ( crontab -l 2>/dev/null; \
+    echo "0 4 * * * certbot renew --quiet && docker compose -f $REPO_DIR/docker-compose.yml exec nginx nginx -s reload" \
+  ) | crontab -
 }
 
-main "$@"
+# ─────────────── main flow ───────────────
+need_root
+install_packages
+install_docker
+install_node
+clone_repo
+prepare_env
+build_frontend
+run_migrations
+start_stack
+obtain_certs         # ← после nginx запущен, но до перезапуска
+docker compose -f "$REPO_DIR/docker-compose.yml" restart nginx
+smoke_test
+schedule_renew
+
+echo -e "\n\033[1;32mInstallation complete! → https://$DOMAIN/login\033[0m"
