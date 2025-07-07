@@ -127,6 +127,12 @@ build_frontend() {
 
   # build workspaces
   pnpm --dir "$REPO_DIR" run build
+
+  # ── ensure index.html exists where nginx expects it ──
+  if [[ -f "$REPO_DIR/dist/main/index.html" ]]; then
+    mkdir -p "$REPO_DIR/dist"
+    cp -f "$REPO_DIR/dist/main/index.html" "$REPO_DIR/dist/index.html"
+  fi
 }
 
 run_migrations() {
@@ -154,14 +160,9 @@ run_migrations() {
 }
 
 start_stack() {
-  header "Build & start backend and frontend (nginx later)"
+  header "Build & start all containers"
   compose pull
-  compose up -d --build postgres backend frontend
-}
-
-start_nginx() {
-  header "Start nginx after certs are ready"
-  compose up -d --build nginx
+  compose up -d --build
 }
 
 smoke_test() {
@@ -199,7 +200,7 @@ obtain_certs
 build_frontend
 run_migrations
 start_stack
-start_nginx
+compose restart nginx || true
 smoke_test
 schedule_renew
 
