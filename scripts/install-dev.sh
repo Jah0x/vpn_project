@@ -85,14 +85,23 @@ run_migrations() {
   until compose exec postgres pg_isready -U vpn -d postgres &>/dev/null; do
     echo "   waiting for Postgres …"; sleep 2
   done
+  # 1) применяем миграции (fallback → reset)
   if ! compose run --rm backend npx prisma migrate deploy; then
     echo "migrate deploy failed ⇒ resetting schema and re‑applying migrations"
     compose run --rm backend sh -c "npx prisma migrate reset --force --skip-seed && npx prisma migrate deploy"
   fi
+  # 2) на всякий случай синхронизируем схему напрямую (вдруг новые поля без миграций)
+  compose run --rm backend npx prisma db push
+  # 3) сид — допускаем мягкий сбой (не прерываем установку)
+  set +e
   compose run --rm backend npx prisma db seed
+  if [[ $? -ne 0 ]]; then
+    echo -e "[33m⚠️  Seeding failed, but schema is in sync — continue.[0m"
+  fi
+  set -e
 }
 
-start_stack() {
+start_stack() {() {
   header "Build & start all containers"
   compose pull
   compose up -d --build
