@@ -11,7 +11,7 @@ REPO_DIR="/opt/vpn_project"         # куда кладём репо
 CERT_DIR="$REPO_DIR/certs"          # сюда будут ссылаться certbot‑файлы
 ENV_FILE="$REPO_DIR/.env"
 
-# docker‑compose wrapper (чтобы не играться с кавычками)
+# docker‑compose wrapper (чтобы не возиться с кавычками)
 compose() {
   docker compose -f "$REPO_DIR/docker-compose.yml" "$@"
 }
@@ -90,18 +90,18 @@ run_migrations() {
     echo "migrate deploy failed ⇒ resetting schema and re‑applying migrations"
     compose run --rm backend sh -c "npx prisma migrate reset --force --skip-seed && npx prisma migrate deploy"
   fi
-  # 2) на всякий случай синхронизируем схему напрямую (вдруг новые поля без миграций)
+  # 2) синхронизируем схему напрямую (на случай новых полей без миграций)
   compose run --rm backend npx prisma db push
   # 3) сид — допускаем мягкий сбой (не прерываем установку)
   set +e
   compose run --rm backend npx prisma db seed
   if [[ $? -ne 0 ]]; then
-    echo -e "[33m⚠️  Seeding failed, but schema is in sync — continue.[0m"
+    echo -e "\033[33m⚠️  Seeding failed, but schema is in sync — continue.\033[0m"
   fi
   set -e
 }
 
-start_stack() (){ 
+start_stack() {
   header "Build & start all containers"
   compose pull
   compose up -d --build
