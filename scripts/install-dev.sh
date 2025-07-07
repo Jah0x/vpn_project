@@ -154,9 +154,14 @@ run_migrations() {
 }
 
 start_stack() {
-  header "Build & start all containers"
+  header "Build & start backend and frontend (nginx later)"
   compose pull
-  compose up -d --build
+  compose up -d --build postgres backend frontend
+}
+
+start_nginx() {
+  header "Start nginx after certs are ready"
+  compose up -d --build nginx
 }
 
 smoke_test() {
@@ -194,7 +199,7 @@ obtain_certs
 build_frontend
 run_migrations
 start_stack
-compose restart nginx || true
+start_nginx
 smoke_test
 schedule_renew
 
