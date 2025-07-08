@@ -19,7 +19,6 @@ const LoginPage = () => {
 
   const [formData, setFormData] = useState({
     email: '',
-    email: '',
     username: '',
     name: '',
     password: '',

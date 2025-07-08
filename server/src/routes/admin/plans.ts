@@ -10,7 +10,7 @@ router.get('/', authenticateJWT, authorizeRoles(Role.ADMIN), async (_req, res) =
   res.json(plans);
 });
 
-router.post('/', authenticateJWT, authorizeRoles(Role.ADMIN), async (req: AuthenticatedRequest, res) => {
+router.post('/', authenticateJWT, authorizeRoles(Role.ADMIN), async (req, res) => {
   const plan = await prisma.plan.create({ data: req.body });
   res.status(201).json(plan);
 });

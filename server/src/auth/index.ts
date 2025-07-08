@@ -6,8 +6,10 @@ import { prisma } from '../lib/prisma';
 passport.use('local', local);
 passport.use('telegram', telegram);
 
-passport.serializeUser((user: any, done) => done(null, user.id));
-passport.deserializeUser(async (id: number, done) => {
+passport.serializeUser((user: any, done: (err: any, id?: any) => void) =>
+  done(null, user.id)
+);
+passport.deserializeUser(async (id: string, done: (err: any, user?: any) => void) => {
   try {
     const user = await prisma.user.findUnique({ where: { id } });
     done(null, user);

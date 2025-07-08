@@ -9,8 +9,9 @@ const router = Router();
 router.get(
   "/subscription-url",
   authenticateJWT,
-  async (req: AuthenticatedRequest, res: Response) => {
-    const userId = req.user!.id;
+  async (req, res: Response) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user!.id;
     const sub = await prisma.subscription.findFirst({ where: { userId } });
     if (!sub || sub.status !== "active") {
       return res.status(402).json({ error: "Subscription inactive" });
@@ -28,7 +29,7 @@ router.get(
   "/admin/subscription-template",
   authenticateJWT,
   authorizeRoles(Role.ADMIN),
-  async (_req: AuthenticatedRequest, res: Response) => {
+  async (_req, res: Response) => {
     const tmpl = await prisma.subscriptionLinkTemplate.findUnique({
       where: { id: 1 },
     });
@@ -40,7 +41,8 @@ router.put(
   "/admin/subscription-template",
   authenticateJWT,
   authorizeRoles(Role.ADMIN),
-  async (req: AuthenticatedRequest, res: Response) => {
+  async (req, res: Response) => {
+    const authReq = req as AuthenticatedRequest;
     const { urlTemplate } = req.body as { urlTemplate?: string };
     if (!urlTemplate || !urlTemplate.includes("{{UUID}}")) {
       return res.status(400).json({ error: "Invalid template" });
@@ -50,7 +52,7 @@ router.put(
       update: { urlTemplate },
       create: { id: 1, urlTemplate },
     });
-    await logAction(AuditAction.TEMPLATE_EDIT, req.user!.id, {
+    await logAction(AuditAction.TEMPLATE_EDIT, authReq.user!.id, {
       template: "subscription-link",
     });
     res.json({ urlTemplate: tmpl.urlTemplate });

@@ -9,7 +9,7 @@ router.get(
   "/admin/audit",
   authenticateJWT,
   authorizeRoles(Role.ADMIN),
-  async (req: AuthenticatedRequest, res) => {
+  async (req, res) => {
     const {
       action,
       userId,

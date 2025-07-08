@@ -22,13 +22,14 @@ router.put(
   "/admin/config-template",
   authenticateJWT,
   authorizeRoles(Role.ADMIN),
-  (req: AuthenticatedRequest, res) => {
+  (req, res) => {
+    const authReq = req as AuthenticatedRequest;
     if (typeof req.body !== "object" || Array.isArray(req.body)) {
       return res.status(400).json({ error: "Invalid JSON" });
     }
     Object.assign(configTemplate, req.body);
     // template stored in memory only
-    logAction(AuditAction.TEMPLATE_EDIT, req.user!.id, {});
+    logAction(AuditAction.TEMPLATE_EDIT, authReq.user!.id, {});
     res.json(configTemplate);
   },
 );

@@ -39,42 +39,38 @@ export function verifyRefreshToken(token: string): JwtPayload {
   return jwt.verify(token, JWT_REFRESH_SECRET) as JwtPayload;
 }
 
-export function authenticateJWT(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction,
-) {
+import { RequestHandler } from "express";
+
+export const authenticateJWT: RequestHandler = (req, res, next) => {
   const auth = req.headers.authorization;
   if (!auth) return res.status(401).json({ error: "Unauthorized" });
   const [scheme, token] = auth.split(" ");
   if (scheme !== "Bearer" || !token)
     return res.status(401).json({ error: "Unauthorized" });
   try {
-    req.user = verifyAccessToken(token);
+    (req as AuthenticatedRequest).user = verifyAccessToken(token);
     next();
   } catch {
     return res.status(401).json({ error: "Unauthorized" });
   }
-}
+};
 
 export function authorizeRoles(...roles: Role[]) {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    if (!req.user || !roles.includes(req.user.role)) {
+  return ((req, res, next) => {
+    const user = (req as AuthenticatedRequest).user;
+    if (!user || !roles.includes(user.role)) {
       return res.status(403).json({ error: "Forbidden" });
     }
     next();
-  };
+  }) as RequestHandler;
 }
 
-export async function ownerOrAdmin(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction,
-) {
+export const ownerOrAdmin: RequestHandler = async (req, res, next) => {
   const vpn = await prisma.vpn.findUnique({ where: { id: req.params.id } });
   if (!vpn) return res.status(404).json({ error: "Not found" });
-  if (req.user?.role === Role.ADMIN || req.user?.id === vpn.ownerId) {
+  const user = (req as AuthenticatedRequest).user;
+  if (user?.role === Role.ADMIN || user?.id === vpn.ownerId) {
     return next();
   }
   return res.status(403).json({ error: "Forbidden" });
-}
+};
