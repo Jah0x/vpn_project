@@ -51,12 +51,12 @@ export const useAuth = () => {
     }
   }, []);
 
-  const login = useCallback(async (loginField, password) => {
+  const login = useCallback(async (email, password) => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response = await authApi.login(loginField, password);
+      const response = await authApi.login(email, password);
       const {
         access_token,
         refresh_token,

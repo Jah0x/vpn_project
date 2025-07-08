@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, User, Lock, Zap, Shield, Globe } from 'lucide-react';
 import LoadingSpinner from '../Common/LoadingSpinner';
 import { validateNickname, validateEmail, validatePassword } from '../../utils/validators';
+import { getTelegram } from '@/lib/telegram';
 
 const LoginPage = () => {
   const { login, register, telegramAuth } = useAuth();
@@ -17,7 +18,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
-    login: '',
+    email: '',
     email: '',
     username: '',
     name: '',
@@ -52,8 +53,8 @@ const LoginPage = () => {
     const newErrors = {};
 
     if (isLogin) {
-      if (!formData.login.trim()) {
-        newErrors.login = 'Введите email или username';
+      if (!formData.email.trim()) {
+        newErrors.email = 'Введите email';
       }
     } else {
       if (!formData.username.trim()) {
@@ -102,7 +103,7 @@ const LoginPage = () => {
     try {
       let result;
       if (isLogin) {
-        result = await login(formData.login, formData.password);
+        result = await login(formData.email, formData.password);
       } else {
         result = await register(formData.email, formData.username, formData.password);
       }
@@ -251,17 +252,17 @@ const LoginPage = () => {
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
-                    type="text"
-                    name="login"
-                    placeholder="Email или Nickname"
-                    value={formData.login}
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
                     onChange={handleInputChange}
                     className={`w-full pl-10 pr-4 py-3 bg-gray-700/50 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
-                      errors.login ? 'border-red-500' : 'border-gray-600'
+                      errors.email ? 'border-red-500' : 'border-gray-600'
                     }`}
                   />
                 </div>
-                {errors.login && <p className="text-red-400 text-sm mt-1">{errors.login}</p>}
+                {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
               </div>
             )}
 
@@ -342,7 +343,6 @@ const LoginPage = () => {
                 onClick={() => {
                   setIsLogin(!isLogin);
                   setFormData({
-                    login: '',
                     email: '',
                     username: '',
                     name: '',

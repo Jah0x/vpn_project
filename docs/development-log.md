@@ -513,3 +513,8 @@
 - В `docker-compose.yml` сервис `nginx` получил дополнительный том для статики.
 - Сборка SPA `pnpm build:main` прошла успешно, `npm run lint` и `npm test` без ошибок.
 
+## 2025-10-17
+- Реализована двойная аутентификация через email/пароль и Telegram.
+- Добавлены стратегии Passport и эндпоинты `/api/auth/local`, `/api/auth/telegram`.
+- Frontend теперь сохраняет JWT в `localStorage` и использует его при запросах.
+
