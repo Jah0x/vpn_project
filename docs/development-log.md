@@ -501,3 +501,5 @@
 - В package.json добавлена команда `dev:install`, README дополнен быстрым стартом.
 - `npm run lint` и `npm test` выполнены без ошибок.
 
+## 2025-10-13
+- Скрипт update_zerologsvpn.sh сохраняет вывод в logs/update_DATE.log.
