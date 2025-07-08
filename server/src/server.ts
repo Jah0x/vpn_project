@@ -59,6 +59,12 @@ app.use("/api", auditRouter);
 app.use("/api/plans", plansRouter);
 app.use("/api/admin/plans", adminPlansRouter);
 
+// Middleware для логирования необработанных ошибок
+app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  logger.error({ err, url: req.originalUrl, body: req.body }, "unhandled error");
+  res.status(500).json({ error: "Internal Server Error" });
+});
+
 cron.schedule("*/5 * * * *", () => {
   retrySubPushQueue().catch((err) => console.error("subPush retry error", err));
 });
