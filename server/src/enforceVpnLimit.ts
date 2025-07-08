@@ -1,13 +1,10 @@
-import { NextFunction, Response } from "express";
+import { RequestHandler } from "express";
 import { prisma } from "./lib/prisma";
 import { AuthenticatedRequest } from "./auth";
 
-export async function enforceVpnLimit(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction,
-) {
-  const userId = req.user!.id;
+export const enforceVpnLimit: RequestHandler = async (req, res, next) => {
+  const authReq = req as AuthenticatedRequest;
+  const userId = authReq.user!.id;
   const sub = await prisma.subscription.findFirst({ where: { userId } });
   if (!sub || sub.status !== "active") {
     return res.status(403).json({ error: "Subscription inactive" });
@@ -17,4 +14,4 @@ export async function enforceVpnLimit(
     return res.status(403).json({ error: "VPN limit reached" });
   }
   next();
-}
+};

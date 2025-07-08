@@ -7,14 +7,15 @@ import { pushSubscription } from './lib/subPush';
 
 export const router = Router();
 
-router.post('/start', authenticateJWT, async (req: AuthenticatedRequest, res) => {
+router.post('/start', authenticateJWT, async (req, res) => {
+  const authReq = req as AuthenticatedRequest;
   const { planCode } = req.body as { planCode: PlanCode };
   const plan = await prisma.plan.findUnique({ where: { code: planCode, isActive: true } });
   if (!plan) return res.status(400).json({ error: 'Invalid plan' });
   const invoice = await prisma.invoice.create({
     data: {
       planCode,
-      userId: req.user!.id,
+      userId: authReq.user!.id,
       amountRub: plan.priceRub,
       onramperId: crypto.randomUUID(),
     },

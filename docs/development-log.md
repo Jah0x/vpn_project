@@ -518,3 +518,8 @@
 - Добавлены стратегии Passport и эндпоинты `/api/auth/local`, `/api/auth/telegram`.
 - Frontend теперь сохраняет JWT в `localStorage` и использует его при запросах.
 
+
+## 2025-07-08
+- Исправлены ошибки TypeScript при сборке сервера: обновлены типы middleware и маршрутов.
+- Удалён дублирующий ключ email в LoginPage.jsx.
+- Добавлена зависимость @types/passport.
