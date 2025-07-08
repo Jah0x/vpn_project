@@ -26,6 +26,7 @@ pnpm --filter apps/tg-webapp dev   # http://localhost:5174
   вернёт JWT.
 - Авторизация по логину и паролю доступна на домене `zerologsvpn.com`, а вход через Telegram работает на поддомене `tg.zerologsvpn.com`.
 - Исправлена конфигурация nginx: актуальный upstream backend:4000, удалён дублирующий default_type во фронтенд-Nginx.
+- Основной домен теперь обслуживается универсальной локацией: сначала выдаётся статика из `dist/main`, иначе запрос проксируется к контейнеру `frontend`.
 
 ### ✨ Demo credentials
 
