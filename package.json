@@ -87,7 +87,7 @@
   "scripts": {
     "dev": "vite",
     "dev:install": "scripts/install-dev.sh",
-    "build:main": "vite build --config apps/main/vite.config.ts",
+    "build:main": "pnpm --filter apps/main build",
     "build:tg": "vite build --config apps/tg-webapp/vite.config.ts",
     "build": "pnpm build:main && pnpm build:tg",
     "preview": "vite preview",
@@ -106,7 +106,8 @@
     "ci:test": "cypress run --browser chrome --headless",
     "sub:queue:list": "ts-node server/src/cli/subQueue.ts list",
     "sub:queue:retry": "ts-node server/src/cli/subQueue.ts retry",
-    "sub:queue:flush": "ts-node server/src/cli/subQueue.ts flush"
+    "sub:queue:flush": "ts-node server/src/cli/subQueue.ts flush",
+    "check:bundle": "pnpm build:main && ! grep -R \"getTelegram(\" apps/main/dist && echo \u2705"
   },
   "eslintConfig": {
     "extends": [

@@ -12,9 +12,11 @@ COPY . ./
 # Важно: Vite забирает VITE_* из окружения во время build!
 RUN npm run build
 
-FROM nginx:alpine
+FROM nginx:1.29-alpine AS production
 WORKDIR /usr/share/nginx/html
-COPY --from=build /app/dist .
-COPY src/nginx.conf /etc/nginx/conf.d/default.conf
+COPY src/nginx.conf /etc/nginx/nginx.conf
+RUN awk '!x[$0]++' /etc/nginx/mime.types > /tmp/mime && \
+    mv /tmp/mime /etc/nginx/mime.types
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
