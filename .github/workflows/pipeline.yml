@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: docker build -t ghcr.io/${{ github.repository_owner }}/vpn-api ./server
+      - run: docker build -t ghcr.io/${{ github.repository_owner }}/vpn-api ./apps/server
       - run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
       - run: docker push ghcr.io/${{ github.repository_owner }}/vpn-api
       - run: docker compose up -d --build frontend
