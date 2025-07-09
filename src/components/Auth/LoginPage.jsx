@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, User, Lock, Zap, Shield, Globe } from 'lucide-react';
 import LoadingSpinner from '../Common/LoadingSpinner';
 import { validateNickname, validateEmail, validatePassword } from '../../utils/validators';
-import { getTelegram } from '@/lib/telegram';
+import { getTelegram } from '@/utils/telegram';
 
 const LoginPage = () => {
   const { login, register, telegramAuth } = useAuth();

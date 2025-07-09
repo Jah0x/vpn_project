@@ -1,5 +1,5 @@
 /// <reference types="jest" />
-import { parseInitData } from '../../src/utils/telegram/initData';
+import { parseInitData } from '../../src/utils/telegram-extra/initData';
 
 describe('initDataSchema', () => {
   it('parses data with device_storage and secure_storage', () => {

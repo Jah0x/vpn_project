@@ -523,3 +523,9 @@
 - Исправлены ошибки TypeScript при сборке сервера: обновлены типы middleware и маршрутов.
 - Удалён дублирующий ключ email в LoginPage.jsx.
 - Добавлена зависимость @types/passport.
+
+## 2025-07-08b
+- Исправлена ошибка ReferenceError: getTelegram is not defined.
+- Создан хелпер utils/telegram.ts, обновлены импорты.
+- Скрипт Telegram widget подключается в index.html.
+
