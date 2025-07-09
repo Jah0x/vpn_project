@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, User, Lock, Zap, Shield, Globe } from 'lucide-react';
 import LoadingSpinner from '../Common/LoadingSpinner';
 import { validateNickname, validateEmail, validatePassword } from '../../utils/validators';
-import { getTelegram } from '@/shared/lib/telegram';
+import { getTelegram, isInTelegram } from '@/shared/lib/telegram';
 
 const LoginPage = () => {
   const { login, register, telegramAuth } = useAuth();
@@ -29,6 +29,7 @@ const LoginPage = () => {
 
   // Проверка наличия Telegram Web App
   const isTelegramWebApp = () => {
+    if (!isInTelegram()) return false;
     return Boolean(getTelegram());
   };
 
@@ -132,7 +133,7 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const tg = getTelegram();
+      const tg = isInTelegram() ? getTelegram() : null;
       const initData = tg?.initDataUnsafe;
 
       if (!initData?.user || !initData.hash) {
