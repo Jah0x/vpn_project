@@ -41,6 +41,7 @@
     "zod-to-openapi": "^0.2.1"
   },
   "devDependencies": {
+    "@redocly/openapi-cli": "1.0.0-beta.95",
     "@storybook/addon-actions": "^9.0.8",
     "@storybook/addon-links": "^9.0.13",
     "@storybook/addons": "^7.6.17",
@@ -67,10 +68,13 @@
     "@vitejs/plugin-react": "^4.6.0",
     "autoprefixer": "^10.4.14",
     "cypress": "^14.5.0",
+    "husky": "^9.1.7",
     "i18next": "^23.16.8",
     "jest": "^29.7.0",
     "jest-mock-extended": "^3.0.7",
+    "lint-staged": "^16.1.2",
     "postcss": "^8.4.24",
+    "prettier": "^3.6.2",
     "prisma": "^5.4.0",
     "prisma-mock": "^0.10.4",
     "react-i18next": "^12.3.1",
@@ -104,7 +108,8 @@
     "sub:queue:list": "ts-node apps/server/src/cli/subQueue.ts list",
     "sub:queue:retry": "ts-node apps/server/src/cli/subQueue.ts retry",
     "sub:queue:flush": "ts-node apps/server/src/cli/subQueue.ts flush",
-    "check:bundle": "pnpm build:main && ! grep -R \"getTelegram(\" apps/main/dist && echo ✅"
+    "check:bundle": "pnpm build:main && ! grep -R \"getTelegram(\" apps/main/dist && echo ✅",
+    "ci:typecheck": "pnpm exec tsc -b apps/server && pnpm exec tsc -b apps/main"
   },
   "eslintConfig": {
     "extends": [
@@ -130,8 +135,7 @@
     ]
   },
   "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=8.0.0"
+    "node": "20.x"
   },
   "keywords": [
     "vpn",
@@ -156,6 +160,11 @@
   },
   "bugs": {
     "url": "https://github.com/vpnservice/frontend/issues"
-  },
-  "proxy": "http://localhost:8000"
+  },  "proxy": "http://localhost:8000",
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
 }
