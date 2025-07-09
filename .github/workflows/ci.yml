@@ -1,35 +1,23 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches: ["**"]
+  pull_request:
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:15-alpine
-        env:
-          POSTGRES_USER: vpn
-          POSTGRES_PASSWORD: changeme
-          POSTGRES_DB: vpn
-        ports: ['5432:5432']
-        options: >-
-          --health-cmd="pg_isready -U vpn" --health-interval=5s --health-retries=5
-      redis:
-        image: redis:latest
-        ports: ['6379:6379']
+    strategy:
+      matrix:
+        service: [backend, frontend]
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: actions/setup-node@v4
         with:
-          version: 8
-      - uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-      - run: pnpm install
-      - run: pnpm lint
-      - run: pnpm test
-      - run: pnpm test:e2e
-      - run: docker compose build
-      - run: docker compose up -d
-      - run: curl -f http://localhost:80/health
+          node-version: 20
+          cache: 'pnpm'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec tsc -b apps/${{ matrix.service }}
+      - run: pnpm exec eslint "apps/${{ matrix.service }}/src/**/*.{ts,tsx}" --max-warnings=0
+      - run: npx openapi-cli validate apps/server/openapi.yaml

@@ -9,9 +9,9 @@ RUN corepack enable \
     && pnpm install --frozen-lockfile
 
 # исходники
-COPY src ./src
-COPY prisma ./prisma
-COPY openapi.yaml ./openapi.yaml
+COPY ./apps/server/src ./src
+COPY ./apps/server/prisma ./prisma
+COPY ./apps/server/openapi.yaml ./openapi.yaml
 RUN pnpm run build:server && \
     pnpm prisma generate && \
     pnpm prune --prod

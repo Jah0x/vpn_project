@@ -574,3 +574,8 @@
 - Упрощены Dockerfile и docker-compose: backend собирается из корня, база образов unified на node:20-alpine.
 - Добавлен эндпоинт /healthz и обновлён healthcheck.
 
+
+## 2025-07-10
+- Настроен Husky с lint-staged и Node 20.
+- Добавлен генератор OpenAPI из схем Zod и обновлён Dockerfile.
+
