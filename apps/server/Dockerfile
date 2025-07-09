@@ -7,9 +7,9 @@ COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && pnpm install --frozen-lockfile
 
 # исходники
-COPY server ./server
+COPY src ./src
 COPY prisma ./prisma
-COPY server/openapi.yaml ./openapi.yaml
+COPY openapi.yaml ./openapi.yaml
 RUN pnpm run build:server
 RUN pnpm prisma generate
 
@@ -21,7 +21,6 @@ RUN apt-get update -y \
 
 WORKDIR /app
 COPY --from=build /app .
-RUN mv server/dist ./dist
 
 ENV NODE_ENV=production
 EXPOSE 8080
