@@ -28,7 +28,7 @@ if [ ! -f "$REPO_DIR/.env" ]; then
   sudo tee "$REPO_DIR/.env" >/dev/null <<EOT
 NODE_ENV=production
 SERVER_PORT=4000
-VITE_API_BASE_URL=/api
+VITE_API_URL=/api
 DATABASE_URL=postgresql://vpn:vpn@postgres:5432/vpn
 JWT_SECRET=$(openssl rand -hex 32)
 JWT_REFRESH_SECRET=$(openssl rand -hex 32)

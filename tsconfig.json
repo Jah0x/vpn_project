@@ -14,8 +14,8 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["apps/main/src/*"]
     }
   },
-  "include": ["src", "server/src", "server/test", "subscription-server/src", "subscription-server/test"]
+  "include": ["apps/main/src", "apps/server/src", "apps/server/test", "subscription-server/src", "subscription-server/test"]
 }

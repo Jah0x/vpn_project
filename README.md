@@ -2,16 +2,29 @@
 
 Этот репозиторий содержит полный стек сервиса управления VPN. Подробнее о структуре кода смотрите в `docs/`.
 
-## Quick start for local dev
+## Quick start
 
 ```bash
-pnpm dev:install && pnpm docker:logs
+pnpm i
+docker compose up -d
 ```
+
+### Environment variables
+
+```
+VITE_API_URL=/api
+SERVER_PORT=8080
+DATABASE_URL=postgresql://vpn:changeme@postgres:5432/vpn?schema=public
+TELEGRAM_BOT_TOKEN=
+STRIPE_SECRET_KEY=
+```
+
+Swagger docs: [http://localhost:80/api/docs](http://localhost:80/api/docs)
 
 ## Разработка/Запуск
 - Скопируйте `.env.example` в `.env` и при необходимости отредактируйте.
 - Укажите переменную `TELEGRAM_BOT_TOKEN` для проверки подписи от Telegram.
-- Запустите сервер командой `npm run start:server`.
+- Запустите сервер командой `pnpm start:server`.
 - Фронт разделён на два приложения: `apps/main` и `apps/tg-webapp`.
   Запуск локально:
 
