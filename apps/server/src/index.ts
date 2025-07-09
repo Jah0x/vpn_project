@@ -1,10 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.warn("[WARN] STRIPE_SECRET_KEY is not set; Stripe features disabled");
+}
 
 import { app } from "./server";
 import publicPlansRouter from "./routes/publicPlans";
 
-const PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 4000;
+const PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 8080;
 
 app.use("/api/public", publicPlansRouter);
 
