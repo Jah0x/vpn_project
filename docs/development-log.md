@@ -558,3 +558,6 @@
 
 ## 2025-07-15
 - Исправлен Dockerfile backend: копируются src и openapi.yaml, сборка проходит без ошибок.
+
+## 2025-07-15b
+- Исправлены пути импорта markdown-файлов в FaqPage и PrivacyPolicyPage. Сборка Vite теперь проходит без ошибки "Could not resolve".
