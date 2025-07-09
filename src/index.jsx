@@ -7,7 +7,7 @@ import "./i18n/i18n";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { bootstrapFromTelegram } from "./auth/tgInit";
-import { getTelegram } from "./lib/telegram";
+import { getTelegram } from "@/utils/telegram";
 
 if (getTelegram()) {
   bootstrapFromTelegram();

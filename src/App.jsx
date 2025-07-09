@@ -15,7 +15,7 @@ import { useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
 import Toast from './components/Common/Toast';
-import { getTelegram } from './lib/telegram';
+import { getTelegram } from '@/utils/telegram';
 
 // Проверка Telegram Web App
 const isTelegramWebApp = () => {

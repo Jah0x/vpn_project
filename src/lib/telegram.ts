@@ -1,10 +1,6 @@
 export type Theme = { bg_color: string; text_color: string };
 
-export const getTelegram = () => {
-  return typeof window !== 'undefined'
-    ? (window as any)?.Telegram?.WebApp
-    : undefined;
-};
+import { getTelegram } from '@/utils/telegram';
 
 export const ready = () => {
   const tg = getTelegram();
