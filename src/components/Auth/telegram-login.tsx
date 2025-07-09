@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { telegramAuth } from '@/services/auth';
 import { StorageUtils } from '@/utils/helpers';
 import { AUTH_CONFIG } from '@/utils/constants';
-import { getTelegram } from '@/utils/telegram';
+import { getTelegram } from '@/shared/lib/telegram';
 import LoadingSpinner from '@/components/Common/LoadingSpinner';
 
 const TelegramLogin: React.FC = () => {
