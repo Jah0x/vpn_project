@@ -561,3 +561,6 @@
 
 ## 2025-07-15b
 - Исправлены пути импорта markdown-файлов в FaqPage и PrivacyPolicyPage. Сборка Vite теперь проходит без ошибки "Could not resolve".
+
+## 2025-10-19
+- Обновлена конфигурация docker-compose: сервис backend собирается из корня репозитория с указанием server/Dockerfile.
