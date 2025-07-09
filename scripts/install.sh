@@ -24,6 +24,10 @@ curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo npm install -g pnpm
 
+cd "$REPO_DIR"
+pnpm install --frozen-lockfile
+pnpm run build
+
 if [ ! -f "$REPO_DIR/.env" ]; then
   sudo tee "$REPO_DIR/.env" >/dev/null <<EOT
 NODE_ENV=production

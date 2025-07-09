@@ -14,6 +14,9 @@ echo "== $(date) Starting update =="
 sudo git pull
 echo "Repository updated"
 
+pnpm install --frozen-lockfile
+pnpm run build
+
 sudo docker compose pull
 sudo docker compose up --build -d
 
