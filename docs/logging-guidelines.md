@@ -16,11 +16,16 @@
      ```
    - фиксируйте в `docs/development-log.md` информацию об успешности/ошибках.
 4. **Логи сборки Docker**
-   - для `docker compose build` также сохраняйте вывод:
-     ```bash
-     docker compose build 2>&1 | tee logs/docker_build_$(date +%F).log
-     ```
-   - при возникновении ошибок проверяйте путь к Dockerfile и контекст.
+ - для `docker compose build` также сохраняйте вывод:
+    ```bash
+    docker compose build 2>&1 | tee logs/docker_build_$(date +%F).log
+    ```
+  - при возникновении ошибок проверяйте путь к Dockerfile и контекст.
+  - фиксируйте используемые переменные окружения в отдельном файле
+    `logs/env_$(date +%F).log`:
+    ```bash
+    printenv | sort > logs/env_$(date +%F).log
+    ```
 5. **Регулярная очистка**
    - старые лог‑файлы можно архивировать или удалять во избежание засорения репозитория.
 
