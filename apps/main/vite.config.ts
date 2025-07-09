@@ -8,6 +8,13 @@ export default defineConfig({
   build: {
     outDir: resolve(__dirname, '../../dist/main'),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
+      }
+    }
   },
   resolve: {
     alias: {
