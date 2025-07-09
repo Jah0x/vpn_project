@@ -53,8 +53,8 @@ services:
 
   frontend:
     build:
-      context: ./apps/main
-      dockerfile: ../../Dockerfile.frontend
+      context: .
+      dockerfile: Dockerfile.frontend
       args:
         - VITE_API_BASE_URL
     env_file: ./.env
