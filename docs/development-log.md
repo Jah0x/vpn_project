@@ -579,3 +579,9 @@
 - Настроен Husky с lint-staged и Node 20.
 - Добавлен генератор OpenAPI из схем Zod и обновлён Dockerfile.
 
+## 2025-07-11
+- Исправлена ошибка сборки сервера: `tsc` падал из-за файла вне `rootDir`.
+- В `apps/server/tsconfig.json` поле `rootDir` изменено на `"."`, чтобы
+  компилировались CLI-скрипты из каталога `scripts`.
+- В `docs/logging-guidelines.md` описана диагностика ошибки `TS6059`.
+
