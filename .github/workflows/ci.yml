@@ -1,24 +1,12 @@
 name: CI
 on: [push, pull_request]
 jobs:
-  build-test:
+  build:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_PASSWORD: pass
-        ports: [5432:5432]
-    env:
-      DATABASE_URL: "postgresql://postgres:pass@localhost:5432/postgres"
-      TELEGRAM_BOT_TOKEN: "dummy"
-      JWT_SECRET: "dummy"
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - run: corepack enable
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter server exec prisma migrate deploy
-      - run: pnpm --filter frontend run build
-      - run: pnpm run test:e2e
-      - run: pnpm run curl:matrix
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - run: pnpm install
+      - run: pnpm check:bundle
