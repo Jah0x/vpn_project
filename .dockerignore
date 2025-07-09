@@ -6,4 +6,12 @@ Dockerfile.*
 *.log
 *.db-journal
 logs
+apps/main
+apps/tg-webapp
+subscription-server
+crm
+cypress
+public
+deploy
+docs
 

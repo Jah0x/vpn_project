@@ -569,3 +569,8 @@
 - Добавлен алиас `~/docs` в Vite, исправлены пути импорта Markdown.
 - Скрипт для структурированных данных помечен `data-vite-ignore`.
 - Docker-compose теперь использует директорию `apps/server` как контекст.
+
+## 2025-10-20
+- Упрощены Dockerfile и docker-compose: backend собирается из корня, база образов unified на node:20-alpine.
+- Добавлен эндпоинт /healthz и обновлён healthcheck.
+
