@@ -585,3 +585,9 @@
   компилировались CLI-скрипты из каталога `scripts`.
 - В `docs/logging-guidelines.md` описана диагностика ошибки `TS6059`.
 
+## 2025-07-12
+- Исправлена сборка docker compose: обновлены переменные окружения и Dockerfile
+  сервера.
+- В `.env.example` добавлен `STRIPE_SECRET_KEY=`.
+- Все команды `docker compose build` выполняются без ошибок.
+

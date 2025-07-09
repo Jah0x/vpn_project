@@ -2,8 +2,8 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 # Объявляем ARG для build-time переменной
-ARG VITE_API_URL
-ENV VITE_API_URL=${VITE_API_URL}
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 
 COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && pnpm install --frozen-lockfile
