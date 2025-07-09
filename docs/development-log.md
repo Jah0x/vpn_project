@@ -518,6 +518,12 @@
 - Добавлены стратегии Passport и эндпоинты `/api/auth/local`, `/api/auth/telegram`.
 - Frontend теперь сохраняет JWT в `localStorage` и использует его при запросах.
 
+## 2025-10-18
+- Скрипты `install.sh` и `update_zerologsvpn.sh` выполняют `pnpm run build` для
+  обновления статики.
+- Документация `zerologsvpn-installation.md` скорректирована, журнал
+  пополнен текущей записью.
+
 
 ## 2025-07-08
 - Исправлены ошибки TypeScript при сборке сервера: обновлены типы middleware и маршрутов.
