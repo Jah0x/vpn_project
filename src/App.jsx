@@ -17,10 +17,11 @@ import { useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
 import Toast from './components/Common/Toast';
-import { getTelegram } from '@/shared/lib/telegram';
+import { getTelegram, isInTelegram } from '@/shared/lib/telegram';
 
 // Проверка Telegram Web App
 const isTelegramWebApp = () => {
+  if (!isInTelegram()) return false;
   const tg = getTelegram();
   return Boolean(tg && tg.initData);
 };

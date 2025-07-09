@@ -7,7 +7,7 @@ import "./i18n/i18n";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { bootstrapFromTelegram } from "./auth/tgInit";
-import { getTelegram } from "@/shared/lib/telegram";
+import { getTelegram, isInTelegram } from "@/shared/lib/telegram";
 import { loadTelegramSdk } from "@/shared/lib/loadTelegram";
 import { RootErrorBoundary } from "@/app/providers/ErrorBoundary";
 import { AuthGate } from "@/features/auth/AuthGate";
@@ -23,8 +23,9 @@ async function initTelegram() {
       console.error(e);
     }
   }
-  if (getTelegram()) {
-    bootstrapFromTelegram();
+  if (isInTelegram()) {
+    const tg = getTelegram();
+    if (tg) bootstrapFromTelegram();
   }
 }
 initTelegram();

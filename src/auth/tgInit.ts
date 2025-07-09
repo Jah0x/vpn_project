@@ -1,8 +1,9 @@
 import { setInitParams } from './store';
 import { ready } from '../lib/telegram';
-import { getTelegram } from '@/shared/lib/telegram';
+import { getTelegram, isInTelegram } from '@/shared/lib/telegram';
 
 export function bootstrapFromTelegram() {
+  if (!isInTelegram()) return;
   const tg = getTelegram();
   const initData = tg?.initData || '';
 
