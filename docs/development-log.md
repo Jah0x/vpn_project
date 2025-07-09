@@ -553,4 +553,8 @@
 - Добавлены скрипт `check:bundle` и упрощённый CI.
 - Dockerfile удаляет дубли в mime.types.
 - Обновлён README по проверке getTelegram bug.
-\n## 2025-07-14\n- Перенесён фронтенд в apps/main и обновлены Dockerfiles.
+## 2025-07-14
+- Перенесён фронтенд в apps/main и обновлены Dockerfiles.
+
+## 2025-07-15
+- Исправлен Dockerfile backend: копируются src и openapi.yaml, сборка проходит без ошибок.
