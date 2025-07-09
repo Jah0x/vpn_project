@@ -1,6 +1,6 @@
 export type Theme = { bg_color: string; text_color: string };
 
-import { getTelegram } from '@/utils/telegram';
+import { getTelegram } from '@/shared/lib/telegram';
 
 export const ready = () => {
   const tg = getTelegram();

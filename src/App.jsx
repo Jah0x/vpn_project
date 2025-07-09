@@ -5,6 +5,8 @@ import PromoBanner from './components/Layout/PromoBanner';
 import TelegramWarning from './components/Auth/TelegramWarning';
 import TelegramLogin from './components/Auth/telegram-login';
 import LoginPage from './components/Auth/LoginPage';
+import { LoginForm } from '@/features/auth/LoginForm';
+import TgRedirect from '@/pages/TgRedirect';
 import Dashboard from './components/Dashboard/Dashboard';
 import Subscription from './pages/Subscription';
 import SettingsPage from './components/Settings/SettingsPage';
@@ -15,7 +17,7 @@ import { useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
 import Toast from './components/Common/Toast';
-import { getTelegram } from '@/utils/telegram';
+import { getTelegram } from '@/shared/lib/telegram';
 
 // Проверка Telegram Web App
 const isTelegramWebApp = () => {
@@ -85,14 +87,8 @@ const AppContent = () => {
       <main className={isAuthenticated ? 'pt-16' : ''}>
         <Routes>
           {/* Публичные маршруты */}
-          <Route
-            path="/login"
-            element={
-              isAuthenticated ?
-                <Navigate to="/dashboard" replace /> :
-                <LoginPage />
-            }
-          />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/tg-redirect" element={<TgRedirect />} />
           <Route path="/telegram" element={<TelegramLogin />} />
           
           {/* Защищенные маршруты */}
@@ -130,15 +126,7 @@ const AppContent = () => {
           
           
           {/* Редирект на главную */}
-          <Route 
-            path="/" 
-            element={
-              <Navigate 
-                to={isAuthenticated ? "/dashboard" : "/login"} 
-                replace 
-              />
-            } 
-          />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
           
           {/* 404 страница */}
           <Route 

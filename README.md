@@ -20,6 +20,15 @@ pnpm --filter apps/main dev        # http://localhost:5173
 pnpm --filter apps/tg-webapp dev   # http://localhost:5174
 ```
 
+### Запуск в Telegram и в браузере
+
+- **Телеграм**: откройте мини‑приложение или добавьте параметр `tgWebApp=true` к URL.
+  Скрипт `telegram-web-app.js` подгрузится автоматически.
+- **Браузер**: просто переходите по адресу приложения. Будет доступна форма входа.
+
+Для учёта логов в процессе разработки используйте рекомендации из
+[`docs/logging-guidelines.md`](docs/logging-guidelines.md).
+
 - Для работы входа через Telegram Web App задайте `TELEGRAM_BOT_TOKEN` и
   укажите URL мини‑приложения в настройках бота. После нажатия «Войти» данные
   Telegram отправятся на `/api/auth/telegram`, где сервер создаст профиль и

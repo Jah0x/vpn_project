@@ -7,18 +7,38 @@ import "./i18n/i18n";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { bootstrapFromTelegram } from "./auth/tgInit";
-import { getTelegram } from "@/utils/telegram";
+import { getTelegram } from "@/shared/lib/telegram";
+import { loadTelegramSdk } from "@/shared/lib/loadTelegram";
+import { RootErrorBoundary } from "@/app/providers/ErrorBoundary";
+import { AuthGate } from "@/features/auth/AuthGate";
 
-if (getTelegram()) {
-  bootstrapFromTelegram();
+async function initTelegram() {
+  if (
+    navigator.userAgent.includes('Telegram') ||
+    window.location.search.includes('tgWebApp=true')
+  ) {
+    try {
+      await loadTelegramSdk();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  if (getTelegram()) {
+    bootstrapFromTelegram();
+  }
 }
+initTelegram();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <RootErrorBoundary>
+      <AuthProvider>
+        <AuthGate>
+          <App />
+        </AuthGate>
+      </AuthProvider>
+    </RootErrorBoundary>
   </React.StrictMode>
 );
 
