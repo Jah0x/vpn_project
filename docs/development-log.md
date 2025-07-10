@@ -595,3 +595,9 @@
 - Исправлена сборка фронтенда: `docker-compose` теперь использует корень
   проекта в качестве контекста, чтобы `pnpm` находил `package.json`.
 
+## 2025-07-14
+- В `.dockerignore` перестали исключаться `apps/main` и `public`, сборка фронтенда
+  в Docker больше не падает из-за отсутствия `vite.config.ts`.
+- В `apps/server/package.json` добавлены dev-зависимости `ts-node` и `typescript`,
+  чтобы `pnpm run build:server` выполнялся без ошибок внутри контейнера.
+
