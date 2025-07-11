@@ -616,3 +616,9 @@
 
 ## 2025-07-11
 - Из `.dockerignore` удалён каталог `apps/tg-webapp`, теперь `pnpm run build:tg` и `docker compose build frontend --no-cache` выполняются без ошибок.
+
+## 2025-10-24
+- В `apps/server/Dockerfile` сначала выполняется `pnpm prisma generate`, затем `pnpm run build:server`. Так `tsc` видит `@prisma/client`.
+- Скрипт `build:server` внутри `apps/server/package.json` теперь запускает только `tsc -p tsconfig.json`.
+- В файлах сервисов типизирован параметр `tx` как `Prisma.TransactionClient`, устранена ошибка `TS7006`.
+- `docker compose build backend --no-cache` завершается без ошибок.

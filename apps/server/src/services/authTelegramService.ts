@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { TelegramAuthData, verifyTelegramHash } from '../lib/telegram';
 import { issueTokens } from './userService';
@@ -18,7 +19,7 @@ export async function authTelegram(data: TelegramAuthData) {
     const uid = await prisma.preallocatedUid.findFirst({ where: { isFree: true } });
     if (!uid) throw new Error('NO_UID_AVAILABLE');
 
-    user = await prisma.$transaction(async tx => {
+    user = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const created = await tx.user.create({
         data: {
           email: `tg${telegramId}@telegram.local`,

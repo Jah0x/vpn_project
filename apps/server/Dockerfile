@@ -13,8 +13,8 @@ RUN corepack enable \
 COPY ./apps/server ./apps/server
 
 WORKDIR /app/apps/server
-RUN pnpm run build:server && \
-    pnpm prisma generate && \
+RUN pnpm prisma generate && \
+    pnpm run build:server && \
     pnpm prune --prod
 
 ################ runtime stage ################
