@@ -182,4 +182,36 @@ model BuildTag {
   id        Int      @id @default(autoincrement())
   tag       String   @unique
   createdAt DateTime @default(now())
+
+model SubtaskQueue {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  status    String   @default("waiting")
+  payload   Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //  —–– возможная связь на Job (если нужна):
+  // job   Job   @relation(fields:[taskId], references:[id])
+}
+
+model PlanCache {
+  id        Int      @id @default(autoincrement())
+  planId    Int
+  data      Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Plan      Plan     @relation(fields:[planId], references:[id])
+}
+
+model PlanUse {
+  id        Int      @id @default(autoincrement())
+  planId    Int
+  userId    Int
+  usedAt    DateTime @default(now())
+
+  Plan      Plan     @relation(fields:[planId], references:[id])
+  User      User     @relation(fields:[userId], references:[id])
+}
 }
