@@ -24,12 +24,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: docker build -t ghcr.io/${{ github.repository_owner }}/vpn-api ./apps/server
+      - run: docker compose build backend frontend
+      - run: docker compose run --rm backend node dist/index.js --help
+      - run: docker compose up -d
+      - run: curl http://localhost:8080/health
+      - run: docker compose down
       - run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-      - run: docker push ghcr.io/${{ github.repository_owner }}/vpn-api
-      - run: docker compose up -d --build frontend
-      - name: Purge CDN cache
-        run: curl -X POST ${{ secrets.CDN_PURGE_URL }}
+      - run: docker compose push backend frontend
 
   deploy-staging:
     needs: build-docker

@@ -641,3 +641,12 @@
 - Удалена дублирующая схема Prisma из `apps/server/prisma`, вместо неё создан симлинк на корневую `prisma`.
 - В `apps/server/Dockerfile` Prisma-клиент генерируется из корневой схемы, а в образ копируется правильная папка `prisma`.
 - `docker compose build backend` выполняется без ошибок.
+
+## 2025-10-28
+- Исправлен `rootDir` в `apps/server/tsconfig.json`.
+- Скрипт `build:server` теперь запускает `prisma generate` перед `tsc`.
+- `apps/server/Dockerfile` упрощён: установка и сборка в одном слое.
+- Добавлен `docker/frontend/nginx/default.conf` с `try_files` для SPA.
+- В `Dockerfile.frontend` копируется новый конфиг.
+- Компонент `AuthPage` проверяет наличие Telegram WebApp.
+- GitHub Actions собирает контейнеры через `docker compose`, запускает smoke-тесты и пушит образы при успехе.
