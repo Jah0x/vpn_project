@@ -2,6 +2,9 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 
+
+RUN apk add --no-cache openssl
+
 # ▾ Файлы, необходимые pnpm, чтобы посчитать граф зависимостей
 COPY pnpm-lock.yaml package.json ./
 
