@@ -691,3 +691,9 @@
 
 ## 2025-11-01
 - Dockerfile backend теперь использует `node:20-alpine3.17` во всех этапах и устанавливает `openssl` и `libssl1.1`. Сборка контейнера через `docker compose build backend --no-cache` проходит без ошибок.
+
+## 2025-11-02
+- При запуске контейнера backend возникала ошибка `ENOENT open '/app/apps/server/dist/../openapi.yaml'`.
+- Файл `openapi.yaml` не копировался в финальный слой образа.
+- В `apps/server/Dockerfile` добавлена строка `COPY --from=build-backend /app/apps/server/openapi.yaml ./openapi.yaml`.
+- Теперь сервер стартует без ошибки и документация Swagger доступна в режиме разработки.
