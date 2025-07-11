@@ -629,3 +629,8 @@
 - В `apps/server/Dockerfile` команда генерации заменена на `npx prisma generate`;
   перед ней выполняется `pnpm install` внутри каталога сервера.
 - Сборка контейнера `backend` выполняется через `docker compose build backend --no-cache`.
+
+## 2025-07-11
+- Починен билд backend: ошибка TS2339 в `VpnModel` устранена кастом через `as any`.
+- Выполнены `prisma generate` и `pnpm run build:server` без ошибок.
+
