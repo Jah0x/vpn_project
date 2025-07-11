@@ -23,7 +23,7 @@ RUN corepack enable                 # или: npm i -g pnpm@8
 # Забираем готовые node_modules и lock-файлы
 COPY --from=deps /app/node_modules   ./node_modules
 COPY --from=deps /app/pnpm-lock.yaml /app/package.json ./
-
+ENV PATH=/app/node_modules/.bin:$PATH
 # ▾ Копируем реальные исходники после deps-кэша
 COPY apps/server ./apps/server
 COPY prisma      ./prisma
