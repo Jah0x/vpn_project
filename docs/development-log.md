@@ -609,3 +609,7 @@
 
 ## 2025-10-22
 - В `apps/server/Dockerfile` убран флаг `--frozen-lockfile` для установки зависимостей в подпроекте без `pnpm-lock.yaml`. Сборка контейнера проходит без ошибок.
+
+
+## 2025-10-23
+- Из .dockerignore удалён каталог `docs`, чтобы Docker-сборка фронтенда могла импортировать `docs/faq.md`. `docker compose build frontend --no-cache` выполняется без ошибок.
