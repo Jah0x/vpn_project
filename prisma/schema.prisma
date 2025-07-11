@@ -30,6 +30,7 @@ model User {
   RefreshToken    RefreshToken[]
   telegram        TelegramAccount?
   creds           Credentials?
+  checkSecret     UserCheckSecret?
 }
 
 model Vpn {
@@ -168,4 +169,16 @@ model Credentials {
   email   String @unique
   passHash String
   user    User   @relation(fields: [userId], references: [id])
+}
+
+model UserCheckSecret {
+  userId String @id
+  secret String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model BuildTag {
+  id        Int      @id @default(autoincrement())
+  tag       String   @unique
+  createdAt DateTime @default(now())
 }

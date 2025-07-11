@@ -634,3 +634,6 @@
 - Починен билд backend: ошибка TS2339 в `VpnModel` устранена кастом через `as any`.
 - Выполнены `prisma generate` и `pnpm run build:server` без ошибок.
 
+## 2025-10-26
+- Добавлены модели `UserCheckSecret` и `BuildTag` в Prisma schema.
+- Выполнены `prisma generate` и `pnpm run build:server` без ошибок.
