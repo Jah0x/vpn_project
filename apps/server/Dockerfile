@@ -13,7 +13,8 @@ RUN corepack enable \
 COPY ./apps/server ./apps/server
 
 WORKDIR /app/apps/server
-RUN pnpm prisma generate && \
+RUN pnpm install --frozen-lockfile && \
+    npx prisma generate && \
     pnpm run build:server && \
     pnpm prune --prod
 
