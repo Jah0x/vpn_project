@@ -11,10 +11,11 @@ RUN corepack enable \
 
 # исходники
 COPY ./apps/server ./apps/server
+COPY prisma ./prisma
 
 WORKDIR /app/apps/server
 RUN pnpm install --frozen-lockfile && \
-    npx prisma generate && \
+    npx prisma generate --schema ../../prisma/schema.prisma && \
     pnpm run build:server && \
     pnpm prune --prod
 
@@ -25,7 +26,7 @@ RUN apk add --no-cache openssl ca-certificates
 WORKDIR /app
 COPY --from=build /app/apps/server/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/apps/server/prisma ./prisma
+COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/apps/server/openapi.yaml ./openapi.yaml
 
 ENV NODE_ENV=production

@@ -637,3 +637,7 @@
 ## 2025-10-26
 - Добавлены модели `UserCheckSecret` и `BuildTag` в Prisma schema.
 - Выполнены `prisma generate` и `pnpm run build:server` без ошибок.
+\n## 2025-10-27
+- Удалена дублирующая схема Prisma из `apps/server/prisma`, вместо неё создан симлинк на корневую `prisma`.
+- В `apps/server/Dockerfile` Prisma-клиент генерируется из корневой схемы, а в образ копируется правильная папка `prisma`.
+- `docker compose build backend` выполняется без ошибок.
