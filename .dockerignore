@@ -6,7 +6,6 @@ Dockerfile.*
 *.log
 *.db-journal
 logs
-apps/tg-webapp
 subscription-server
 crm
 cypress

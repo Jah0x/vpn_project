@@ -613,3 +613,6 @@
 
 ## 2025-10-23
 - Из .dockerignore удалён каталог `docs`, чтобы Docker-сборка фронтенда могла импортировать `docs/faq.md`. `docker compose build frontend --no-cache` выполняется без ошибок.
+
+## 2025-07-11
+- Из `.dockerignore` удалён каталог `apps/tg-webapp`, теперь `pnpm run build:tg` и `docker compose build frontend --no-cache` выполняются без ошибок.
