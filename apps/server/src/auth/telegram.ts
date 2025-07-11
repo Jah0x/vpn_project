@@ -1,4 +1,5 @@
 import { TelegramStrategy } from 'passport-telegram-official';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 
 const verify = async (profile: any, done: (err: any, user?: any) => void) => {
@@ -7,7 +8,7 @@ const verify = async (profile: any, done: (err: any, user?: any) => void) => {
       if (!user) {
         const uid = await prisma.preallocatedUid.findFirst({ where: { isFree: true } });
         if (!uid) return done(new Error('NO_UID_AVAILABLE'));
-        user = await prisma.$transaction(async tx => {
+        user = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
           const created = await tx.user.create({
             data: {
               telegramId: String(profile.id),
