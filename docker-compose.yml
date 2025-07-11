@@ -31,6 +31,7 @@ services:
     networks: [app]
 
   backend:
+    container_name: backend
     build:
       context: .
       dockerfile: apps/server/Dockerfile
@@ -43,15 +44,16 @@ services:
       sh -c "npx prisma migrate deploy &&
              node dist/index.js"
     healthcheck:
-      test: ["CMD-SHELL","curl -sf http://localhost:8080/healthz | grep OK || exit 1"]
+      test: ["CMD-SHELL","curl -sf http://localhost:4000/healthz | grep OK || exit 1"]
       interval: 10s
       retries: 5
     networks: [app]
     ports:
-      - 8080:8080
+      - 4000:4000
 
 
   frontend:
+    container_name: frontend
     build:
       context: .
       dockerfile: Dockerfile.frontend

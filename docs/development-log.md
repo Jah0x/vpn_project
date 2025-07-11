@@ -655,3 +655,9 @@
 - Создан `tsconfig.build.json` в `apps/server` для продакшн сборки.
 - Скрипт `build:server` теперь использует этот конфиг.
 - `pnpm --filter apps/server run build:server` проходит без ошибок.
+
+## 2025-10-30
+- Исправлены имена сервисов и порты в `docker-compose.yml`.
+- Обновлены upstream в `nginx.conf` и конфиг SPA `docker/frontend/nginx/default.conf`.
+- Prisma Client теперь генерируется в `apps/server/dist/.prisma`.
+- В `apps/server/package.json` добавлен скрипт `start`.

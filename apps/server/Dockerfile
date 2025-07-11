@@ -29,5 +29,5 @@ COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/apps/server/openapi.yaml ./openapi.yaml
 
 ENV NODE_ENV=production
-EXPOSE 8080
+EXPOSE 4000
 CMD ["node", "dist/index.js"]
