@@ -688,3 +688,6 @@
 - Исправлена генерация Prisma Client: вывод снова в `node_modules/@prisma/client`.
 - Сборка `pnpm run build:server` завершается без ошибок.
 
+
+## 2025-11-01
+- Dockerfile backend теперь использует `node:20-alpine3.17` во всех этапах и устанавливает `openssl` и `libssl1.1`. Сборка контейнера через `docker compose build backend --no-cache` проходит без ошибок.
