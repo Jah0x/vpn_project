@@ -32,6 +32,7 @@ model User {
   telegram        TelegramAccount?
   creds           Credentials?
   checkSecret     UserCheckSecret?
+  PlanUse         PlanUse[]
 }
 
 model Vpn {
@@ -130,12 +131,14 @@ model PreallocatedUid {
 }
 
 model Plan {
-  code       PlanCode @id
+  code       PlanCode    @id
   name       String
   priceRub   Int
   durationMo Int
-  maxVpns    Int      @default(5)
-  isActive   Boolean  @default(true)
+  maxVpns    Int         @default(5)
+  isActive   Boolean     @default(true)
+  PlanCache  PlanCache[]
+  PlanUse    PlanUse[]
 }
 
 model Invoice {
@@ -158,18 +161,18 @@ model RefreshToken {
 }
 
 model TelegramAccount {
-  userId   String   @id @map("user_id")
-  user     User     @relation(fields: [userId], references: [id])
-  tgid     BigInt   @unique
+  userId   String  @id @map("user_id")
+  user     User    @relation(fields: [userId], references: [id])
+  tgid     BigInt  @unique
   hash     String
   username String?
 }
 
 model Credentials {
-  userId  String @id
-  email   String @unique
+  userId   String @id
+  email    String @unique
   passHash String
-  user    User   @relation(fields: [userId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
 }
 
 model UserCheckSecret {
@@ -198,21 +201,20 @@ model SubtaskQueue {
 
 model PlanCache {
   id        Int      @id @default(autoincrement())
-  planId    Int
+  planCode  PlanCode
   data      Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Plan      Plan     @relation(fields:[planId], references:[id])
+  Plan Plan @relation(fields: [planCode], references: [code])
 }
 
 model PlanUse {
-  id        Int      @id @default(autoincrement())
-  planId    Int
-  userId    Int
-  usedAt    DateTime @default(now())
+  id       Int      @id @default(autoincrement())
+  planCode PlanCode
+  userId   String
+  usedAt   DateTime @default(now())
 
-  Plan      Plan     @relation(fields:[planId], references:[id])
-  User      User     @relation(fields:[userId], references:[id])
+  Plan Plan @relation(fields: [planCode], references: [code])
+  User User @relation(fields: [userId], references: [id])
 }
-
