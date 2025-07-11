@@ -38,7 +38,7 @@ WORKDIR /app/apps/server
 # Минимально — только скомпилированный билд + зависимости рантайма
 COPY --from=build-backend /app/apps/server/dist ./dist
 COPY --from=build-backend /app/node_modules     ./node_modules
-COPY --from=build-backend /app/prisma           ./prisma   # если нужны миграции
+COPY --from=build-backend /app/prisma           ./prisma   
 
 ENV NODE_ENV=production
 CMD ["node", "dist/index.js"]
