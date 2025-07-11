@@ -1,9 +1,7 @@
 # ── STAGE 1: deps ────────────────────────────────────────────────
-FROM node:20-alpine AS deps
+FROM node:20-alpine3.17 AS deps
+RUN apk add --no-cache openssl libssl1.1
 WORKDIR /app
-
-
-RUN apk add --no-cache openssl
 
 # ▾ Файлы, необходимые pnpm, чтобы посчитать граф зависимостей
 COPY pnpm-lock.yaml package.json ./
@@ -17,7 +15,8 @@ RUN corepack enable && pnpm install --frozen-lockfile
 # └─ node_modules поселились на корневом уровне /app
 
 # ── STAGE 2: build-backend ───────────────────────────────────────
-FROM node:20-alpine AS build-backend
+FROM node:20-alpine3.17 AS build-backend
+RUN apk add --no-cache openssl libssl1.1
 WORKDIR /app
 
 # ←  ОБЯЗАТЕЛЬНО: в каждом новом FROM нужно снова включить Corepack
@@ -35,7 +34,8 @@ COPY prisma      ./prisma
 RUN pnpm --filter "./apps/server" run build:server
 
 # ── STAGE 3: prod ────────────────────────────────────────────────
-FROM node:20-alpine
+FROM node:20-alpine3.17
+RUN apk add --no-cache openssl libssl1.1
 WORKDIR /app/apps/server
 
 # Минимально — только скомпилированный билд + зависимости рантайма
