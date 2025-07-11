@@ -2,7 +2,7 @@
   "name": "vpn-backend",
   "private": true,
   "scripts": {
-    "build:server": "tsc -p tsconfig.json",
+    "build:server": "prisma generate && tsc -p .",
     "seed": "ts-node prisma/seed.ts"
   },
   "devDependencies": {

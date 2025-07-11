@@ -14,10 +14,9 @@ COPY ./apps/server ./apps/server
 COPY prisma ./prisma
 
 WORKDIR /app/apps/server
-RUN pnpm install --frozen-lockfile && \
-    npx prisma generate --schema ../../prisma/schema.prisma && \
-    pnpm run build:server && \
-    pnpm prune --prod
+RUN pnpm install --frozen-lockfile \
+    && pnpm run build:server \
+    && pnpm prune --prod
 
 ################ runtime stage ################
 FROM node:20-alpine

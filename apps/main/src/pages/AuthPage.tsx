@@ -6,7 +6,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const tg = (window as any).Telegram?.WebApp;
+    const tg = (window as any)?.Telegram?.WebApp ?? null;
     if (!tg?.initDataUnsafe) {
       navigate('/login');
       return;
@@ -21,6 +21,14 @@ const AuthPage = () => {
         navigate('/login');
       });
   }, [navigate]);
+
+  if ((window as any)?.Telegram?.WebApp == null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Telegram WebApp недоступен
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center text-white">
