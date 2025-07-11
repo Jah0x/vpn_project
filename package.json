@@ -96,7 +96,7 @@
     "lint": "eslint \"apps/main/src/**/*.{ts,tsx,js}\" --max-warnings=0",
     "format": "prettier --write apps/main/src/**/*.{js,jsx,css,md}",
     "start:server": "ts-node apps/server/src/index.ts",
-    "build:server": "prisma generate && tsc -p apps/server",
+    "build:server": "tsc -p apps/server/tsconfig.build.json",
     "prisma:migrate": "prisma migrate dev --name init",
     "seed": "prisma db seed",
     "seed:test": "ts-node apps/server/src/cli/test-seed.ts",

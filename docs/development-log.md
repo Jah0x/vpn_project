@@ -661,3 +661,9 @@
 - Обновлены upstream в `nginx.conf` и конфиг SPA `docker/frontend/nginx/default.conf`.
 - Prisma Client теперь генерируется в `apps/server/dist/.prisma`.
 - В `apps/server/package.json` добавлен скрипт `start`.
+
+## 2025-10-31
+- Исключены `prisma/seed.ts` и `scripts/**` из `tsconfig.build.json`.
+- Скрипт `build:server` в `package.json` использует этот конфиг.
+- Обновлён `apps/server/Dockerfile` для установки зависимостей через `pnpm --filter ./...`.
+- `docker compose build backend` выполняется без ошибок.

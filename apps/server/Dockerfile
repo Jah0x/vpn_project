@@ -6,17 +6,15 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 COPY apps/server/package.json ./apps/server/
 RUN corepack enable \
-    && pnpm install --frozen-lockfile \
-    && pnpm --dir apps/server install
+    && pnpm --filter ./... install --frozen-lockfile
 
 # исходники
 COPY ./apps/server ./apps/server
 COPY prisma ./prisma
 
 WORKDIR /app/apps/server
-RUN pnpm install --frozen-lockfile \
-    && pnpm run build:server \
-    && pnpm prune --prod
+RUN pnpm --filter ./... install --frozen-lockfile
+RUN pnpm run build:server && pnpm prune --prod
 
 ################ runtime stage ################
 FROM node:20-alpine
