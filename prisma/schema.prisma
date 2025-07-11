@@ -214,4 +214,4 @@ model PlanUse {
   Plan      Plan     @relation(fields:[planId], references:[id])
   User      User     @relation(fields:[userId], references:[id])
 }
-}
+
