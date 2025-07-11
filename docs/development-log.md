@@ -601,3 +601,8 @@
 - В `apps/server/package.json` добавлены dev-зависимости `ts-node` и `typescript`,
   чтобы `pnpm run build:server` выполнялся без ошибок внутри контейнера.
 
+
+
+
+## 2025-10-21
+- Исправлена сборка backend: в Dockerfile выполняется `pnpm --dir apps/server install` перед компиляцией, чтобы `ts-node` присутствовал. `docker compose build` теперь завершается успешно.

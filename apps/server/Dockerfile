@@ -4,8 +4,10 @@ WORKDIR /app
 
 # установки зависимостей
 COPY package.json pnpm-lock.yaml ./
+COPY apps/server/package.json ./apps/server/
 RUN corepack enable \
-    && pnpm install --frozen-lockfile
+    && pnpm install --frozen-lockfile \
+    && pnpm --dir apps/server install --frozen-lockfile
 
 # исходники
 COPY ./apps/server ./apps/server
