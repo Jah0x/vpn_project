@@ -650,3 +650,8 @@
 - В `Dockerfile.frontend` копируется новый конфиг.
 - Компонент `AuthPage` проверяет наличие Telegram WebApp.
 - GitHub Actions собирает контейнеры через `docker compose`, запускает smoke-тесты и пушит образы при успехе.
+
+## 2025-10-29
+- Создан `tsconfig.build.json` в `apps/server` для продакшн сборки.
+- Скрипт `build:server` теперь использует этот конфиг.
+- `pnpm --filter apps/server run build:server` проходит без ошибок.
