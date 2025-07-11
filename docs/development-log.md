@@ -622,3 +622,10 @@
 - Скрипт `build:server` внутри `apps/server/package.json` теперь запускает только `tsc -p tsconfig.json`.
 - В файлах сервисов типизирован параметр `tx` как `Prisma.TransactionClient`, устранена ошибка `TS7006`.
 - `docker compose build backend --no-cache` завершается без ошибок.
+
+## 2025-10-25
+- В `apps/server/package.json` зависимость `prisma` перенесена в `devDependencies`,
+  чтобы `npx prisma generate` находил бинарник при сборке Docker.
+- В `apps/server/Dockerfile` команда генерации заменена на `npx prisma generate`;
+  перед ней выполняется `pnpm install` внутри каталога сервера.
+- Сборка контейнера `backend` выполняется через `docker compose build backend --no-cache`.
