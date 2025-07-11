@@ -1,39 +1,41 @@
-################ build stage ################
-FROM node:20-alpine AS build
+# ---  STAGE 1: deps  ---------------------------------------------
+FROM node:20-alpine AS deps
 WORKDIR /app
 
-# установки зависимостей
-COPY package.json pnpm-lock.yaml ./
-COPY apps/server/package.json ./apps/server/
-RUN corepack enable \
-    && pnpm --filter ./... install --frozen-lockfile
+# ⬇️  Копируем всё, что нужно pnpm для решения зависимостей
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 
-# исходники
-COPY ./apps/server ./apps/server
+# ⬇️  Копируем манифесты workspace-ов (без исходников —
+#     это быстро, и кэш на deps не будет ломаться каждый коммит)
+COPY apps/server/package.json apps/server/
+# (добавь package.json других пакетов, если надо)
+
+RUN corepack enable && pnpm install --frozen-lockfile
+# └── node_modules на корневом уровне
+
+# ---  STAGE 2: билд backend  -------------------------------------
+FROM node:20-alpine AS build-backend
+WORKDIR /app
+
+# Забираем node_modules из предыдущего слоя
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/pnpm-lock.yaml \
+                 /app/pnpm-workspace.yaml \
+                 /app/package.json ./
+
+# ⬇️  Копируем реальные исходники после deps-кэша
+COPY apps/server ./apps/server
 COPY prisma ./prisma
 
-# сначала работаем из корня, где есть pnpm-lock.yaml
-WORKDIR /app
-# тянем только backend-workspace и её зависимости
-RUN pnpm install --frozen-lockfile --filter "./apps/server" \
-    # билдим
-    && pnpm --workspace-root --filter "./apps/server" run build:server \
-    # режем лишнее – только production-deps
-    && pnpm prune --prod
+# Генерим Prisma и компилим TypeScript
+RUN pnpm --filter "./apps/server" run build:server
 
-# после всего — рабочая директория приложения
+# ---  STAGE 3: прод-образ  ---------------------------------------
+FROM node:20-alpine
 WORKDIR /app/apps/server
 
-################ runtime stage ################
-FROM node:20-alpine
-RUN apk add --no-cache openssl ca-certificates
-
-WORKDIR /app
-COPY --from=build /app/apps/server/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/prisma ./prisma
-COPY --from=build /app/apps/server/openapi.yaml ./openapi.yaml
-
+COPY --from=build-backend /app/apps/server/dist ./dist
+COPY --from=build-backend /app/node_modules ./node_modules
+COPY --from=build-backend /app/prisma ./prisma            # если нужно миграциям
 ENV NODE_ENV=production
-EXPOSE 4000
 CMD ["node", "dist/index.js"]
