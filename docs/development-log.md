@@ -684,3 +684,7 @@
 ## 2025-07-15
 - Модели `PlanCache` и `PlanUse` теперь ссылаются на `Plan.code` и `User.id`. Клиент Prisma пересоздан.
 
+## 2025-07-16
+- Исправлена генерация Prisma Client: вывод снова в `node_modules/@prisma/client`.
+- Сборка `pnpm run build:server` завершается без ошибок.
+
