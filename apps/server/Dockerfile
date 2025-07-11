@@ -12,9 +12,17 @@ RUN corepack enable \
 COPY ./apps/server ./apps/server
 COPY prisma ./prisma
 
+# сначала работаем из корня, где есть pnpm-lock.yaml
+WORKDIR /app
+# тянем только backend-workspace и её зависимости
+RUN pnpm install --frozen-lockfile --filter "./apps/server" \
+    # билдим
+    && pnpm --workspace-root --filter "./apps/server" run build:server \
+    # режем лишнее – только production-deps
+    && pnpm prune --prod
+
+# после всего — рабочая директория приложения
 WORKDIR /app/apps/server
-RUN pnpm --filter ./... install --frozen-lockfile
-RUN pnpm run build:server && pnpm prune --prod
 
 ################ runtime stage ################
 FROM node:20-alpine
