@@ -7,7 +7,7 @@ COPY package.json pnpm-lock.yaml ./
 COPY apps/server/package.json ./apps/server/
 RUN corepack enable \
     && pnpm install --frozen-lockfile \
-    && pnpm --dir apps/server install --frozen-lockfile
+    && pnpm --dir apps/server install
 
 # исходники
 COPY ./apps/server ./apps/server

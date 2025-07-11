@@ -606,3 +606,6 @@
 
 ## 2025-10-21
 - Исправлена сборка backend: в Dockerfile выполняется `pnpm --dir apps/server install` перед компиляцией, чтобы `ts-node` присутствовал. `docker compose build` теперь завершается успешно.
+
+## 2025-10-22
+- В `apps/server/Dockerfile` убран флаг `--frozen-lockfile` для установки зависимостей в подпроекте без `pnpm-lock.yaml`. Сборка контейнера проходит без ошибок.
