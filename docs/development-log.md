@@ -665,5 +665,6 @@
 ## 2025-10-31
 - Исключены `prisma/seed.ts` и `scripts/**` из `tsconfig.build.json`.
 - Скрипт `build:server` в `package.json` использует этот конфиг.
-- Обновлён `apps/server/Dockerfile` для установки зависимостей через `pnpm --filter ./...`.
-- `docker compose build backend` выполняется без ошибок.
+
+## 2025-07-11
+- Обновлён backend Dockerfile: зависимости устанавливаются из корня через фильтр, сборка и prune выполняются одной командой.
