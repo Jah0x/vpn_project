@@ -51,7 +51,13 @@ export interface TelegramHashDebug {
 export function getTelegramHashDebug(data: TelegramAuthData): TelegramHashDebug {
   const { hash, ...rest } = data;
 
-  const secretKey = crypto.createHmac('sha256', 'WebAppData').update(BOT_TOKEN).digest();
+  // Согласно официальной документации secret_key рассчитывается как
+  // HMAC_SHA256(key=bot_token, data="WebAppData"). Ранее параметры
+  // были перепутаны, что приводило к неверному хэшу и отказу в авторизации.
+  const secretKey = crypto
+    .createHmac('sha256', BOT_TOKEN)
+    .update('WebAppData')
+    .digest();
 
   const dataCheckString = Object.keys(rest)
     .filter((k) => rest[k] !== undefined)
