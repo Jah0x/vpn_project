@@ -49,18 +49,24 @@ describe('POST /api/auth/telegram', () => {
   });
 
   function makePayload() {
+    const params = new URLSearchParams();
+    const user = { id: 1, username: 'tg' };
+    params.set('user', JSON.stringify(user));
+    params.set('auth_date', '100');
     const data = {
-      id: 1,
+      user: JSON.stringify(user),
+      auth_date: '100',
+      id: '1',
       username: 'tg',
-      auth_date: 100,
-    } as any;
-    const secret = crypto.createHash('sha256').update('token').digest();
+    };
+    const secret = crypto.createHmac('sha256', 'WebAppData').update('token').digest();
     const checkString = Object.keys(data)
       .sort()
       .map((k) => `${k}=${(data as any)[k]}`)
       .join('\n');
     const hash = crypto.createHmac('sha256', secret).update(checkString).digest('hex');
-    return { ...data, hash };
+    params.set('hash', hash);
+    return { initData: params.toString() };
   }
 
   it('creates new user and returns tokens', async () => {
@@ -72,7 +78,11 @@ describe('POST /api/auth/telegram', () => {
   });
 
   it('rejects invalid signature', async () => {
-    const payload = { id: 1, username: 'tg', auth_date: 100, hash: 'bad' };
+    const params = new URLSearchParams();
+    params.set('user', JSON.stringify({ id: 1, username: 'tg' }));
+    params.set('auth_date', '100');
+    params.set('hash', 'bad');
+    const payload = { initData: params.toString() };
     const res = await request(app).post('/api/auth/telegram').send(payload);
     expect(res.status).toBe(403);
   });

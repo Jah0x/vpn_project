@@ -3,7 +3,7 @@ import rateLimit from "express-rate-limit";
 import crypto from "crypto";
 import { signAccessToken, verifyRefreshToken } from "./auth";
 import * as userService from "./services/userService";
-import { TelegramAuthData } from "./lib/telegram";
+import { TelegramAuthData, getTelegramHashDebug, parseInitData } from "./lib/telegram";
 import { authTelegram } from "./services/authTelegramService";
 import { prisma } from "./lib/prisma";
 
@@ -35,9 +35,16 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/telegram", telegramLimiter, async (req, res) => {
-  const data = req.body as TelegramAuthData;
-  // Логируем всё initData, чтобы видеть что приходит от клиента
-  req.log.info({ initData: data }, "Telegram auth attempt");
+  const raw = (req.body as any).initData || req.body;
+  const data = typeof raw === 'string' ? parseInitData(raw) : (raw as TelegramAuthData);
+  // Логируем входящие данные целиком
+  req.log.info({ body: raw }, "Telegram auth attempt");
+  if (!data) {
+    req.log.warn({ body: raw }, "empty initData");
+    return res.status(400).json({ error: "empty initData" });
+  }
+  const debug = getTelegramHashDebug(data);
+  req.log.debug({ debug }, "telegram hash details");
   try {
     const key = crypto
       .createHash("sha256")
@@ -54,7 +61,7 @@ router.post("/telegram", telegramLimiter, async (req, res) => {
     res.status(200).json(tokens);
   } catch (err: any) {
     if (err.message === "INVALID_SIGNATURE") {
-      req.log.warn({ initData: data }, "Invalid Telegram signature");
+      req.log.warn({ debug }, "Invalid Telegram signature");
       return res.status(403).json({ error: "invalid hash" });
     }
     if (err.message === "NO_UID_AVAILABLE") {

@@ -7,13 +7,13 @@ const AuthPage = () => {
 
   useEffect(() => {
     const tg = (window as any)?.Telegram?.WebApp ?? null;
-    if (!tg?.initDataUnsafe) {
+    if (!tg?.initData) {
       navigate('/login');
       return;
     }
 
     axios
-      .post('/api/auth/telegram', tg.initDataUnsafe)
+      .post('/api/auth/telegram', { initData: tg.initData })
       .then(() => {
         navigate('/dashboard');
       })

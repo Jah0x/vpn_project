@@ -29,7 +29,11 @@ jest.mock('../src/lib/prisma', () => {
   return { prisma: prismaMock, __stores: { uidStore, userStore } };
 });
 jest.mock('../src/middleware/audit', () => ({ logAction: jest.fn() }));
-jest.mock('../src/lib/telegram', () => ({ verifyTelegramHash: () => true }));
+jest.mock('../src/lib/telegram', () => ({
+  verifyTelegramHash: () => true,
+  getTelegramHashDebug: () => ({ calculatedHash: 'h', providedHash: 'h', dataCheckString: '', secretKeyHex: '' }),
+  parseInitData: () => ({ id: 1, auth_date: 1, hash: 'h' }),
+}));
 
 import { app } from '../src/server';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -42,7 +46,11 @@ beforeEach(() => {
 });
 
 test('duplicate telegram auth returns 200 twice', async () => {
-  const payload = { id: 1, username: 'tg', auth_date: 1, hash: 'h' };
+  const params = new URLSearchParams();
+  params.set('user', JSON.stringify({ id: 1, username: 'tg' }));
+  params.set('auth_date', '1');
+  params.set('hash', 'h');
+  const payload = { initData: params.toString() };
   const first = await request(app).post('/api/auth/telegram').send(payload);
   const second = await request(app).post('/api/auth/telegram').send(payload);
   expect(first.status).toBe(200);
