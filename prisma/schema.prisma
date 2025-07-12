@@ -20,6 +20,7 @@ model User {
   lastName        String?
   photoUrl        String?
   telegramId      String?          @unique
+  hankoUserId     String?          @unique
   passwordHash    String?
   uuid            String           @unique
   role            Role             @default(USER)

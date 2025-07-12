@@ -12,6 +12,7 @@ import authRouter from "./authRoutes";
 import authPasswordRouter from "./routes/authPassword";
 import combinedAuthRouter from "./routes/auth";
 import linkTelegramRouter from "./routes/linkTelegram";
+import hankoAuthRouter from "./routes/auth/hanko";
 import configRouter from "./configRoutes";
 import onramperRouter from "./onramper";
 import subscriptionLinkRouter from "./subscriptionLink";
@@ -55,6 +56,7 @@ app.get("/metrics", async (_req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/auth", authPasswordRouter);
 app.use("/api/auth", combinedAuthRouter);
+app.use("/api/auth/hanko", hankoAuthRouter);
 app.use("/api/auth/link/telegram", linkTelegramRouter);
 app.use("/api/vpn", vpnRouter);
 app.use("/api", configRouter);
