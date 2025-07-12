@@ -1,7 +1,6 @@
 # ── STAGE 1: deps ────────────────────────────────────────────────
 FROM node:20-alpine3.17 AS deps
-RUN apk add --no-cache openssl libssl1.1 \
-  && npm i -g pino-pretty pino-file-rotate
+RUN apk add --no-cache openssl libssl1.1
 WORKDIR /app
 
 # ▾ Файлы, необходимые pnpm, чтобы посчитать граф зависимостей
@@ -17,8 +16,7 @@ RUN corepack enable && pnpm install --frozen-lockfile
 
 # ── STAGE 2: build-backend ───────────────────────────────────────
 FROM node:20-alpine3.17 AS build-backend
-RUN apk add --no-cache openssl libssl1.1 \
-  && npm i -g pino-pretty pino-file-rotate
+RUN apk add --no-cache openssl libssl1.1
 WORKDIR /app
 
 # ←  ОБЯЗАТЕЛЬНО: в каждом новом FROM нужно снова включить Corepack
@@ -38,8 +36,7 @@ RUN pnpm --filter "./apps/server" run build:server
 
 # ── STAGE 3: prod ────────────────────────────────────────────────
 FROM node:20-alpine3.17
-RUN apk add --no-cache openssl libssl1.1 \
-  && npm i -g pino-pretty pino-file-rotate
+RUN apk add --no-cache openssl libssl1.1
 WORKDIR /app/apps/server
 
 # Минимально — только скомпилированный билд + зависимости рантайма

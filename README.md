@@ -22,12 +22,18 @@ STRIPE_SECRET_KEY=
 ## Логирование
 
 В разработке используется `pino-pretty`, в продакшене — `pino-file-rotate`.
-Логи сохраняются в каталоге `/app/logs`.
+Все файлы располагаются в каталоге `/app/logs` и имеют имя вида
+`app-YYYY-MM-DD.log`.
 
-Важные переменные окружения: `LOG_LEVEL`, `LOG_FILE_ENABLED`,
-`PINO_PRETTY_DISABLE`.
-При значении `LOG_FILE_ENABLED=false` или `PINO_PRETTY_DISABLE=true` вывод идёт
-только в stdout без форматирования.
+Основные переменные окружения:
+
+- `LOG_LEVEL` — уровень логирования (`info`, `debug`, `error`).
+- `LOG_FILE_ENABLED` — включение записи в файл (`true` по умолчанию).
+- `PINO_PRETTY_DISABLE` — отключить форматирование вывода в консоль.
+
+Если `LOG_FILE_ENABLED=false` или `PINO_PRETTY_DISABLE=true`,
+логи выводятся только в stdout без красивого форматирования.
+Изменения переменных вступают в силу после перезапуска сервиса.
 
 Swagger docs: [http://localhost:80/api/docs](http://localhost:80/api/docs)
 
