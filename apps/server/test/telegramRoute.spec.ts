@@ -59,7 +59,8 @@ describe('POST /api/auth/telegram', () => {
       id: '1',
       username: 'tg',
     };
-    const secret = crypto.createHmac('sha256', 'WebAppData').update('token').digest();
+    // Секрет формируется как HMAC_SHA256(botToken, 'WebAppData')
+    const secret = crypto.createHmac('sha256', 'token').update('WebAppData').digest();
     const checkString = Object.keys(data)
       .sort()
       .map((k) => `${k}=${(data as any)[k]}`)

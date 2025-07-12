@@ -17,7 +17,8 @@ describe('verifyTelegramHash', () => {
       auth_date: 100,
     } as any;
 
-    const secret = crypto.createHmac('sha256', 'WebAppData').update('testtoken').digest();
+    // В тесте повторяем официальную формулу расчёта secret_key
+    const secret = crypto.createHmac('sha256', 'testtoken').update('WebAppData').digest();
     const checkString = Object.keys(data)
       .sort()
       .map((k) => `${k}=${(data as any)[k]}`)
