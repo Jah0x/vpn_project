@@ -1,45 +1,37 @@
-import pino from 'pino';
-import { resolve } from 'path';
+import { pino } from 'pino';
 
-const level = process.env.LOG_LEVEL || 'info';
+const level = process.env.LOG_LEVEL ?? 'info';
 const fileEnabled = process.env.LOG_FILE_ENABLED !== 'false';
+const prettyDisabled = process.env.PINO_PRETTY_DISABLE === 'true';
+
 const targets: pino.TransportTargetOptions[] = [];
 
-if (process.env.NODE_ENV === 'development') {
-  targets.push({
-    level,
-    target: resolve('node_modules/pino-pretty'),
-    options: { colorize: true, translateTime: 'yyyy-mm-dd HH:MM:ss.l' },
-  });
-} else {
-  targets.push({
-    level,
-    target: 'pino/file',
-    options: { destination: 1 },
-  });
+if (fileEnabled && !prettyDisabled) {
+  if (process.env.NODE_ENV === 'development') {
+    targets.push({
+      level,
+      target: 'pino-pretty',
+      options: { colorize: true, translateTime: 'HH:MM:ss.l' },
+    });
+  } else {
+    targets.push({
+      level,
+      target: 'pino/file',
+      options: { destination: 1 },
+    });
+    targets.push({
+      level,
+      target: 'pino-file-rotate',
+      options: {
+        file: '/app/logs/app-%DATE%.log',
+        interval: '1d',
+        count: 7,
+        mkdir: true,
+      },
+    });
+  }
 }
 
-if (fileEnabled) {
-  targets.push({
-    level: 'info',
-    target: 'pino-rotate',
-    options: {
-      file: '/app/logs/app-%YYYY-MM-DD%.log',
-      interval: '1d',
-      limit: '7d',
-      mkdir: true,
-    },
-  });
-  targets.push({
-    level: 'warn',
-    target: 'pino-rotate',
-    options: {
-      file: '/app/logs/error-%YYYY-MM-DD%.log',
-      interval: '1d',
-      limit: '7d',
-      mkdir: true,
-    },
-  });
-}
-
-export const logger = pino({ level }, pino.transport({ targets }));
+export const logger = targets.length
+  ? pino({ level }, pino.transport({ targets }))
+  : pino({ level });

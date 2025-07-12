@@ -19,6 +19,16 @@ TELEGRAM_BOT_TOKEN=
 STRIPE_SECRET_KEY=
 ```
 
+## Логирование
+
+В разработке используется `pino-pretty`, в продакшене — `pino-file-rotate`.
+Логи сохраняются в каталоге `/app/logs`.
+
+Важные переменные окружения: `LOG_LEVEL`, `LOG_FILE_ENABLED`,
+`PINO_PRETTY_DISABLE`.
+При значении `LOG_FILE_ENABLED=false` или `PINO_PRETTY_DISABLE=true` вывод идёт
+только в stdout без форматирования.
+
 Swagger docs: [http://localhost:80/api/docs](http://localhost:80/api/docs)
 
 ## Разработка/Запуск
