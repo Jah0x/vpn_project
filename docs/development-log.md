@@ -697,3 +697,8 @@
 - Файл `openapi.yaml` не копировался в финальный слой образа.
 - В `apps/server/Dockerfile` добавлена строка `COPY --from=build-backend /app/apps/server/openapi.yaml ./openapi.yaml`.
 - Теперь сервер стартует без ошибки и документация Swagger доступна в режиме разработки.
+
+## 2025-11-03
+- Удалена директива `version` из `docker-compose.yml` — Docker больше не предупреждает об устаревшей схеме.
+- `apps/server/Dockerfile` теперь отдельно копирует `openapi.yaml` на этапе сборки.
+- Дополнен раздел `/docs` — фиксация изменений помогает отслеживать проблемы сборки.

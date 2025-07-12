@@ -28,6 +28,7 @@ COPY --from=deps /app/pnpm-lock.yaml /app/package.json ./
 ENV PATH=/app/node_modules/.bin:$PATH
 # ▾ Копируем реальные исходники после deps-кэша
 COPY apps/server ./apps/server
+COPY apps/server/openapi.yaml apps/server/openapi.yaml
 COPY prisma      ./prisma
 
 # Генерируем Prisma и компилируем TypeScript
