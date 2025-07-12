@@ -38,10 +38,16 @@ export function parseInitData(raw: string): TelegramAuthData | null {
 }
 
 export interface TelegramHashDebug {
+  /** Строка, из которой строится подпись */
   dataCheckString: string;
+  /** Секретный ключ в hex, полученный как HMAC_SHA256(botToken, "WebAppData") */
   secretKeyHex: string;
-  calculatedHash: string;
+  /** Ожидаемый хэш, вычисленный из dataCheckString */
+  expectedHash: string;
+  /** Хэш, полученный от клиента */
   providedHash: string;
+  /** Совпадают ли хэши */
+  match: boolean;
 }
 
 /**
@@ -69,18 +75,22 @@ export function getTelegramHashDebug(data: TelegramAuthData): TelegramHashDebug 
     })
     .join('\n');
 
-  const calculatedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
+  const expectedHash = crypto
+    .createHmac('sha256', secretKey)
+    .update(dataCheckString)
+    .digest('hex');
 
   return {
     dataCheckString,
     secretKeyHex: secretKey.toString('hex'),
-    calculatedHash,
+    expectedHash,
     providedHash: hash,
+    match: expectedHash === hash,
   };
 }
 
 export function verifyTelegramHash(data: TelegramAuthData): boolean {
   if (!BOT_TOKEN || !data.hash) return false;
   const info = getTelegramHashDebug(data);
-  return info.calculatedHash === info.providedHash;
+  return info.match;
 }

@@ -9,7 +9,7 @@ import { logAction } from '../middleware/audit';
 
 export async function authTelegram(data: TelegramAuthData) {
   const debug = getTelegramHashDebug(data);
-  if (debug.calculatedHash !== debug.providedHash) {
+  if (!debug.match) {
     const err: any = new Error('INVALID_SIGNATURE');
     (err as any).debug = debug;
     throw err;
