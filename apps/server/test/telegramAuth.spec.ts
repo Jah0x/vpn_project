@@ -31,7 +31,13 @@ jest.mock('../src/lib/prisma', () => {
 jest.mock('../src/middleware/audit', () => ({ logAction: jest.fn() }));
 jest.mock('../src/lib/telegram', () => ({
   verifyTelegramHash: () => true,
-  getTelegramHashDebug: () => ({ calculatedHash: 'h', providedHash: 'h', dataCheckString: '', secretKeyHex: '' }),
+  getTelegramHashDebug: () => ({
+    expectedHash: 'h',
+    providedHash: 'h',
+    dataCheckString: '',
+    secretKeyHex: '',
+    match: true,
+  }),
   parseInitData: () => ({ id: 1, auth_date: 1, hash: 'h' }),
 }));
 

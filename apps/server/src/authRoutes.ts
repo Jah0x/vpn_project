@@ -49,8 +49,9 @@ router.post("/telegram", telegramLimiter, async (req, res) => {
       data,
       botToken: BOT_TOKEN ? '***' : '(empty)',
       data_check_string: debug.dataCheckString,
-      calculatedHash: debug.calculatedHash,
-      providedHash: debug.providedHash,
+      expected_hash: debug.expectedHash,
+      received_hash: debug.providedHash,
+      match: debug.match,
     },
     "telegram hash details",
   );
@@ -70,7 +71,15 @@ router.post("/telegram", telegramLimiter, async (req, res) => {
     res.status(200).json(tokens);
   } catch (err: any) {
     if (err.message === "INVALID_SIGNATURE") {
-      req.log.warn({ reason: "hash mismatch", debug }, "Invalid Telegram signature");
+      req.log.warn(
+        {
+          reason: "hash mismatch",
+          expected: debug.expectedHash,
+          received: debug.providedHash,
+          data_check_string: debug.dataCheckString,
+        },
+        "Invalid Telegram signature",
+      );
       return res.status(403).json({ error: "invalid hash" });
     }
     if (err.message === "NO_UID_AVAILABLE") {
