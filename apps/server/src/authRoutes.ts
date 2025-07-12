@@ -67,6 +67,19 @@ router.post("/telegram", telegramLimiter, async (req, res) => {
     res.status(200).json(tokens);
   } catch (err: any) {
     if (err.message === "INVALID_SIGNATURE") {
+      const { initData } = (req.body as any) ?? {};
+      const parsed = initData ? parseInitData(initData) : undefined;
+      const hashDebug = parsed ? getTelegramHashDebug(parsed) : undefined;
+      (req as any).log.warn(
+        {
+          initData: initData?.slice(0, 120) + "…",
+          dataCheckString: hashDebug?.dataCheckString,
+          expectedHash: hashDebug?.expectedHash,
+          receivedHash: hashDebug?.providedHash,
+          match: hashDebug?.match,
+        },
+        "telegram auth debug",
+      );
       (req as any).log.warn(
         {
           reason: "hash mismatch",
@@ -76,6 +89,9 @@ router.post("/telegram", telegramLimiter, async (req, res) => {
         },
         "Invalid Telegram signature",
       );
+      if (!hashDebug?.match) {
+        return res.status(403).json({ error: "invalid hash" });
+      }
       return res.status(403).json({ error: "invalid hash" });
     }
     if (err.message === "NO_UID_AVAILABLE") {
