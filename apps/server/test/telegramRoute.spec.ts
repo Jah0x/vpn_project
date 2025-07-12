@@ -74,6 +74,6 @@ describe('POST /api/auth/telegram', () => {
   it('rejects invalid signature', async () => {
     const payload = { id: 1, username: 'tg', auth_date: 100, hash: 'bad' };
     const res = await request(app).post('/api/auth/telegram').send(payload);
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(403);
   });
 });

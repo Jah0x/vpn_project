@@ -3,6 +3,8 @@ dotenv.config();
 if (!process.env.STRIPE_SECRET_KEY) {
   console.warn("[WARN] STRIPE_SECRET_KEY is not set; Stripe features disabled");
 }
+// Выводим токен в логах для проверки доступности переменных окружения
+console.log(`TELEGRAM_BOT_TOKEN=${process.env.TELEGRAM_BOT_TOKEN}`);
 
 import { app } from "./server";
 import publicPlansRouter from "./routes/publicPlans";
