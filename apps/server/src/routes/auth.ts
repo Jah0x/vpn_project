@@ -14,7 +14,7 @@ function issueJwt(req: Request, res: Response) {
   res.json({ token });
 }
 
-router.post('/local', passport.authenticate('local', { session: false }), issueJwt);
-router.post('/telegram', passport.authenticate('telegram', { session: false }), issueJwt);
+router.post('/local', passport.authenticate('local', { session: false }), issueJwt as any);
+router.post('/telegram', passport.authenticate('telegram', { session: false }), issueJwt as any);
 
 export default router;

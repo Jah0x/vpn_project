@@ -94,3 +94,14 @@ export function verifyTelegramHash(data: TelegramAuthData): boolean {
   const info = getTelegramHashDebug(data);
   return info.match;
 }
+
+export function debugTelegramSignature(data: TelegramAuthData) {
+  const debug = getTelegramHashDebug(data);
+  return {
+    dataCheckString: debug.dataCheckString,
+    secretKeyHex: debug.secretKeyHex.slice(0, 8) + '…',
+    expectedHash: debug.expectedHash,
+    receivedHash: debug.providedHash,
+    match: debug.match,
+  };
+}

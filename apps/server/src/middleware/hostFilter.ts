@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { RequestHandler } from 'express';
 
-export function hostFilterMiddleware(req: Request, res: Response, next: NextFunction) {
+export const hostFilterMiddleware: RequestHandler = (req, res, next) => {
   if (process.env.NODE_ENV === 'test') return next();
 
   const host = req.hostname;
