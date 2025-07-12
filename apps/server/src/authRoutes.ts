@@ -44,10 +44,17 @@ router.post("/telegram", telegramLimiter, async (req, res) => {
     return res.status(400).json({ error: "empty initData" });
   }
   const debug = (debugTelegramSignature || getTelegramHashDebug)(data);
+  const initData = (req.body as any)?.initData;
+  const receivedHash = (debug as any).receivedHash ?? (debug as any).providedHash;
+  (req as any).log.warn(
+    { initData, expectedHash: debug.expectedHash, receivedHash, match: debug.match },
+    'tg-auth'
+  );
+  if (!debug.match) return res.status(403).json({ error: 'bad hash' });
   (req as any).log.warn(
     {
       ...debug,
-      initData: (req.body as any)?.initData?.slice(0, 120) + '…',
+      initData: initData?.slice(0, 120) + '…',
     },
     'telegram auth debug'
   );
