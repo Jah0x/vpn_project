@@ -16,6 +16,7 @@ VITE_API_BASE_URL=/api
 SERVER_PORT=8080
 DATABASE_URL=postgresql://vpn:changeme@postgres:5432/vpn?schema=public
 TELEGRAM_BOT_TOKEN=
+# токен вашего бота для проверки подписи Telegram WebApp
 STRIPE_SECRET_KEY=
 ```
 

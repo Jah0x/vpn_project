@@ -3,13 +3,11 @@ import rateLimit from "express-rate-limit";
 import crypto from "crypto";
 import { signAccessToken, verifyRefreshToken } from "./auth";
 import * as userService from "./services/userService";
-import { TelegramAuthData, debugTelegramSignature, getTelegramHashDebug, parseInitData, BOT_TOKEN } from "./lib/telegram";
-import { authTelegram } from "./services/authTelegramService";
+import { TelegramAuthData, parseInitData } from "./lib/telegram";
 import { prisma } from "./lib/prisma";
 
 const router = Router();
 
-const telegramCache = new Map<string, { tokens: any; expires: number }>();
 const telegramLimiter = rateLimit({
   windowMs: 10_000,
   max: 5,
@@ -35,77 +33,34 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/telegram", telegramLimiter, async (req, res) => {
-  const raw = (req.body as any).initData || req.body;
-  const data = typeof raw === 'string' ? parseInitData(raw) : (raw as TelegramAuthData);
-  // Логируем входящие данные целиком
-  (req as any).log.info({ body: raw }, "Telegram auth attempt");
-  if (!data) {
-    (req as any).log.warn({ body: raw }, "empty initData");
-    return res.status(400).json({ error: "empty initData" });
-  }
-  const debug = (debugTelegramSignature || getTelegramHashDebug)(data);
-  const initData = (req.body as any)?.initData;
-  const receivedHash = (debug as any).receivedHash ?? (debug as any).providedHash;
-  (req as any).log.warn(
-    { initData, expectedHash: debug.expectedHash, receivedHash, match: debug.match },
-    'tg-auth'
-  );
-  if (!debug.match) return res.status(403).json({ error: 'bad hash' });
-  (req as any).log.warn(
-    {
-      ...debug,
-      initData: initData?.slice(0, 120) + '…',
-    },
-    'telegram auth debug'
-  );
-  try {
-    const key = crypto
-      .createHash("sha256")
-      .update(JSON.stringify(data))
-      .digest("hex");
-    const cached = telegramCache.get(key);
-    if (cached && cached.expires > Date.now()) {
-      return res.status(200).json(cached.tokens);
-    }
+  const { initData } = req.body as { initData?: string };
+  if (!initData) return res.status(400).json({ error: "empty initData" });
 
-    const tokens = await authTelegram(data);
-    telegramCache.set(key, { tokens, expires: Date.now() + 10 * 60 * 1000 });
-    (req as any).log.info({ telegramId: data.id }, "Telegram auth success");
-    res.status(200).json(tokens);
+  const params = new URLSearchParams(initData);
+  const data: any = {};
+  params.forEach((v, k) => (data[k] = v));
+  const hash = data.hash;
+  delete data.hash;
+
+  const checkString = Object.keys(data)
+    .sort()
+    .map((k) => `${k}=${data[k]}`)
+    .join("\n");
+  const secret = crypto.createHash("sha256").update(process.env.TELEGRAM_BOT_TOKEN!).digest();
+  const hmac = crypto.createHmac("sha256", secret).update(checkString).digest("hex");
+
+  if (hmac !== hash) return res.status(403).json({ error: "invalid hash" });
+  const authDate = Number(data.auth_date);
+  if (Date.now() / 1000 - authDate > 86400) return res.status(403).json({ error: "expired" });
+
+  const userData: TelegramAuthData = parseInitData(initData)!;
+  try {
+    const user = await userService.upsertTelegramUser(userData);
+    const token = signAccessToken({ id: user.id, role: user.role as any });
+    (req as any).log.info({ telegramId: userData.id }, "Telegram auth success");
+    res.json({ token });
   } catch (err: any) {
-    if (err.message === "INVALID_SIGNATURE") {
-      const { initData } = (req.body as any) ?? {};
-      const parsed = initData ? parseInitData(initData) : undefined;
-      const hashDebug = parsed ? getTelegramHashDebug(parsed) : undefined;
-      (req as any).log.warn(
-        {
-          initData: initData?.slice(0, 120) + "…",
-          dataCheckString: hashDebug?.dataCheckString,
-          expectedHash: hashDebug?.expectedHash,
-          receivedHash: hashDebug?.providedHash,
-          match: hashDebug?.match,
-        },
-        "telegram auth debug",
-      );
-      (req as any).log.warn(
-        {
-          reason: "hash mismatch",
-          expected: debug.expectedHash,
-          received: debug.receivedHash,
-          data_check_string: debug.dataCheckString,
-        },
-        "Invalid Telegram signature",
-      );
-      if (!hashDebug?.match) {
-        return res.status(403).json({ error: "invalid hash" });
-      }
-      return res.status(403).json({ error: "invalid hash" });
-    }
-    if (err.message === "NO_UID_AVAILABLE") {
-      (req as any).log.error({ reason: "uid pool empty", err }, "Telegram auth failed");
-      return res.status(503).json({ error: "NO_UID_AVAILABLE" });
-    }
-    (req as any).log.error({ err }, "Telegram auth failed");
+    if (err.message === "NO_UID_AVAILABLE") return res.status(503).json({ error: "NO_UID_AVAILABLE" });
     res.status(403).json({ error: err.message || "unknown error" });
   }
 });

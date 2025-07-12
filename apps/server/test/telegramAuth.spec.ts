@@ -4,6 +4,7 @@
 /// <reference types="jest" />
 import request from 'supertest';
 
+import crypto from "crypto";
 jest.mock('../src/lib/prisma', () => {
   const uidStore: any[] = [];
   const userStore: any[] = [];
@@ -29,17 +30,6 @@ jest.mock('../src/lib/prisma', () => {
   return { prisma: prismaMock, __stores: { uidStore, userStore } };
 });
 jest.mock('../src/middleware/audit', () => ({ logAction: jest.fn() }));
-jest.mock('../src/lib/telegram', () => ({
-  verifyTelegramHash: () => true,
-  getTelegramHashDebug: () => ({
-    expectedHash: 'h',
-    providedHash: 'h',
-    dataCheckString: '',
-    secretKeyHex: '',
-    match: true,
-  }),
-  parseInitData: () => ({ id: 1, auth_date: 1, hash: 'h' }),
-}));
 
 import { app } from '../src/server';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -47,15 +37,25 @@ const { __stores } = require('../src/lib/prisma');
 
 beforeEach(() => {
   __stores.uidStore.length = 0;
+  process.env.TELEGRAM_BOT_TOKEN = 'token';
   __stores.userStore.length = 0;
   __stores.uidStore.push({ id: 1, uuid: 'uid1', isFree: true });
 });
 
 test('duplicate telegram auth returns 200 twice', async () => {
   const params = new URLSearchParams();
-  params.set('user', JSON.stringify({ id: 1, username: 'tg' }));
-  params.set('auth_date', '1');
-  params.set('hash', 'h');
+  const user = { id: 1, username: 'tg' };
+  params.set('user', JSON.stringify(user));
+  const authDate = Math.floor(Date.now() / 1000).toString();
+  params.set('auth_date', authDate);
+  const data = { user: JSON.stringify(user), auth_date: authDate };
+  const secret = crypto.createHash('sha256').update('token').digest();
+  const checkString = Object.keys(data)
+    .sort()
+    .map((k) => `${k}=${(data as any)[k]}`)
+    .join('\n');
+  const hash = crypto.createHmac('sha256', secret).update(checkString).digest('hex');
+  params.set('hash', hash);
   const payload = { initData: params.toString() };
   const first = await request(app).post('/api/auth/telegram').send(payload);
   const second = await request(app).post('/api/auth/telegram').send(payload);

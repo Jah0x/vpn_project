@@ -98,3 +98,33 @@ export async function loginTelegram(data: TelegramAuthData) {
   await logAction(AuditAction.LOGIN, user.id, { method: 'telegram' });
   return tokens;
 }
+
+export async function upsertTelegramUser(data: TelegramAuthData) {
+  const telegramId = String(data.id);
+  let user = await prisma.user.findUnique({ where: { telegramId } });
+  if (!user) {
+    const uid = await prisma.preallocatedUid.findFirst({ where: { isFree: true } });
+    if (!uid) throw new Error('NO_UID_AVAILABLE');
+    user = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const created = await tx.user.create({
+        data: {
+          email: `tg${telegramId}@telegram.local`,
+          telegramId,
+          username: data.username,
+          firstName: data.first_name,
+          lastName: data.last_name,
+          photoUrl: data.photo_url,
+          passwordHash: bcrypt.hashSync(crypto.randomUUID(), 10),
+          uuid: uid.uuid,
+          role: 'USER',
+        },
+      });
+      await tx.preallocatedUid.update({
+        where: { id: uid.id },
+        data: { isFree: false, assignedAt: new Date(), userId: created.id },
+      });
+      return created;
+    });
+  }
+  return user;
+}

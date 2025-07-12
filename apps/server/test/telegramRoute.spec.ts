@@ -52,15 +52,14 @@ describe('POST /api/auth/telegram', () => {
     const params = new URLSearchParams();
     const user = { id: 1, username: 'tg' };
     params.set('user', JSON.stringify(user));
-    params.set('auth_date', '100');
+    const authDate = Math.floor(Date.now() / 1000).toString();
+    params.set('auth_date', authDate);
     const data = {
       user: JSON.stringify(user),
-      auth_date: '100',
-      id: '1',
-      username: 'tg',
+      auth_date: authDate,
     };
-    // Секрет формируется как HMAC_SHA256(botToken, 'WebAppData')
-    const secret = crypto.createHmac('sha256', 'token').update('WebAppData').digest();
+    // Секрет формируется как SHA256(botToken)
+    const secret = crypto.createHash('sha256').update('token').digest();
     const checkString = Object.keys(data)
       .sort()
       .map((k) => `${k}=${(data as any)[k]}`)
@@ -74,7 +73,7 @@ describe('POST /api/auth/telegram', () => {
     const payload = makePayload();
     const res = await request(app).post('/api/auth/telegram').send(payload);
     expect(res.status).toBe(200);
-    expect(res.body.access_token).toBeDefined();
+    expect(res.body.token).toBeDefined();
     expect(__stores.userStore.length).toBe(1);
   });
 

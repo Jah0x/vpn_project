@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'r
 import Footer from './components/Layout/Footer';
 import PromoBanner from './components/Layout/PromoBanner';
 import TelegramWarning from './components/Auth/TelegramWarning';
-import TelegramLogin from './components/Auth/telegram-login';
+import TelegramLogin from '@/pages/TelegramLogin';
 import LoginPage from './components/Auth/LoginPage';
 import { LoginForm } from '@/features/auth/LoginForm';
 import TgRedirect from '@/pages/TgRedirect';
