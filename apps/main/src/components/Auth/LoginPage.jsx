@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { useNavigate } from 'react-router-dom';
@@ -6,16 +6,24 @@ import { Eye, EyeOff, Mail, User, Lock, Zap, Shield, Globe } from 'lucide-react'
 import LoadingSpinner from '../Common/LoadingSpinner';
 import { validateNickname, validateEmail, validatePassword } from '../../utils/validators';
 import { getTelegram, isInTelegram } from '@/shared/lib/telegram';
+import { register as hankoRegister } from '@teamhanko/hanko-elements';
 
 const LoginPage = () => {
   const { login, register, telegramAuth } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  
+
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    hankoRegister('/hanko');
+    const handle = () => navigate('/dashboard');
+    document.addEventListener('hankoAuthFlowCompleted', handle);
+    return () => document.removeEventListener('hankoAuthFlowCompleted', handle);
+  }, []);
 
   const [formData, setFormData] = useState({
     email: '',

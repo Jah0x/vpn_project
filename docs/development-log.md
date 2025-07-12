@@ -737,3 +737,8 @@
 
 ## 2025-12-20
 - Дополнен вывод при ошибке подписи Telegram в хендлере `/api/auth/telegram`. Теперь перед возвратом 403 в логах (`tg-auth`) фиксируются `expectedHash`, `receivedHash` и `match`.
+
+## 2025-07-12
+- Интегрирована аутентификация Hanko.
+- В `docker-compose.yml` добавлены сервисы `hanko-migrate` и `hanko`.
+- Новая переменная `HANKO_JWT_SECRET` описана в `.env.example`.

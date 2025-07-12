@@ -29,6 +29,24 @@ services:
       retries: 5
     networks: [app]
 
+  hanko-migrate:
+    image: teamhanko/hanko:1
+    command: ["hanko", "migrate", "--database", "postgresql://vpn:changeme@postgres:5432/hanko"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [app]
+
+  hanko:
+    image: teamhanko/hanko:1
+    environment:
+      HANKO_JWT_SECRET: ${HANKO_JWT_SECRET:-changeme}
+      HANKO_DB_CONNECTION_STRING: postgresql://vpn:changeme@postgres:5432/hanko
+    depends_on:
+      hanko-migrate:
+        condition: service_completed_successfully
+    networks: [app]
+
   backend:
     container_name: backend
     build:

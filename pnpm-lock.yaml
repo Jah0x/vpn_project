@@ -14,6 +14,9 @@ importers:
       '@prisma/client':
         specifier: ^5.4.0
         version: 5.22.0(prisma@5.22.0)
+      '@teamhanko/hanko-elements':
+        specifier: ^2.1.0
+        version: 2.1.0
       '@types/passport-local':
         specifier: ^1.0.38
         version: 1.0.38
@@ -484,6 +487,11 @@ packages:
 
   '@cypress/xvfb@1.2.4':
     resolution: {integrity: sha512-skbBzPggOVYCbnGgV+0dmBdW/s77ZkAOXIC1knS8NagwDjBrNC1LuXtQJeiN6l+m7lzmHtaoUw/ctJKdqkG57Q==}
+
+  '@denysvuika/preact-translate@0.5.1':
+    resolution: {integrity: sha512-qqKkpjzR8E55nlLA+H3gP9Q99mCCWiTtRupVQBh8YRZljX+Q8YbsaJtV3F+TX4DR4lV8NLgvv2+sSUcHoWvNtQ==}
+    peerDependencies:
+      preact: '>=10.13.0'
 
   '@emotion/use-insertion-effect-with-fallbacks@1.2.0':
     resolution: {integrity: sha512-yJMtVdH59sxi/aVJBpk9FQq+OR8ll5GT8oWd57UpeaKEVGab41JWaCFA7FRLoMLloOZF/c/wsPoe+bfGmRKgDg==}
@@ -1285,6 +1293,17 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20 || >=4.0.0-beta.1'
 
+  '@teamhanko/hanko-elements@2.1.0':
+    resolution: {integrity: sha512-yVGak1fR9fCwXCgw0m+biFRkZyNlVD1iCCfyQxGeekOWdWCWj5O1CbQOIp9NdY9IukaoCFg6a4m9n4vRx4FAhA==}
+
+  '@teamhanko/hanko-frontend-sdk@2.1.0':
+    resolution: {integrity: sha512-vef8rH/ZkLpoOa7g9ggwIyYDQ0roIr1u6oSbU2spk05CaNFFH+8FqUHwLE4k2YJHTqslaiG7B6v5CdZ0Wucung==}
+
+  '@teamhanko/preact-custom-element@4.2.2':
+    resolution: {integrity: sha512-3djCQr25IxQIgpidxD8J0fTQ7/hMuoa5Nmv7delQc6sX4kXgv9e/pE01cywpmGZLi69H1KUH4dmZ4cPPJQrsQQ==}
+    peerDependencies:
+      preact: 10.x
+
   '@testing-library/dom@8.20.1':
     resolution: {integrity: sha512-/DiOQ5xBxgdYRC8LNk7U+RWat0S3qRLeIw3ZIkMQ9kkVlRmwD/Eg8k8CqIpD6GW7u20JIUOfMKbxtiLutpjQ4g==}
     engines: {node: '>=12'}
@@ -1900,6 +1919,9 @@ packages:
 
   cjs-module-lexer@1.4.3:
     resolution: {integrity: sha512-9z8TZaGM1pfswYeXrUpzPrkx8UnWYdhJclsiYMm6x/w5+nN+8Tf/LnAgfLGQCm59qAOxU8WwHEq2vNwF6i4j+Q==}
+
+  classnames@2.5.1:
+    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
 
   clean-stack@2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
@@ -3834,6 +3856,9 @@ packages:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
 
+  preact@10.26.9:
+    resolution: {integrity: sha512-SSjF9vcnF27mJK1XyFMNJzFd5u3pQiATFqoaDy03XuN00u4ziveVVEGt5RKJrDR8MHE/wJo9Nnad56RLzS2RMA==}
+
   prebuild-install@7.1.3:
     resolution: {integrity: sha512-8Mf2cbV7x1cXPUILADGI3wuhfqWvtiLA1iclTDbFRZkgRQS0NqsPZphna9V+HyTEadheuPmjaJMsbzKQFOzLug==}
     engines: {node: '>=10'}
@@ -5170,6 +5195,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@denysvuika/preact-translate@0.5.1(preact@10.26.9)':
+    dependencies:
+      preact: 10.26.9
+
   '@emotion/use-insertion-effect-with-fallbacks@1.2.0(react@18.3.1)':
     dependencies:
       react: 18.3.1
@@ -6037,6 +6066,22 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.17(ts-node@10.9.2(@types/node@18.19.113)(typescript@4.9.5))
 
+  '@teamhanko/hanko-elements@2.1.0':
+    dependencies:
+      '@denysvuika/preact-translate': 0.5.1(preact@10.26.9)
+      '@teamhanko/hanko-frontend-sdk': 2.1.0
+      '@teamhanko/preact-custom-element': 4.2.2(preact@10.26.9)
+      classnames: 2.5.1
+      preact: 10.26.9
+
+  '@teamhanko/hanko-frontend-sdk@2.1.0':
+    dependencies:
+      '@types/js-cookie': 3.0.6
+
+  '@teamhanko/preact-custom-element@4.2.2(preact@10.26.9)':
+    dependencies:
+      preact: 10.26.9
+
   '@testing-library/dom@8.20.1':
     dependencies:
       '@babel/code-frame': 7.27.1
@@ -6752,6 +6797,8 @@ snapshots:
   ci-info@4.2.0: {}
 
   cjs-module-lexer@1.4.3: {}
+
+  classnames@2.5.1: {}
 
   clean-stack@2.2.0: {}
 
@@ -8987,6 +9034,8 @@ snapshots:
       nanoid: 3.3.11
       picocolors: 1.1.1
       source-map-js: 1.2.1
+
+  preact@10.26.9: {}
 
   prebuild-install@7.1.3:
     dependencies:
