@@ -44,6 +44,9 @@ importers:
       lucide-react:
         specifier: ^0.263.1
         version: 0.263.1(react@18.3.1)
+      nanoid:
+        specifier: ^5.1.5
+        version: 5.1.5
       node-cron:
         specifier: ^3.0.3
         version: 3.0.3
@@ -71,6 +74,9 @@ importers:
       pino-pretty:
         specifier: ^10.3.0
         version: 10.3.1
+      pino-rotate:
+        specifier: ^0.3.0
+        version: 0.3.0
       prom-client:
         specifier: ^15.1.3
         version: 15.1.3
@@ -3480,6 +3486,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanoid@5.1.5:
+    resolution: {integrity: sha512-Ir/+ZpE9fDsNH0hQ3C68uyThDXzYcim2EqcZ8zn8Chtt1iylPT9xXJB0kPCnqzgcEGikO9RxSrh63MsmVCU7Fw==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+
   napi-build-utils@2.0.0:
     resolution: {integrity: sha512-GEbrYkbfF7MoNaoh2iGG84Mnf/WZfB0GdGEsM8wz7Expx/LlWf5U8t9nvJKXSp3qr5IsEbK04cBGhol/KwOsWA==}
 
@@ -3738,6 +3749,9 @@ packages:
   pino-pretty@10.3.1:
     resolution: {integrity: sha512-az8JbIYeN/1iLj2t0jR9DV48/LQ3RC6hZPpapKPkb84Q+yTidMCpgWxIT3N0flnBDilyBQ1luWNpOeJptjdp/g==}
     hasBin: true
+
+  pino-rotate@0.3.0:
+    resolution: {integrity: sha512-90o9lNA6XYIgmiA/SSrkS3i6741tCv0cyXy95khQqBzX8AbVIPTiKLDyQVq/NGGijoZIungdkWrh2O4Avsf4tA==}
 
   pino-std-serializers@6.2.2:
     resolution: {integrity: sha512-cHjPPsE+vhj/tnhCy/wiMh3M3z3h/j15zHQX+S9GkTBgqJuTuJzYJ4gUyACLhDaJ7kk9ba9iRDmbH2tJU03OiA==}
@@ -4243,6 +4257,9 @@ packages:
 
   sonic-boom@3.8.1:
     resolution: {integrity: sha512-y4Z8LCDBuum+PBP3lSV7RHrXscqksve/bi0as7mhwVnBW+/wUqKT/2Kb7um8yqcFy0duYbbPxzt89Zy2nOCaxg==}
+
+  sonic-boom@4.2.0:
+    resolution: {integrity: sha512-INb7TM37/mAcsGmc9hyyI6+QR3rR1zVRu36B0NeGXKnOOLiZOfER5SA+N7X7k3yUYRzLWafduTDvJAfDswwEww==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -8614,6 +8631,8 @@ snapshots:
 
   nanoid@3.3.11: {}
 
+  nanoid@5.1.5: {}
+
   napi-build-utils@2.0.0: {}
 
   natural-compare@1.4.0: {}
@@ -8869,6 +8888,13 @@ snapshots:
       secure-json-parse: 2.7.0
       sonic-boom: 3.8.1
       strip-json-comments: 3.1.1
+
+  pino-rotate@0.3.0:
+    dependencies:
+      dayjs: 1.11.13
+      fast-glob: 3.3.3
+      pino-abstract-transport: 1.2.0
+      sonic-boom: 4.2.0
 
   pino-std-serializers@6.2.2: {}
 
@@ -9448,6 +9474,10 @@ snapshots:
     optional: true
 
   sonic-boom@3.8.1:
+    dependencies:
+      atomic-sleep: 1.0.0
+
+  sonic-boom@4.2.0:
     dependencies:
       atomic-sleep: 1.0.0
 

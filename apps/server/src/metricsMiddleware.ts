@@ -1,11 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import { RequestHandler } from "express";
 import { httpRequestsTotal, httpRequestDurationSeconds } from "./metrics";
 
-export function metricsMiddleware(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): void {
+export const metricsMiddleware: RequestHandler = (req, res, next): void => {
   const start = process.hrtime();
   res.on("finish", () => {
     const [sec, nano] = process.hrtime(start);

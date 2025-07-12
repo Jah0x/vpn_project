@@ -1,8 +1,8 @@
-import express from "express";
+import express, { ErrorRequestHandler } from "express";
 import cors from "cors";
 import { mountSwagger } from "./swagger";
-import pino from "pino";
-import pinoHttp from "pino-http";
+import { logger } from "./lib/logger";
+import { loggingMiddleware } from "./middleware/logger";
 import { securityMiddlewares } from "./middleware/security";
 import { hostFilterMiddleware } from "./middleware/hostFilter";
 import { register } from "./metrics";
@@ -24,8 +24,7 @@ import { retrySubPushQueue } from "./lib/subPush";
 
 export const app = express();
 
-const logger = pino({ level: "info" });
-app.use(pinoHttp({ logger }));
+app.use(loggingMiddleware);
 
 app.use(cors());
 app.use("/api/pay/onramper/webhook", express.raw({ type: "application/json" }));
@@ -66,10 +65,16 @@ app.use("/api/plans", plansRouter);
 app.use("/api/admin/plans", adminPlansRouter);
 
 // Middleware для логирования необработанных ошибок
-app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  logger.error({ err, url: req.originalUrl, body: req.body }, "unhandled error");
-  res.status(500).json({ error: "Internal Server Error" });
-});
+const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
+  (req as any).log.error(err);
+  res.status(500).json({
+    error: err?.message || "Internal Server Error",
+    stack: err?.stack,
+    route: req.originalUrl,
+    requestId: (req as any).id,
+  });
+};
+app.use(errorHandler);
 
 cron.schedule("*/5 * * * *", () => {
   retrySubPushQueue().catch((err) => console.error("subPush retry error", err));
