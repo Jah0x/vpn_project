@@ -1,6 +1,6 @@
 # Аутентификация через Telegram
 
-В проекте предусмотрена возможность входа без пароля с помощью Telegram Web App. Теперь компонент `TelegramLogin` отправляет на сервер объект `window.Telegram.WebApp.initDataUnsafe` целиком.
+В проекте предусмотрена возможность входа без пароля с помощью Telegram Web App. Компонент `TelegramLogin` теперь отправляет на сервер строку `window.Telegram.WebApp.initData` без разбора на поля.
 
 > **Важно.** Эндпоинт `/api/auth/telegram` доступен только на поддомене `tg.zerologsvpn.com`. На основном домене `zerologsvpn.com` используется классическая авторизация по логину и паролю.
 

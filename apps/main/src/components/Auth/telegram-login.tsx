@@ -17,23 +17,13 @@ const TelegramLogin: React.FC = () => {
     setLoading(true);
 
     const tg = isInTelegram() ? getTelegram() : null;
-    if (!tg?.initDataUnsafe?.user || !tg?.initDataUnsafe?.hash) {
+    if (!tg?.initData) {
       setError('Данные Telegram недоступны');
       setLoading(false);
       return;
     }
 
-    const payload = {
-      id: tg.initDataUnsafe.user.id,
-      username: tg.initDataUnsafe.user.username,
-      first_name: tg.initDataUnsafe.user.first_name,
-      last_name: tg.initDataUnsafe.user.last_name,
-      photo_url: tg.initDataUnsafe.user.photo_url,
-      auth_date: tg.initDataUnsafe.auth_date,
-      hash: tg.initDataUnsafe.hash,
-    };
-
-    telegramAuth(payload)
+    telegramAuth({ initData: tg.initData })
       .then((res) => {
         const { access_token, refresh_token } = res.data || {};
         if (access_token) {

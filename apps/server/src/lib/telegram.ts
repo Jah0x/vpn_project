@@ -15,18 +15,46 @@ export interface TelegramAuthData {
 // Token берётся из переменной окружения
 export const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 
+export function parseInitData(raw: string): TelegramAuthData | null {
+  try {
+    const params = new URLSearchParams(raw);
+    const obj: any = {};
+    params.forEach((v, k) => {
+      obj[k] = v;
+    });
+    if (obj.user) {
+      const user = JSON.parse(obj.user);
+      obj.id = Number(user.id);
+      if (user.first_name) obj.first_name = user.first_name;
+      if (user.last_name) obj.last_name = user.last_name;
+      if (user.username) obj.username = user.username;
+      if (user.photo_url) obj.photo_url = user.photo_url;
+    }
+    obj.auth_date = Number(obj.auth_date);
+    return obj as TelegramAuthData;
+  } catch {
+    return null;
+  }
+}
+
+export interface TelegramHashDebug {
+  dataCheckString: string;
+  secretKeyHex: string;
+  calculatedHash: string;
+  providedHash: string;
+}
+
 /**
  * Проверяет подпись данных, полученных из Telegram WebApp.
  * Возвращает true, если подпись верна.
  */
-export function verifyTelegramHash(data: TelegramAuthData): boolean {
-  if (!BOT_TOKEN || !data.hash) return false;
-
+export function getTelegramHashDebug(data: TelegramAuthData): TelegramHashDebug {
   const { hash, ...rest } = data;
 
-  const secret = crypto.createHash('sha256').update(BOT_TOKEN).digest();
+  const secretKey = crypto.createHmac('sha256', 'WebAppData').update(BOT_TOKEN).digest();
 
-  const checkString = Object.keys(rest)
+  const dataCheckString = Object.keys(rest)
+    .filter((k) => rest[k] !== undefined)
     .sort()
     .map((key) => {
       const value = rest[key];
@@ -35,7 +63,18 @@ export function verifyTelegramHash(data: TelegramAuthData): boolean {
     })
     .join('\n');
 
-  const hmac = crypto.createHmac('sha256', secret).update(checkString).digest('hex');
+  const calculatedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
 
-  return hmac === hash;
+  return {
+    dataCheckString,
+    secretKeyHex: secretKey.toString('hex'),
+    calculatedHash,
+    providedHash: hash,
+  };
+}
+
+export function verifyTelegramHash(data: TelegramAuthData): boolean {
+  if (!BOT_TOKEN || !data.hash) return false;
+  const info = getTelegramHashDebug(data);
+  return info.calculatedHash === info.providedHash;
 }

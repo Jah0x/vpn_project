@@ -2,14 +2,17 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma';
-import { TelegramAuthData, verifyTelegramHash } from '../lib/telegram';
+import { TelegramAuthData, getTelegramHashDebug } from '../lib/telegram';
 import { issueTokens } from './userService';
 import { AuditAction } from '../types';
 import { logAction } from '../middleware/audit';
 
 export async function authTelegram(data: TelegramAuthData) {
-  if (!verifyTelegramHash(data)) {
-    throw new Error('INVALID_SIGNATURE');
+  const debug = getTelegramHashDebug(data);
+  if (debug.calculatedHash !== debug.providedHash) {
+    const err: any = new Error('INVALID_SIGNATURE');
+    (err as any).debug = debug;
+    throw err;
   }
 
   const telegramId = String(data.id);
