@@ -36,9 +36,10 @@ const verify = async (profile: any, done: (err: any, user?: any) => void) => {
     }
 };
 
+// Используем только переменную TELEGRAM_BOT_TOKEN из .env.
 export default new TelegramStrategy(
   {
-    botToken: (process.env.TG_BOT_TOKEN || 'test_token') as string,
+    botToken: (process.env.TELEGRAM_BOT_TOKEN || 'test_token') as string,
   },
-  verify as any
+  verify as any,
 );

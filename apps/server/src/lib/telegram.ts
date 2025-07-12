@@ -13,7 +13,7 @@ export interface TelegramAuthData {
 }
 
 // Token берётся из переменной окружения
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
+export const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 
 /**
  * Проверяет подпись данных, полученных из Telegram WebApp.
@@ -28,7 +28,11 @@ export function verifyTelegramHash(data: TelegramAuthData): boolean {
 
   const checkString = Object.keys(rest)
     .sort()
-    .map((key) => `${key}=${rest[key]}`)
+    .map((key) => {
+      const value = rest[key];
+      const serialized = typeof value === 'object' ? JSON.stringify(value) : String(value);
+      return `${key}=${serialized}`;
+    })
     .join('\n');
 
   const hmac = crypto.createHmac('sha256', secret).update(checkString).digest('hex');

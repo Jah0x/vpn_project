@@ -36,7 +36,8 @@ router.post("/register", async (req, res) => {
 
 router.post("/telegram", telegramLimiter, async (req, res) => {
   const data = req.body as TelegramAuthData;
-  req.log.info({ telegramId: data.id }, "Telegram auth attempt");
+  // Логируем всё initData, чтобы видеть что приходит от клиента
+  req.log.info({ initData: data }, "Telegram auth attempt");
   try {
     const key = crypto
       .createHash("sha256")
@@ -53,14 +54,14 @@ router.post("/telegram", telegramLimiter, async (req, res) => {
     res.status(200).json(tokens);
   } catch (err: any) {
     if (err.message === "INVALID_SIGNATURE") {
-      req.log.warn("Invalid Telegram signature");
-      return res.status(400).json({ error: "INVALID_SIGNATURE" });
+      req.log.warn({ initData: data }, "Invalid Telegram signature");
+      return res.status(403).json({ error: "invalid hash" });
     }
     if (err.message === "NO_UID_AVAILABLE") {
       return res.status(503).json({ error: "NO_UID_AVAILABLE" });
     }
     req.log.error({ err }, "Telegram auth failed");
-    res.status(400).json({ error: err.message });
+    res.status(403).json({ error: err.message });
   }
 });
 
