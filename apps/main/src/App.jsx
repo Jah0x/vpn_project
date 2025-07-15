@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Footer from './components/Layout/Footer';
 import PromoBanner from './components/Layout/PromoBanner';
-import TelegramWarning from './components/Auth/TelegramWarning';
-import TelegramLogin from '@/pages/TelegramLogin';
-import LoginPage from './components/Auth/LoginPage';
-import { LoginForm } from '@/features/auth/LoginForm';
-import TgRedirect from '@/pages/TgRedirect';
+import LoginPage from '@/pages/LoginPage';
 import Dashboard from './components/Dashboard/Dashboard';
 import Subscription from './pages/Subscription';
 import SettingsPage from './components/Settings/SettingsPage';
@@ -17,16 +13,7 @@ import { useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import LoadingSpinner from './components/Common/LoadingSpinner';
 import Toast from './components/Common/Toast';
-import { getTelegram, isInTelegram } from '@/shared/lib/telegram';
 
-// Проверка Telegram Web App
-const isTelegramWebApp = () => {
-  if (!isInTelegram()) return false;
-  const tg = getTelegram();
-  return Boolean(tg && tg.initData);
-};
-
-// Компонент для защищенных маршрутов
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
 
@@ -49,18 +36,10 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
   return children;
 };
 
-// Основной компонент приложения
 const AppContent = () => {
   const { isAuthenticated, isLoading } = useAuth();
-  const [showTelegramWarning, setShowTelegramWarning] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Проверяем, если пользователь зашел через Telegram Web App
-    if (isTelegramWebApp() && !isAuthenticated) {
-      setShowTelegramWarning(true);
-    }
-  }, [isAuthenticated]);
+  const [showPromo, setShowPromo] = useState(true);
 
   if (isLoading) {
     return (
@@ -70,47 +49,32 @@ const AppContent = () => {
     );
   }
 
-  if (showTelegramWarning) {
-    return (
-      <TelegramWarning
-        onContinue={() => {
-          setShowTelegramWarning(false);
-          navigate('/telegram');
-        }}
-      />
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-900">
       <PromoBanner />
 
       <main className={isAuthenticated ? 'pt-16' : ''}>
         <Routes>
-          {/* Публичные маршруты */}
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/tg-redirect" element={<TgRedirect />} />
-          <Route path="/telegram" element={<TelegramLogin />} />
-          
-          {/* Защищенные маршруты */}
-          <Route 
-            path="/dashboard" 
+          <Route path="/login" element={<LoginPage />} />
+
+          <Route
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/subscription" 
+
+          <Route
+            path="/subscription"
             element={
               <ProtectedRoute>
                 <Subscription />
               </ProtectedRoute>
-            } 
+            }
           />
-          
+
           <Route
             path="/settings"
             element={
@@ -121,43 +85,33 @@ const AppContent = () => {
           />
 
           <Route path="/pricing" element={<Pricing />} />
-
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
-          
-          
-          {/* Редирект на главную */}
+
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          
-          {/* 404 страница */}
-          <Route 
-            path="*" 
+          <Route
+            path="*"
             element={
               <div className="min-h-screen bg-gray-900 flex items-center justify-center">
                 <div className="text-center">
                   <h1 className="text-4xl font-bold text-white mb-4">404</h1>
                   <p className="text-gray-400 mb-8">Страница не найдена</p>
-                  <button 
-                    onClick={() => window.history.back()}
-                    className="btn-primary"
-                  >
+                  <button onClick={() => window.history.back()} className="btn-primary">
                     Вернуться назад
                   </button>
                 </div>
               </div>
-            } 
+            }
           />
         </Routes>
       </main>
 
       <Footer />
-
       <Toast />
     </div>
   );
 };
 
-// Корневой компонент
 const App = () => {
   return (
     <Router>

@@ -19,9 +19,7 @@ model User {
   firstName       String?
   lastName        String?
   photoUrl        String?
-  telegramId      String?          @unique
   hankoUserId     String?          @unique
-  passwordHash    String?
   uuid            String           @unique
   role            Role             @default(USER)
   preallocatedUid PreallocatedUid?
@@ -29,8 +27,6 @@ model User {
   Subscription    Subscription?
   AuditLog        AuditLog[]
   RefreshToken    RefreshToken[]
-  telegram        TelegramAccount?
-  creds           Credentials?
   checkSecret     UserCheckSecret?
   PlanUse         PlanUse[]
 }
@@ -160,20 +156,6 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id])
 }
 
-model TelegramAccount {
-  userId   String  @id @map("user_id")
-  user     User    @relation(fields: [userId], references: [id])
-  tgid     BigInt  @unique
-  hash     String
-  username String?
-}
-
-model Credentials {
-  userId   String @id
-  email    String @unique
-  passHash String
-  user     User   @relation(fields: [userId], references: [id])
-}
 
 model UserCheckSecret {
   userId String @id
