@@ -1,9 +1,7 @@
 import { logger } from "./lib/logger";
 import dotenv from "dotenv";
 dotenv.config();
-if (!process.env.STRIPE_SECRET_KEY) {
-  logger.warn("[WARN] STRIPE_SECRET_KEY is not set; Stripe features disabled");
-}
+
 // Выводим токен частично для проверки доступности переменных окружения
 const botToken = process.env.TELEGRAM_BOT_TOKEN || "";
 logger.info({ TELEGRAM_BOT_TOKEN: botToken.slice(0, 4) + "…" }, "env loaded");

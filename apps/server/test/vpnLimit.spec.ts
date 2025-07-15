@@ -31,7 +31,7 @@ beforeEach(async () => {
     data: {
       id: "s1",
       userId: "u1",
-      stripeSubId: "sub_1",
+      onramperId: "onramper_1",
       planId: "BASIC_1M",
       maxActiveVpns: 1,
       status: "active",

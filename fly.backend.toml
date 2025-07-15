@@ -6,7 +6,6 @@ primary_region = "ams"
 [env]
   DATABASE_URL = "postgres://vpn:vpn@db.internal:5432/vpn"
   JWT_SECRET = "REPLACE_ME"
-  STRIPE_KEY = "REPLACE_ME"
 
 [deploy]
   release_command = "npm run migrate"

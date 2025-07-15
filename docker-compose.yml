@@ -39,9 +39,14 @@ services:
 
   hanko:
     image: teamhanko/hanko:1
+    ports:
+      - "8000:8000"
     environment:
       HANKO_JWT_SECRET: ${HANKO_JWT_SECRET:-changeme}
       HANKO_DB_CONNECTION_STRING: postgresql://vpn:changeme@postgres:5432/hanko
+      HANKO_WEBAUTHN_RELYING_PARTY_ID: ${HANKO_WEBAUTHN_RELYING_PARTY_ID:-localhost}
+      HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS: ${HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS:-http://localhost:5173,http://localhost:80,https://localhost}
+      HANKO_CORS_ALLOW_ORIGINS: ${HANKO_CORS_ALLOW_ORIGINS:-http://localhost:5173,http://localhost:80,https://localhost}
     depends_on:
       hanko-migrate:
         condition: service_completed_successfully

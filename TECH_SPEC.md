@@ -11,7 +11,7 @@
 
 ## Config template editing
 
-Файл шаблона конфигурации VPN хранится в таблице `ConfigTemplate` (см. Prisma schema) и дублируется на диске `server/config-template.json`. Админ может получить и изменить шаблон через `/api/admin/config-template`. После оплаты подписки веб‑хук Stripe создаёт пользовательский конфиг в `configs/<userId>.json`, подставляя `uuid` пользователя вместо `{{USER_UUID}}`.
+Файл шаблона конфигурации VPN хранится в таблице `ConfigTemplate` (см. Prisma schema) и дублируется на диске `server/config-template.json`. Админ может получить и изменить шаблон через `/api/admin/config-template`. После оплаты подписки через Onramper создаётся пользовательский конфиг в `configs/<userId>.json`, подставляя `uuid` пользователя вместо `{{USER_UUID}}`.
 
 ## Audit logging
 Все действия пользователей (логин, операции с VPN, изменение шаблонов и события оплаты) сохраняются в таблицу `AuditLog`. Маршрут `/api/admin/audit` позволяет просматривать журнал с фильтрами по пользователю и типу действия. Записи можно удалить через `DELETE /api/admin/audit/{id}`.
@@ -19,7 +19,7 @@
 ## Observability
 - Все HTTP запросы считаются и измеряются через Prometheus middleware. Метрики доступны без авторизации по `/metrics`.
 - Alertmanager настроен на Slack и Telegram, правило `HighErrorRate` срабатывает при доле 5xx >5% в течение 5 минут.
-- Дополнительно собираются `db_query_duration_seconds`, `stripe_webhook_total` и `audit_logs_total`.
+- Дополнительно собираются `db_query_duration_seconds`, `onramper_webhook_total` и `audit_logs_total`.
 - Правила Prometheus описаны в `k8s/monitoring/alerts.yaml`.
 - Алерты с `severity: critical` отправляются в Slack и Telegram, `warning` — только в Telegram.
 
@@ -34,10 +34,10 @@
 - Для локальной разработки БД поднимается через Docker Compose сервис `postgres`.
 
 ## Billing
-Интеграция со Stripe Billing осуществляется через Checkout и Webhook. В `.env` должны быть заданы ключи:
-`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` и идентификаторы цен `STRIPE_PRICE_*`.
+Интеграция с Onramper для обработки платежей через криптовалюты и карты. В `.env` должны быть заданы ключи:
+`ONRAMPER_KEY`, `VITE_ONRAMPER_KEY`, `ONRAMPER_WEBHOOK_SECRET`.
 
-Модель `Subscription` хранит активный тариф пользователя и лимит активных VPN. Вебхук `/api/billing/webhook` обновляет статус подписки в зависимости от событий Stripe (`checkout.session.completed`, `invoice.payment_failed`, `customer.subscription.deleted`).
+Модель `Subscription` хранит активный тариф пользователя и лимит активных VPN. Вебхук `/api/pay/onramper/webhook` обновляет статус подписки при успешной оплате через Onramper.
 
 Создание VPN ограничено middleware `enforceVpnLimit`, которое сравнивает количество VPN пользователя с `maxActiveVpns` из его подписки.
 

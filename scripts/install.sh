@@ -36,6 +36,14 @@ VITE_API_BASE_URL=/api
 DATABASE_URL=postgresql://vpn:vpn@postgres:5432/vpn
 JWT_SECRET=$(openssl rand -hex 32)
 JWT_REFRESH_SECRET=$(openssl rand -hex 32)
+HANKO_JWT_SECRET=$(openssl rand -hex 32)
+VITE_HANKO_API_URL=https://${DOMAIN}:8000
+HANKO_WEBAUTHN_RELYING_PARTY_ID=${DOMAIN}
+HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS=https://${DOMAIN},https://tg.${DOMAIN},https://admin.${DOMAIN}
+HANKO_CORS_ALLOW_ORIGINS=https://${DOMAIN},https://tg.${DOMAIN},https://admin.${DOMAIN}
+ONRAMPER_KEY=
+VITE_ONRAMPER_KEY=
+ONRAMPER_WEBHOOK_SECRET=
 EOT
 fi
 
@@ -63,6 +71,10 @@ http {
 
     upstream frontend {
         server frontend:8081;
+    }
+
+    upstream hanko {
+        server hanko:8000;
     }
 
     resolver 127.0.0.11 valid=30s;

@@ -94,8 +94,8 @@ describe.skip("Webhook generation", () => {
 
   it("creates file with uuid", async () => {
     const res = await request(app)
-      .post("/api/stripe/webhook")
-      .send({ type: "checkout.session.completed", data: { userId: "u2" } });
+      .post("/api/pay/onramper/webhook")
+      .send({ status: "SUCCESS", orderId: "test-order-id" });
     expect(res.status).toBe(200);
     const data = JSON.parse(fs.readFileSync(configPath, "utf-8"));
     expect(data.id).toBe("uuid-u2");

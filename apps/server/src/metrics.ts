@@ -26,11 +26,7 @@ export const dbQueryDurationSeconds = new Histogram({
   labelNames: ["model", "action"] as const,
 });
 
-export const stripeWebhookTotal = new Counter({
-  name: "stripe_webhook_total",
-  help: "Count of received Stripe webhook events",
-  labelNames: ["event"] as const,
-});
+
 
 export const auditLogsTotal = new Counter({
   name: "audit_logs_total",
@@ -40,5 +36,4 @@ export const auditLogsTotal = new Counter({
 register.registerMetric(httpRequestsTotal);
 register.registerMetric(httpRequestDurationSeconds);
 register.registerMetric(dbQueryDurationSeconds);
-register.registerMetric(stripeWebhookTotal);
 register.registerMetric(auditLogsTotal);
