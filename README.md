@@ -47,8 +47,8 @@ Swagger docs: [http://localhost:80/api/docs](http://localhost:80/api/docs)
 ### Hanko auth setup
 
 - Сервис `hanko` стартует вместе с `docker compose up`.
-- Укажите `HANKO_JWT_SECRET` в `.env` для проверки подписи токенов.
-- Вход через Hanko доступен на странице логина и реагирует на событие `hankoAuthFlowCompleted`.
+- Укажите `HANKO_JWT_SECRET` и при необходимости `VITE_HANKO_API_URL` в `.env`.
+- Страница `/login` содержит компонент `<hanko-auth>`; после успешного входа браузер отправляет полученный JWT на `/api/auth/hanko` и сохраняет `access_token` в `localStorage`.
 
 ### ✨ Demo credentials
 
@@ -66,13 +66,13 @@ User --1:M Vpn
 
 ### API: логин
 
-При POST `/api/auth/login` сервер теперь возвращает JSON вида:
+При POST `/api/auth/hanko` сервер возвращает JSON вида:
 
 ```json
 { "access_token": "<JWT>", "refresh_token": "<token>" }
 ```
 
-`access_token` следует сохранять в `localStorage` под ключом `auth_token` и
+`access_token` следует сохранять в `localStorage` и
 передавать в заголовке `Authorization: Bearer <JWT>` во все защищённые запросы.
 
 Для локального запуска выполните:

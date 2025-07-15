@@ -10,7 +10,7 @@ export const API_CONFIG = {
 
 // Конфигурация аутентификации
 export const AUTH_CONFIG = {
-  TOKEN_KEY: "auth_token",
+  TOKEN_KEY: "access_token",
   REFRESH_TOKEN_KEY: "refresh_token",
   USER_KEY: "user_data",
   SESSION_TIMEOUT: 7 * 24 * 60 * 60 * 1000, // 7 дней
