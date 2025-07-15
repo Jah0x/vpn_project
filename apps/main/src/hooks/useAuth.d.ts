@@ -13,18 +13,9 @@ export interface UseAuthReturn {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  login(email: string, password: string, remember?: boolean): Promise<AuthResult<User>>;
-  register(data: { email: string; password: string }): Promise<AuthResult>;
-  telegramAuth(data: any): Promise<AuthResult<User>>;
+  loginWithHanko(token: string): Promise<AuthResult<User>>;
+  refreshWithHanko(): Promise<AuthResult>;
   logout(): Promise<void>;
-  refreshToken(): Promise<AuthResult>;
-  updateUser(data: Partial<User & { [key: string]: any }>): void;
-  changePassword(currentPassword: string, newPassword: string): Promise<AuthResult>;
-  resetPassword(email: string): Promise<AuthResult>;
-  hasRole(role: string): boolean;
-  hasPermission(permission: string): boolean;
-  isSubscriptionActive(): boolean;
-  getSubscriptionDaysLeft(): number;
   clearAuthData(): void;
   checkAuthStatus(): Promise<void>;
 }

@@ -2,7 +2,6 @@
  * @jest-environment node
  */
 import request from "supertest";
-import bcrypt from "bcryptjs";
 import createPrismaMock from "prisma-mock";
 import { mockReset } from "jest-mock-extended";
 import { Prisma } from "@prisma/client";
@@ -23,7 +22,6 @@ beforeEach(async () => {
     data: {
       id: "u2",
       email: "user@test.com",
-      passwordHash: bcrypt.hashSync("user", 10),
       uuid: "uuid-u2",
       role: "USER",
     },
@@ -32,7 +30,6 @@ beforeEach(async () => {
     data: {
       id: "u3",
       email: "viewer@test.com",
-      passwordHash: bcrypt.hashSync("viewer", 10),
       uuid: "uuid-u3",
       role: "USER",
     },
