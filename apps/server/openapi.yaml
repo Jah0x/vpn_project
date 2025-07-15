@@ -54,7 +54,7 @@ components:
           type: string
         status:
           type: string
-        stripeId:
+        onramperId:
           type: string
           nullable: true
     SubscriptionUrl:
@@ -291,9 +291,9 @@ paths:
               schema:
                 type: string
 
-  /api/billing/checkout:
+  /api/pay/onramper/start:
     post:
-      summary: Start Stripe Checkout
+      summary: Start Onramper payment
       security:
         - bearerAuth: []
       requestBody:
@@ -303,25 +303,24 @@ paths:
             schema:
               type: object
               properties:
-                plan:
+                planCode:
                   type: string
-                  enum: [basic, pro, team]
       responses:
         '200':
-          description: Checkout URL
+          description: Payment URL
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  url:
+                  payUrl:
                     type: string
         '429':
           $ref: '#/components/responses/TooManyRequests'
 
-  /api/billing/webhook:
+  /api/pay/onramper/webhook:
     post:
-      summary: Stripe webhook
+      summary: Onramper webhook
       responses:
         '200':
           description: Received

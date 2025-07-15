@@ -28,11 +28,7 @@ spec:
                 secretKeyRef:
                   name: vpn-secrets
                   key: jwt_secret
-            - name: STRIPE_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: vpn-secrets
-                  key: stripe_key
+
           readinessProbe:
             httpGet:
               path: /metrics

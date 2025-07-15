@@ -31,9 +31,7 @@
     "react-router-dom": "^6.8.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
-    "stripe": "^18.2.1",
     "swagger-ui-express": "^4.6.3",
-    "web-vitals": "^3.3.2",
     "yamljs": "^0.3.0",
     "zod": "^3.5.4",
     "zod-to-openapi": "^0.2.1"

@@ -15,7 +15,6 @@ docker compose up -d
 VITE_API_BASE_URL=/api
 SERVER_PORT=8080
 DATABASE_URL=postgresql://vpn:changeme@postgres:5432/vpn?schema=public
-STRIPE_SECRET_KEY=
 ```
 
 ## Логирование
@@ -46,9 +45,15 @@ Swagger docs: [http://localhost:80/api/docs](http://localhost:80/api/docs)
 
 ### Hanko auth setup
 
-- Сервис `hanko` стартует вместе с `docker compose up`.
-- Укажите `HANKO_JWT_SECRET` и при необходимости `VITE_HANKO_API_URL` в `.env`.
+- Сервис `hanko` стартует вместе с `docker compose up` на порту 8000.
+- Обязательные переменные окружения в `.env`:
+  - `HANKO_JWT_SECRET` - секрет для JWT токенов
+  - `VITE_HANKO_API_URL` - URL API Hanko для фронтенда
+  - `HANKO_WEBAUTHN_RELYING_PARTY_ID` - домен для WebAuthn
+  - `HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS` - разрешенные origins
+  - `HANKO_CORS_ALLOW_ORIGINS` - CORS настройки
 - Страница `/login` содержит компонент `<hanko-auth>`; после успешного входа браузер отправляет полученный JWT на `/api/auth/hanko` и сохраняет `access_token` в `localStorage`.
+- Для проверки интеграции запустите: `./scripts/check-hanko.sh`
 
 ### ✨ Demo credentials
 
@@ -154,13 +159,18 @@ docker compose up -d --build frontend
 curl -X POST $CDN_PURGE_URL
 ```
 
-## Диагностика
+## Скрипты управления
 
-Для запуска линтера, тестов и сборки с сохранением логов выполните:
+### Установка и обновление
+- `./scripts/install-improved.sh` - улучшенный скрипт установки с поддержкой Hanko и Onramper
+- `./scripts/update.sh` - обновление проекта с созданием бэкапа
+- `./scripts/install.sh` - оригинальный скрипт установки (устарел)
 
-```bash
-./scripts/diagnostics.sh
-```
+### Диагностика
+- `./scripts/diagnostics.sh` - запуск линтера, тестов и сборки с логированием
+- `./scripts/check-hanko.sh` - проверка интеграции Hanko
+- `./scripts/collect-logs.sh` - сбор логов всех контейнеров
+- `./scripts/curl-matrix.sh` - быстрый smoke-тест API
 
 Все логи сохраняются в каталоге `logs/`.
 
