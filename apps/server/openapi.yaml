@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: VPN Service API
-  version: 1.1.0
+  version: 1.2.0
 servers:
   - url: /api
 components:
@@ -11,14 +11,6 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    UserLogin:
-      type: object
-      required: [email, password]
-      properties:
-        email:
-          type: string
-        password:
-          type: string
     Tokens:
       type: object
       properties:
@@ -112,15 +104,18 @@ paths:
                 properties:
                   status:
                     type: string
-  /api/auth/login:
+  /api/auth/hanko:
     post:
-      summary: Login user
+      summary: Exchange Hanko session token
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserLogin'
+              type: object
+              properties:
+                token:
+                  type: string
       responses:
         '200':
           description: Tokens

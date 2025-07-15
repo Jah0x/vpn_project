@@ -49,7 +49,7 @@ app.get("/metrics", async (_req, res) => {
   res.end(await register.metrics());
 });
 
-app.use("/api/auth/login", hankoAuthRouter);
+app.use("/api/auth/hanko", hankoAuthRouter);
 app.use("/api/vpn", vpnRouter);
 app.use("/api", configRouter);
 app.use("/api/pay/onramper", onramperRouter);

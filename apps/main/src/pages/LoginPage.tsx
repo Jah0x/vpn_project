@@ -1,28 +1,20 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { hanko, register } from '@teamhanko/hanko-elements';
-import api from '@/services/api';
-import { useAuth } from '@/contexts/AuthContext';
+import { Hanko } from '@teamhanko/hanko-elements';
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-  const auth = useAuth();
-
   useEffect(() => {
-    register('/hanko');
-    const handle = async () => {
-      const token = await hanko.session.getToken();
-      const { data } = await api.post('/api/auth/login', { token });
-      auth.checkAuthStatus();
-      navigate('/dashboard');
-    };
-    document.addEventListener('hankoAuthFlowCompleted', handle);
-    return () => document.removeEventListener('hankoAuthFlowCompleted', handle);
-  }, [auth, navigate]);
-
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <hanko-auth />
-    </div>
-  );
+    const hanko = new Hanko(process.env.VITE_HANKO_API_URL!);
+    hanko.onAuthFlowCompleted(async () => {
+      const { jwt } = await hanko.session.get();
+      const res = await fetch('/api/auth/hanko', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: jwt }),
+      });
+      const { access_token } = await res.json();
+      localStorage.setItem('access_token', access_token);
+      window.location.href = '/dashboard';
+    });
+  }, []);
+  return <hanko-auth />;
 }
