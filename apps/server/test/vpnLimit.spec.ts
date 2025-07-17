@@ -35,7 +35,7 @@ beforeEach(async () => {
       planId: "BASIC_1M",
       maxActiveVpns: 1,
       status: "active",
-    },
+    } as any,
   });
   await prisma.vpn.create({ data: { id: "v1", ownerId: "u1", name: "VPN1" } });
 });

@@ -32,7 +32,7 @@ COPY apps/server/openapi.yaml apps/server/openapi.yaml
 COPY prisma      ./prisma
 
 # Генерируем Prisma и компилируем TypeScript
-RUN pnpm --filter "./apps/server" run build:server
+RUN npx prisma generate --schema=prisma/schema.prisma && pnpm exec tsc -p apps/server/tsconfig.build.json
 
 # ── STAGE 3: prod ────────────────────────────────────────────────
 FROM node:20-alpine3.17
