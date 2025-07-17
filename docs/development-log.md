@@ -753,3 +753,10 @@
 - На фронтенде компонент `<hanko-auth>` напрямую вызывает этот маршрут и
   сохраняет `access_token` в `localStorage`.
 - Обновлены Swagger, env и e2e тест.
+
+## 2025-07-21
+- Исправлена ошибка сборки Docker backend (`ENOTDIR` при `prisma generate`).
+- В `apps/server/package.json` путь к `schema.prisma` указан относительно корня,
+  генерация выполняется через `npx`.
+- `apps/server/Dockerfile` теперь вызывает `npx prisma generate` и `pnpm exec tsc`
+  вместо `pnpm --filter`.
