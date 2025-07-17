@@ -12,9 +12,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
+      - run: corepack enable
+      - run: corepack prepare pnpm@9.2.0 --activate
+      - run: |
+          if [ -f yarn.lock ] || [ -e .pnp.cjs ]; then
+            echo "❌ forbidden lock-file"; exit 1;
+          fi
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm test
 
   build-docker:
     needs: lint-test

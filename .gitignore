@@ -10,3 +10,6 @@ server/prisma/*.db
 server/prisma/*.db-journal
 logs/
 dist/
+
+yarn.lock
+.pnp.*

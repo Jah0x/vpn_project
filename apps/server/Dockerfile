@@ -11,7 +11,7 @@ COPY apps/server/package.json apps/server/
 #  (добавьте сюда package.json остальных пакетов, если нужно)
 
 # Устанавливаем зависимости
-RUN corepack enable && pnpm install --frozen-lockfile
+RUN corepack enable && corepack prepare pnpm@9.2.0 --activate && pnpm install --frozen-lockfile
 # └─ node_modules поселились на корневом уровне /app
 
 # ── STAGE 2: build-backend ───────────────────────────────────────
@@ -20,7 +20,7 @@ RUN apk add --no-cache openssl libssl1.1
 WORKDIR /app
 
 # ←  ОБЯЗАТЕЛЬНО: в каждом новом FROM нужно снова включить Corepack
-RUN corepack enable                 # или: npm i -g pnpm@8
+RUN corepack enable && corepack prepare pnpm@9.2.0 --activate                 # или: npm i -g pnpm@8
 
 # Забираем готовые node_modules и lock-файлы
 COPY --from=deps /app/node_modules   ./node_modules

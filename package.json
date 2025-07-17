@@ -4,6 +4,7 @@
   "description": "Современный VPN сервис с React интерфейсом",
   "homepage": ".",
   "private": true,
+  "packageManager": "pnpm@9.2.0",
   "dependencies": {
     "@onramper/widget": "^2.2.35",
     "@prisma/client": "^5.4.0",
