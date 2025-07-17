@@ -6,7 +6,7 @@ ARG VITE_API_BASE_URL
 ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && pnpm install --frozen-lockfile
+RUN corepack enable && corepack prepare pnpm@9.2.0 --activate && pnpm install --frozen-lockfile
 COPY . ./
 
 # Важно: Vite забирает VITE_* из окружения во время build!

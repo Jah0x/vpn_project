@@ -1,4 +1,4 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-npx lint-staged
+#!/usr/bin/env sh
+if [ -f yarn.lock ]; then
+  echo "❌ yarn.lock is banned"; exit 1;
+fi

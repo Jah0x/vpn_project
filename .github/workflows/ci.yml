@@ -17,6 +17,11 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: corepack enable
+      - run: corepack prepare pnpm@9.2.0 --activate
+      - run: |
+          if [ -f yarn.lock ] || [ -e .pnp.cjs ]; then
+            echo "❌ forbidden lock-file"; exit 1;
+          fi
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec tsc -b apps/${{ matrix.service }}
       - run: pnpm exec eslint "apps/${{ matrix.service }}/src/**/*.{ts,tsx}" --max-warnings=0
