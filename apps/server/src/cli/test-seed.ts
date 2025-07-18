@@ -26,7 +26,7 @@ async function main() {
   await prisma.subscription.create({
     data: {
       userId: admin.id,
-      onramperId: 'onramper_test_admin',
+      stripeSubId: '',
       planId: 'pro',
       maxActiveVpns: 5,
       status: 'active',

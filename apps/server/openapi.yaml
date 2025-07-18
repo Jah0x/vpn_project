@@ -52,11 +52,14 @@ components:
           type: string
         userId:
           type: string
+        stripeSubId:
+          type: string
         status:
           type: string
-        onramperId:
+        planId:
           type: string
-          nullable: true
+        maxActiveVpns:
+          type: integer
     SubscriptionUrl:
       type: object
       properties:
