@@ -947,3 +947,7 @@
 - В `apps/server/Dockerfile` каталог `apps/server` создаётся до копирования `prisma`.
 - Символическая ссылка `apps/server/prisma` заменена на реальную директорию,
   чтобы избежать ошибки "cannot copy to non-directory" при сборке Docker.
+## 2025-10-15
+
+- Удалена лишняя строка копирования каталога prisma в Dockerfile бекенда.
+
