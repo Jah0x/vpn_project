@@ -30,6 +30,9 @@ ENV PATH=/app/node_modules/.bin:$PATH
 COPY apps/server ./apps/server
 COPY apps/server/openapi.yaml apps/server/openapi.yaml
 COPY prisma      ./prisma
+# также копируем схему в каталог приложения,
+# иначе при сборке возникает ошибка ENOTDIR
+COPY prisma      ./apps/server/prisma
 
 # Генерируем Prisma и компилируем TypeScript
 RUN npx prisma generate --schema=prisma/schema.prisma && pnpm exec tsc -p apps/server/tsconfig.build.json
