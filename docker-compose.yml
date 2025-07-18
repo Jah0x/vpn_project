@@ -31,7 +31,7 @@ services:
 
   hanko-migrate:
     image: ghcr.io/teamhanko/hanko:latest
-    command: ["hanko", "migrate", "--database", "postgresql://vpn:changeme@postgres:5432/hanko"]
+    command: ["migrate", "--database", "postgresql://vpn:changeme@postgres:5432/hanko"]
     depends_on:
       postgres:
         condition: service_healthy
