@@ -38,7 +38,6 @@ services:
       postgres:
         condition: service_healthy
     networks: [app]
-
  hanko:
   image: ghcr.io/teamhanko/hanko:latest
   ports:
