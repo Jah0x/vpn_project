@@ -957,3 +957,9 @@
 - Удалено поле `onramperId` из модели подписки.
 - Обновлены тесты и OpenAPI, скрипт `test-seed` использует `stripeSubId`.
 
+## 2025-12-22
+
+- Обновлена конфигурация `docker-compose.yml`: сервисы `hanko` и `hanko-migrate` используют образ
+  `ghcr.io/teamhanko/hanko` версии 2.1.0.
+- В `.env.example` и `.env.production` добавлена переменная `HANKO_VERSION`.
+
