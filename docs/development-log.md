@@ -760,3 +760,8 @@
   генерация выполняется через `npx`.
 - `apps/server/Dockerfile` теперь вызывает `npx prisma generate` и `pnpm exec tsc`
   вместо `pnpm --filter`.
+
+## 2025-07-22
+- Снова возникла ошибка `ENOTDIR` в Docker при `pnpm run build:server`.
+- Путь к `schema.prisma` изменён на `./prisma/schema.prisma` для надёжной работы
+  в контейнере.
