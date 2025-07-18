@@ -941,3 +941,9 @@
 - Dockerfile фронтенда переведён на node:18-alpine.
 - Добавлен временный компонент TelegramLogin для tg-webapp.
 - `pnpm build` и тесты выполняются без ошибок.
+
+## 2025-10-11
+
+- В `apps/server/Dockerfile` каталог `apps/server` создаётся до копирования `prisma`.
+- Символическая ссылка `apps/server/prisma` заменена на реальную директорию,
+  чтобы избежать ошибки "cannot copy to non-directory" при сборке Docker.

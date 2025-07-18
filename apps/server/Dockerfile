@@ -28,11 +28,12 @@ COPY --from=deps /app/pnpm-lock.yaml /app/package.json ./
 ENV PATH=/app/node_modules/.bin:$PATH
 # ▾ Копируем реальные исходники после deps-кэша
 COPY apps/server ./apps/server
+RUN rm -f apps/server/prisma && mkdir -p apps/server/prisma
 COPY apps/server/openapi.yaml apps/server/openapi.yaml
-COPY prisma      ./prisma
-# также копируем схему в каталог приложения,
-# иначе при сборке возникает ошибка ENOTDIR
-COPY prisma      ./apps/server/prisma
+# Каталог с Prisma должен существовать до копирования,
+# иначе Docker выдаёт "cannot copy to non-directory"
+COPY prisma ./prisma
+COPY prisma ./apps/server/prisma
 
 # Генерируем Prisma и компилируем TypeScript
 RUN npx prisma generate --schema=prisma/schema.prisma && pnpm exec tsc -p apps/server/tsconfig.build.json
