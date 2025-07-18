@@ -765,3 +765,7 @@
 - Снова возникла ошибка `ENOTDIR` в Docker при `pnpm run build:server`.
 - Путь к `schema.prisma` изменён на `./prisma/schema.prisma` для надёжной работы
   в контейнере.
+
+## 2025-07-18
+- Для предотвращения ошибки `ENOTDIR` в Dockerfile сервера копируем каталог
+  `prisma` как в корень образа, так и в `apps/server/prisma` перед сборкой.
