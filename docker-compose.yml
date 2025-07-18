@@ -30,7 +30,7 @@ services:
     networks: [app]
 
   hanko-migrate:
-    image: "ghcr.io/teamhanko/hanko-migrate:${HANKO_VERSION:-2.1.0}"
+    image: ghcr.io/teamhanko/hanko:latest
     command: ["hanko", "migrate", "--database", "postgresql://vpn:changeme@postgres:5432/hanko"]
     depends_on:
       postgres:
@@ -38,7 +38,7 @@ services:
     networks: [app]
 
   hanko:
-    image: "ghcr.io/teamhanko/hanko:${HANKO_VERSION:-2.1.0}"
+    image: ghcr.io/teamhanko/hanko:latest
     ports:
       - "8000:8000"
     environment:

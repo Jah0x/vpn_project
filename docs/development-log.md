@@ -963,3 +963,8 @@
   `ghcr.io/teamhanko/hanko` версии 2.1.0.
 - В `.env.example` и `.env.production` добавлена переменная `HANKO_VERSION`.
 
+## 2026-01-15
+
+- Актуализированы Docker-образы Hanko до тега `latest`, переменная `HANKO_VERSION` удалена
+  из файлов окружения и `README`.
+
