@@ -44,6 +44,7 @@ services:
     command: ["serve"]
     ports:
       - "8000:8000"
+    command: ["serve", "--listen", "0.0.0.0:8000"]
     environment:
       HANKO_JWT_SECRET: ${HANKO_JWT_SECRET:-changeme}
       HANKO_WEBAUTHN_RELYING_PARTY_ID: ${HANKO_WEBAUTHN_RELYING_PARTY_ID:-localhost}
