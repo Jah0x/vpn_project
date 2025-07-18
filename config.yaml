@@ -1,0 +1,9 @@
+database:
+  connectionString: postgresql://vpn:changeme@postgres:5432/hanko
+jwt:
+  secret: ${HANKO_JWT_SECRET:-changeme}
+server:
+  corsAllowOrigins:
+    - http://localhost:5173
+    - http://localhost:80
+    - https://localhost
