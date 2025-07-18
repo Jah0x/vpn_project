@@ -39,13 +39,12 @@ services:
         condition: service_healthy
     networks: [app]
 
-  hanko:
-    image: ghcr.io/teamhanko/hanko:latest
-    command: ["serve"]
-    ports:
-      - "8000:8000"
-    command: ["serve", "--listen", "0.0.0.0:8000"]
-    environment:
+ hanko:
+  image: ghcr.io/teamhanko/hanko:latest
+  ports:
+    - "8000:8000"          # наружу → localhost:8000
+  command: ["serve", "--listen", "0.0.0.0:8000"]   # ← главное
+  environment:
       HANKO_JWT_SECRET: ${HANKO_JWT_SECRET:-changeme}
       HANKO_WEBAUTHN_RELYING_PARTY_ID: ${HANKO_WEBAUTHN_RELYING_PARTY_ID:-localhost}
       HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS: ${HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS:-http://localhost:5173,http://localhost:80,https://localhost}
