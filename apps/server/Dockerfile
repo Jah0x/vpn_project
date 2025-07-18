@@ -32,8 +32,8 @@ RUN rm -f apps/server/prisma && mkdir -p apps/server/prisma
 COPY apps/server/openapi.yaml apps/server/openapi.yaml
 # Каталог с Prisma должен существовать до копирования,
 # иначе Docker выдаёт "cannot copy to non-directory"
+# Каталог копируем только один раз
 COPY prisma ./prisma
-COPY prisma ./apps/server/prisma
 
 # Генерируем Prisma и компилируем TypeScript
 RUN npx prisma generate --schema=prisma/schema.prisma && pnpm exec tsc -p apps/server/tsconfig.build.json
