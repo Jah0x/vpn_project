@@ -2,7 +2,7 @@
   "name": "vpn-backend",
   "private": true,
   "scripts": {
-    "build:server": "npx prisma generate --schema=../prisma/schema.prisma && tsc -p tsconfig.build.json",
+    "build:server": "npx prisma generate --schema=./prisma/schema.prisma && tsc -p tsconfig.build.json",
     "seed": "ts-node prisma/seed.ts",
     "start": "node dist/index.js"
   },
