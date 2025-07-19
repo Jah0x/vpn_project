@@ -34,7 +34,7 @@ services:
     image: ghcr.io/teamhanko/hanko:latest
     command: migrate up
     environment:
-      HANKO_DB_CONNECTION_STRING: "postgresql://vpn:changeme@postgres:5432/vpn?search_path=hanko,public"
+      DATABASE_URL: "postgresql://vpn:changeme@postgres:5432/vpn?search_path=hanko,public"
     volumes:
       - ./config.yaml:/etc/hanko/config.yaml:ro
     depends_on:
@@ -45,7 +45,7 @@ services:
     image: ghcr.io/teamhanko/hanko:latest
     command: serve all
     environment:
-      HANKO_DB_CONNECTION_STRING: "postgresql://vpn:changeme@postgres:5432/vpn?search_path=hanko,public"
+      DATABASE_URL: "postgresql://vpn:changeme@postgres:5432/vpn?search_path=hanko,public"
       HANKO_JWT_SECRET: ${HANKO_JWT_SECRET:-changeme}
       HANKO_WEBAUTHN_RELYING_PARTY_ID: ${HANKO_WEBAUTHN_RELYING_PARTY_ID:-localhost}
       HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS: ${HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS:-http://localhost:5173,http://localhost:80,https://localhost}
