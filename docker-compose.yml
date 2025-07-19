@@ -23,6 +23,7 @@ services:
       POSTGRES_DB: vpn
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./db/init-hanko.sql:/docker-entrypoint-initdb.d/01-hanko.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d postgres"]
       interval: 5s
@@ -31,7 +32,9 @@ services:
 
   hanko-migrate:
     image: ghcr.io/teamhanko/hanko:latest
-    command: ["migrate", "up"]
+    command: migrate up
+    environment:
+      HANKO_DB_CONNECTION_STRING: "postgresql://vpn:changeme@postgres:5432/vpn?search_path=hanko,public"
     volumes:
       - ./config.yaml:/etc/hanko/config.yaml:ro
     depends_on:
@@ -40,13 +43,14 @@ services:
     networks: [app]
   hanko:
     image: ghcr.io/teamhanko/hanko:latest
-    ports:
-      - "8000:8000"          # наружу → localhost:8000
-    command: ["serve", "--listen", "0.0.0.0:8000"]   # ← главное
+    command: serve all
     environment:
+      HANKO_DB_CONNECTION_STRING: "postgresql://vpn:changeme@postgres:5432/vpn?search_path=hanko,public"
       HANKO_JWT_SECRET: ${HANKO_JWT_SECRET:-changeme}
       HANKO_WEBAUTHN_RELYING_PARTY_ID: ${HANKO_WEBAUTHN_RELYING_PARTY_ID:-localhost}
       HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS: ${HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS:-http://localhost:5173,http://localhost:80,https://localhost}
+    ports:
+      - "8000:8000"
     volumes:
       - ./config.yaml:/etc/hanko/config.yaml:ro
     depends_on:

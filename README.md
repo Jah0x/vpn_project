@@ -124,6 +124,7 @@ Swagger docs: [http://localhost:80/api/docs](http://localhost:80/api/docs)
   - `HANKO_WEBAUTHN_RELYING_PARTY_ID` - домен для WebAuthn
   - `HANKO_WEBAUTHN_RELYING_PARTY_ORIGINS` - разрешенные origins
   - `HANKO_CORS_ALLOW_ORIGINS` - CORS настройки
+  - `HANKO_DB_CONNECTION_STRING` - строка подключения к базе `vpn` со схемой `hanko`
   - `config.yaml` - путь до конфигурации Hanko, монтируется в контейнер
     через `volumes`.
 - Страница `/login` содержит компонент `<hanko-auth>`; после успешного входа браузер отправляет полученный JWT на `/api/auth/hanko` и сохраняет `access_token` в `localStorage`.
