@@ -974,3 +974,10 @@
 - Добавлен файл `config.yaml` с настройками Hanko.
 - Сервисы `hanko` и `hanko-migrate` теперь монтируют его и не используют `HANKO_DB_CONNECTION_STRING`.
 - README дополнен инструкцией о монтировании конфига.
+
+## 2026-07-25
+
+- Hanko теперь использует ту же базу `vpn`, но со схемой `hanko`.
+- В `docker-compose.yml` добавлен монтируемый скрипт `db/init-hanko.sql` для создания схемы.
+- Сервисы `hanko` и `hanko-migrate` получают переменную `HANKO_DB_CONNECTION_STRING`.
+- README дополнено новой переменной и инструкцией по работе со схемой.
