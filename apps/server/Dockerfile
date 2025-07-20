@@ -1,5 +1,6 @@
 # ── STAGE 1: deps ────────────────────────────────────────────────
 FROM node:20-alpine3.17 AS deps
+RUN apk add --no-cache curl
 RUN apk add --no-cache openssl libssl1.1
 WORKDIR /app
 
