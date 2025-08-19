@@ -981,3 +981,9 @@
 - В `docker-compose.yml` добавлен монтируемый скрипт `db/init-hanko.sql` для создания схемы.
 - Сервисы `hanko` и `hanko-migrate` получают переменную `HANKO_DB_CONNECTION_STRING`.
 - README дополнено новой переменной и инструкцией по работе со схемой.
+
+## 2026-07-26
+
+- Добавлен workflow `.github/workflows/docker.yml` для сборки Docker-образа и смоук-тестов.
+- Workflow поднимает Postgres и приложение, проверяет `/healthz` и отсутствие 404 на `/api/auth/login`.
+- При падении тестов выводятся логи контейнеров.
